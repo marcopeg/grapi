@@ -24,17 +24,12 @@ RUN yarn install
 # Copy source files:
 WORKDIR /usr/src/app-build
 ADD .env /usr/src/app-build
-ADD jsconfig.json /usr/src/app-build
-ADD webpack.config.extend.js /usr/src/app-build
 ADD ssr /usr/src/app-build/ssr
-ADD src /usr/src/app-build/src
-ADD public /usr/src/app-build/public
 ADD index.js /usr/src/app-build
 
 # Build:
 WORKDIR /usr/src/app-build
 RUN yarn build
-RUN yarn build:node
 
 # Remove dev dependencies
 RUN npm prune --production
@@ -61,7 +56,6 @@ COPY --from=builder /usr/src/app-build/node_build ./node_build
 ADD package.json /usr/src/app
 ADD index.js /usr/src/app
 ADD .env /usr/src/app
-ADD pages /usr/src/app/pages
 
 # Default environment configuration:
 EXPOSE 8080

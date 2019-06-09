@@ -32,9 +32,12 @@
     ]
   },
   "dependencies": {
-    "@forrestjs/package-universal": "^2.9.3"
+    "@forrestjs/package-universal": "^2.9.3",
+    "es6-promise": "^4.2.8",
+    "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
-    "@forrestjs/package-universal-dev": "^2.9.3"
+    "@forrestjs/package-universal-dev": "^2.9.3",
+    "babel-polyfill": "^6.26.0"
   }
 }
