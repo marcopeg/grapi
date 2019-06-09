@@ -5,6 +5,21 @@ import { GraphQLObjectType, GraphQLInputObjectType } from 'graphql'
 const getTypeName = (name, options = {}) =>
     options.alias ? `${options.alias}__${name}` : name
 
+const parseQueryResolver = (source) =>
+    typeof source === 'function'
+        ? source
+        : null
+
+const parseExtensionResolver = (source) => {
+    if (source === true) {
+        return () => true
+    }
+
+    return typeof source === 'function'
+        ? source
+        : null
+}
+
 export const parseField = (receivedInput, types, options) => {
     const input = receivedInput.trim()
 
@@ -117,11 +132,16 @@ export const parseEndpoints = (endpoints, types, options) =>
                 fields: endpoints[curr].type,
             }, types, options)
 
+        const resolve = endpoints[curr].resolve
+            ? { resolve: parseQueryResolver(endpoints[curr].resolve) }
+            : {}
+
         return {
             ...acc,
             [curr]: {
                 args,
                 type,
+                ...resolve,
             },
         }
     }, {})
@@ -137,6 +157,10 @@ export const parseExtension = (config) => {
         queries: config.queries
             ? {
                 [config.name]: {
+                    ...(config.shouldRunQueries
+                        ? { resolve: parseExtensionResolver(config.shouldRunQueries) }
+                        : {}
+                    ),
                     type: new GraphQLObjectType({
                         name: `${config.name}Query`,
                         fields: parseEndpoints(config.queries, types, options),
@@ -147,6 +171,10 @@ export const parseExtension = (config) => {
         mutations: config.mutations
             ? {
                 [config.name]: {
+                    ...(config.shouldRunMutations
+                        ? { resolve: parseExtensionResolver(config.shouldRunMutations) }
+                        : {}
+                    ),
                     type: new GraphQLObjectType({
                         name: `${config.name}Mutation`,
                         fields: parseEndpoints(config.mutations, types, options),

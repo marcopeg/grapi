@@ -296,7 +296,7 @@ describe('graphql-parser', () => {
     })
 
     describe('parseExtension()', () => {
-        test('extensiont', async () => {
+        test('it should run a basic extension', async () => {
             const { queries, mutations } = parseExtension({
                 name: 'MyExtension',
                 inputTypes: {
@@ -352,5 +352,51 @@ describe('graphql-parser', () => {
                 name: 'Marco',
             }])
         })
+
+        test('it should run an extension with embed resolvers', async () => {
+            const { queries } = parseExtension({
+                name: 'MyExtension',
+                queries: {
+                    foo: {
+                        type: 'String',
+                        resolve: () => 'foo',
+                    },
+                },
+                shouldRunQueries: true,
+            })
+
+            const schema = new GraphQLSchema({
+                query: new GraphQLObjectType({
+                    name: 'RootQuery',
+                    fields: { ...queries },
+                }),
+            })
+
+            const r1 = await graphql(schema, 'query q1 { MyExtension { foo }}')
+            // console.log(JSON.stringify(r1))
+            expect(r1.data.MyExtension.foo).toBe('foo')
+        })
     })
+
+    // describe('parseQueryResolver()', () => {
+    //     const { queries } = parseExtension({
+    //         name: 'MyExtension',
+    //         queries: {
+    //             getTodo: {
+    //                 args: {
+    //                     id: 'ID!',
+    //                 },
+    //                 type: 'String',
+    //                 resolve: {
+    //                     source: 'rest',
+    //                     method: 'get',
+    //                     url: 'https://jsonplaceholder.typicode.com/todos/{id}',
+    //                 },
+    //             },
+    //         },
+    //         shouldRunQueries: true,
+    //     })
+
+    //     console.log(queries)
+    // })
 })
