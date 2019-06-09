@@ -1,0 +1,40 @@
+{
+  "name": "grapi",
+  "description": "Composable GraphQL Gateway",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "----- // START SCRIPTS // -----": "",
+    "start": "npm run clean && npm run build && cross-env NODE_ENV=production node index",
+    "start:dev": "yarn && cross-env NODE_ENV=development nodemon index",
+    "test": "jest .",
+    "lint": "eslint .",
+    "----- // BUILD SCRIPTS // -----": "",
+    "build": "cross-env NODE_ENV=production babel ssr --out-dir node_build/ssr",
+    "----- // CLEANING SCRIPTS // -----": "",
+    "clean:npm": "rm -rf ./node_modules",
+    "clean": "rm -rf node_build",
+    "reset": "npm run clean && npm run clean:npm"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@forrestjs/eslint-config-universal"
+    ]
+  },
+  "eslintIgnore": [
+    "/.docker-volumes/**/*",
+    "/node_modules/**/*",
+    "/node_build/**/*"
+  ],
+  "babel": {
+    "presets": [
+      "@forrestjs/babel-preset-universal"
+    ]
+  },
+  "dependencies": {
+    "@forrestjs/package-universal": "^2.9.3"
+  },
+  "devDependencies": {
+    "@forrestjs/package-universal-dev": "^2.9.3"
+  }
+}
