@@ -1,98 +1,50 @@
-#
-# Simple interface to run Docker!
-#
-
-# Running container's name
-name?=grapi
-
-# Docker image tag name
-tag?=${name}
-
-# Docker Development Options
-cmd?=build
-api?=8080
-
-
 
 ###
-### Use Docker for Production
-### =========================
+### DEVELOPMENT
 ###
-
-# Build the project using cache
-image:
-	docker build -t ${tag} .
-
-# Spins up a container from the latest available image
-# this is useful to test locally
-prod: image
-	docker run \
-		--rm \
-		--name ${name} \
-		-p 8080:8080 \
-		${name}
-
-# Like start, but in background
-# classic way to launch it on a server
-boot: image
-	docker run \
-		-d \
-		--name ${name} \
-		-p 8080:8080 \
-		${name}
-
-# stop the running container
-stop:
-	docker stop ${name}
-
-remove:
-	docker rm ${name}
-
-
-down: stop remove
-
-# Gain access to a running container
-ssh:
-	docker exec \
-		-it \
-		${name} \
-		/bin/sh
-
-
-
-
-###
-# Use Docker for Development
-# ==========================
-#
-#     # Start the application on default ports:
-#     make dev
-#
-#     # Start the application on custom ports:
-#     make dev api=9999 app=3001
-#
 
 dev:
-	docker run \
-		-it \
-		--rm \
-		--name "${name}-dev" \
-		-v $(shell pwd)/.docker-volumes/node_modules:/usr/src/app/node_modules:cached \
-		-v $(shell pwd)/.docker-volumes/node_build:/usr/src/app/node_build:cached \
-		-v $(shell pwd)/package.json:/usr/src/app/package.json:delegated \
-		-v $(shell pwd)/yarn.lock:/usr/src/app/yarn.lock:delegated \
-		-v $(shell pwd)/ssr:/usr/src/app/ssr:delegated \
-		-v $(shell pwd)/index.js:/usr/src/app/index.js:delegated \
-		-v $(shell pwd)/.env:/usr/src/app/.env:delegated \
-		-p ${api}:8080 \
-		-w /usr/src/app \
-		node:12.2 \
-		yarn start:dev
+	HUMBLE_ENV=dev humble up -d
+	HUMBLE_ENV=dev humble logs -f
+
+undev:
+	HUMBLE_ENV=dev humble down
+
+dev-ssh:
+	HUMBLE_ENV=dev humble exec webapp /bin/sh
+
+dev-build:
+	HUMBLE_ENV=dev humble exec webapp yarn build
+
+dev-locale:
+	HUMBLE_ENV=dev humble exec webapp yarn build:locale
+
+dev-pg:
+	HUMBLE_ENV=dev humble up -d postgres
+	HUMBLE_ENV=dev humble logs -f
+
+
 
 ###
-# Run any npm script over a running development instance
-#
-#     make exec cmd=build
-#
-exec:
-	docker exec -it "${name}-dev" yarn ${cmd}
+### PRODUCTION
+###
+
+prod:
+	HUMBLE_ENV=prod humble up -d --build
+	HUMBLE_ENV=prod humble logs -f
+	
+unprod:
+	HUMBLE_ENV=prod humble down
+
+
+
+###
+### Heroku
+###
+
+heroku-deploy:
+	git subtree push --prefix services/webapp heroku master
+	heroku logs --tail --app learnmap2
+
+heroku-logs:
+	heroku logs --tail --app learnmap2
