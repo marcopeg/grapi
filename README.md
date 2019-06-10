@@ -22,7 +22,12 @@
             "args": {
                 "foo": "String"
             },
-            "type": "User"
+            "type": "User",
+            "resolve": {
+                "type": "rest",
+                "method": "get",
+                "url": "https://jsonplaceholder.typicode.com/users",
+            }
         }
     ],
     "mutations": [

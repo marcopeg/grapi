@@ -34,6 +34,7 @@
   "dependencies": {
     "@forrestjs/package-universal": "^2.9.3",
     "es6-promise": "^4.2.8",
+    "flat": "^4.1.0",
     "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
