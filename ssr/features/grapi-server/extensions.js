@@ -24,7 +24,7 @@ const commitToMemory = extension => {
 
 export const register = extension => {
     commitToMemory(extension)
-    return commitToStorage(extension)
+    // return commitToStorage(extension)
 }
 
 export const get = () => [ data.etag, data.list ]

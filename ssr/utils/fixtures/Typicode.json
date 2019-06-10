@@ -6,6 +6,11 @@
             "name": "String"
         }
     },
+    "inputTypes": {
+        "UserInput": {
+            "name": "String!"
+        }
+    },
     "queries": {
         "users": {
             "type": "[User]",
@@ -29,7 +34,7 @@
         "addUser": {
             "type": "User",
             "args": {
-                "name": "String!"
+                "user": "UserInput!"
             },
             "resolve": {
                 "type": "rest",
@@ -39,7 +44,7 @@
                     "Content-type": "application/json; charset=UTF-8"
                 },
                 "body": {
-                    "name": "{{name}}"
+                    "name": "{{user.name}}"
                 }
             }
         }

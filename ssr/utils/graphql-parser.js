@@ -1,6 +1,7 @@
 import { GraphQLID, GraphQLInt, GraphQLFloat, GraphQLString, GraphQLBoolean } from 'graphql'
 import { GraphQLNonNull, GraphQLList } from 'graphql'
 import { GraphQLObjectType, GraphQLInputObjectType } from 'graphql'
+import GraphQLJSON from 'graphql-type-json'
 
 import { resolverParser } from './resolver-parser'
 
@@ -50,6 +51,8 @@ export const parseField = (receivedInput, types, options) => {
             return GraphQLString
         case 'Boolean':
             return GraphQLBoolean
+        case 'JSON':
+            return GraphQLJSON
         default:
             return types[getTypeName(input, options)] || types[input]
     }
