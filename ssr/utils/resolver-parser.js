@@ -1,5 +1,6 @@
 import 'isomorphic-fetch'
 import { template } from './template'
+import { dotted } from './dotted'
 
 const resolverParserREST = (config) => {
     const fetchConfig = {
@@ -16,17 +17,42 @@ const resolverParserREST = (config) => {
 
         // handle variables in body
         Object.keys(fetchConfig.body).forEach(key => {
-            fetchConfig.body[key] = template(fetchConfig.body[key], variables)
+            if (typeof fetchConfig.body[key] === 'string') {
+                fetchConfig.body[key] = template(fetchConfig.body[key], variables)
+            }
         })
         fetchConfig.body = JSON.stringify(fetchConfig.body)
 
         const url = template(config.url, variables)
         const res = await fetch(url, fetchConfig)
-        return res.json()
+
+        const data = await res.json()
+        return dotted(data, config.grab)
     }
 }
 
-const resolverParserGQL = (config) => {}
+const resolverParserGQL = (config) => {
+    const restConfig = {
+        url: config.url,
+        method: (config.method || 'POST').toUpperCase(),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+        },
+        grab: config.grab,
+    }
+
+    return async (variables) => {
+        const restRequest = resolverParserREST({
+            ...restConfig,
+            body: {
+                query: config.query,
+                variables,
+            },
+        })
+        const res = await restRequest(variables)
+        return res
+    }
+}
 
 const parsers = {
     rest: resolverParserREST,
