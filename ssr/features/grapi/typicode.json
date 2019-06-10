@@ -1,0 +1,29 @@
+{
+    "name": "Typicode",
+    "types": {
+        "User": {
+            "id": "ID!",
+            "name": "String"
+        }
+    },
+    "queries": {
+        "users": {
+            "type": "[User]",
+            "resolve": {
+                "type": "rest",
+                "url": "https://jsonplaceholder.typicode.com/users"
+            }
+        },
+        "user": {
+            "type": "User",
+            "args": {
+                "id": "ID!"
+            },
+            "resolve": {
+                "type": "rest",
+                "url": "https://jsonplaceholder.typicode.com/users/{{id}}"
+            }
+        }
+    },
+    "shouldRunQueries": true
+}

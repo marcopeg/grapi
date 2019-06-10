@@ -12,8 +12,9 @@ const parseQueryResolver = (source) => {
         return source
     }
 
+    // @TODO: hooks or config to inject some validation or limitation logic?
     const resolveFn = resolverParser(source)
-    return (_, args) => resolveFn(args)
+    return async (_, args) => resolveFn(args)
 }
 const parseExtensionResolver = (source) => {
     if (source === true) {

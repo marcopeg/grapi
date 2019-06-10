@@ -378,16 +378,12 @@ describe('graphql-parser', () => {
     })
 
     describe('parseQueryResolver()', () => {
-        test('it should be able to use external data', async () => {
-            const { queries } = parseExtension({
-                name: 'MyExtension',
+        test('it should be able to integrate different extensions', async () => {
+            const typicode = parseExtension({
+                name: 'Typicode',
                 types: {
                     User: {
                         id: 'ID!',
-                        name: 'String',
-                    },
-                    Continent: {
-                        code: 'ID!',
                         name: 'String',
                     },
                 },
@@ -409,6 +405,19 @@ describe('graphql-parser', () => {
                             url: 'https://jsonplaceholder.typicode.com/users/{{id}}',
                         },
                     },
+                },
+                shouldRunQueries: true,
+            })
+
+            const trevorblades = parseExtension({
+                name: 'Trevorblades',
+                types: {
+                    Continent: {
+                        code: 'ID!',
+                        name: 'String',
+                    },
+                },
+                queries: {
                     continents: {
                         type: '[Continent]',
                         resolve: {
@@ -437,21 +446,30 @@ describe('graphql-parser', () => {
             const schema = new GraphQLSchema({
                 query: new GraphQLObjectType({
                     name: 'RootQuery',
-                    fields: { ...queries },
+                    fields: {
+                        ...typicode.queries,
+                        ...trevorblades.queries,
+                    },
                 }),
             })
 
             const query = `{
-                MyExtension {
+                Typicode {
                     user (id: 8) { id name }
-                    continent (code: "EU") { name }
                     users { id name }
+                }
+                Trevorblades {
+                    continent (code: "EU") { name }
                     continents { code name }
                 }
             }`
 
             const r1 = await graphql(schema, query)
-            console.log(r1.data.MyExtension)
+            // console.log(r1.data)
+            expect(r1.data.Typicode.user.id).toBe('8')
+            expect(r1.data.Typicode.users).toBeInstanceOf(Array)
+            expect(r1.data.Trevorblades.continent.name).toBe('Europe')
+            expect(r1.data.Trevorblades.continents.length).toBe(7)
         })
     })
 })

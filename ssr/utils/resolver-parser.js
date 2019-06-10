@@ -2,33 +2,32 @@ import 'isomorphic-fetch'
 import { template } from './template'
 import { dotted } from './dotted'
 
-const resolverParserREST = (config) => {
+const resolverParserREST = (config) => async (variables) => {
     const fetchConfig = {
         method: (config.method || 'GET').toUpperCase(),
         headers: config.headers || {},
         body: config.body || {},
     }
 
-    return async (variables) => {
-        // handle variables in headers
-        Object.keys(fetchConfig.headers).forEach(key => {
-            fetchConfig.headers[key] = template(fetchConfig.headers[key], variables)
-        })
+    // handle variables in headers
+    Object.keys(fetchConfig.headers).forEach(key => {
+        fetchConfig.headers[key] = template(fetchConfig.headers[key], variables)
+    })
 
-        // handle variables in body
-        Object.keys(fetchConfig.body).forEach(key => {
-            if (typeof fetchConfig.body[key] === 'string') {
-                fetchConfig.body[key] = template(fetchConfig.body[key], variables)
-            }
-        })
-        fetchConfig.body = JSON.stringify(fetchConfig.body)
+    // handle variables in body
+    Object.keys(fetchConfig.body).forEach(key => {
+        if (typeof fetchConfig.body[key] === 'string') {
+            fetchConfig.body[key] = template(fetchConfig.body[key], variables)
+        }
+    })
+    fetchConfig.body = JSON.stringify(fetchConfig.body)
 
-        const url = template(config.url, variables)
-        const res = await fetch(url, fetchConfig)
+    const url = template(config.url, variables)
+    console.log(url)
+    const res = await fetch(url, fetchConfig)
 
-        const data = await res.json()
-        return dotted(data, config.grab)
-    }
+    const data = await res.json()
+    return dotted(data, config.grab)
 }
 
 const resolverParserGQL = (config) => {
