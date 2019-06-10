@@ -373,30 +373,85 @@ describe('graphql-parser', () => {
             })
 
             const r1 = await graphql(schema, 'query q1 { MyExtension { foo }}')
-            // console.log(JSON.stringify(r1))
             expect(r1.data.MyExtension.foo).toBe('foo')
         })
     })
 
-    // describe('parseQueryResolver()', () => {
-    //     const { queries } = parseExtension({
-    //         name: 'MyExtension',
-    //         queries: {
-    //             getTodo: {
-    //                 args: {
-    //                     id: 'ID!',
-    //                 },
-    //                 type: 'String',
-    //                 resolve: {
-    //                     source: 'rest',
-    //                     method: 'get',
-    //                     url: 'https://jsonplaceholder.typicode.com/todos/{id}',
-    //                 },
-    //             },
-    //         },
-    //         shouldRunQueries: true,
-    //     })
+    describe('parseQueryResolver()', () => {
+        test('it should be able to use external data', async () => {
+            const { queries } = parseExtension({
+                name: 'MyExtension',
+                types: {
+                    User: {
+                        id: 'ID!',
+                        name: 'String',
+                    },
+                    Continent: {
+                        code: 'ID!',
+                        name: 'String',
+                    },
+                },
+                queries: {
+                    users: {
+                        type: '[User]',
+                        resolve: {
+                            type: 'rest',
+                            url: 'https://jsonplaceholder.typicode.com/users',
+                        },
+                    },
+                    user: {
+                        type: 'User',
+                        args: {
+                            id: 'ID!',
+                        },
+                        resolve: {
+                            type: 'rest',
+                            url: 'https://jsonplaceholder.typicode.com/users/{{id}}',
+                        },
+                    },
+                    continents: {
+                        type: '[Continent]',
+                        resolve: {
+                            type: 'graphql',
+                            url: 'https://countries.trevorblades.com/',
+                            query: '{ continents { code name }}',
+                            grab: 'data.continents',
+                        },
+                    },
+                    continent: {
+                        type: 'Continent',
+                        args: {
+                            code: 'String!',
+                        },
+                        resolve: {
+                            type: 'graphql',
+                            url: 'https://countries.trevorblades.com/',
+                            query: 'query foo ($code: String!) { continent (code: $code) { code name }}',
+                            grab: 'data.continent',
+                        },
+                    },
+                },
+                shouldRunQueries: true,
+            })
 
-    //     console.log(queries)
-    // })
+            const schema = new GraphQLSchema({
+                query: new GraphQLObjectType({
+                    name: 'RootQuery',
+                    fields: { ...queries },
+                }),
+            })
+
+            const query = `{
+                MyExtension {
+                    user (id: 8) { id name }
+                    continent (code: "EU") { name }
+                    users { id name }
+                    continents { code name }
+                }
+            }`
+
+            const r1 = await graphql(schema, query)
+            console.log(r1.data.MyExtension)
+        })
+    })
 })

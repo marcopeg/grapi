@@ -77,6 +77,18 @@ describe('resolverParser()', () => {
             expect(res.data.country.code).toBe('IT')
         })
 
+        test('it should make a simple query2', async () => {
+            const resolve = resolverParser({
+                type: 'graphql',
+                url: 'https://countries.trevorblades.com/',
+                query: '{ continents { code name }}',
+                grab: 'data.continents',
+            })
+
+            const res = await resolve()
+            expect(res.length).toBe(7)
+        })
+
         test('it should make queries with variables', async () => {
             const resolve = resolverParser({
                 type: 'graphql',

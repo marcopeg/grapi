@@ -38,7 +38,6 @@ const resolverParserGQL = (config) => {
         headers: {
             "Content-type": "application/json; charset=UTF-8",
         },
-        grab: config.grab,
     }
 
     return async (variables) => {
@@ -49,8 +48,9 @@ const resolverParserGQL = (config) => {
                 variables,
             },
         })
+
         const res = await restRequest(variables)
-        return res
+        return dotted(res, config.grab)
     }
 }
 

@@ -2,14 +2,19 @@ import { GraphQLID, GraphQLInt, GraphQLFloat, GraphQLString, GraphQLBoolean } fr
 import { GraphQLNonNull, GraphQLList } from 'graphql'
 import { GraphQLObjectType, GraphQLInputObjectType } from 'graphql'
 
+import { resolverParser } from './resolver-parser'
+
 const getTypeName = (name, options = {}) =>
     options.alias ? `${options.alias}__${name}` : name
 
-const parseQueryResolver = (source) =>
-    typeof source === 'function'
-        ? source
-        : null
+const parseQueryResolver = (source) => {
+    if (typeof source === 'function') {
+        return source
+    }
 
+    const resolveFn = resolverParser(source)
+    return (_, args) => resolveFn(args)
+}
 const parseExtensionResolver = (source) => {
     if (source === true) {
         return () => true
