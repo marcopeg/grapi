@@ -1,12 +1,13 @@
 import 'isomorphic-fetch'
+import clone from 'clone-deep'
 import { template } from './template'
 import { dotted } from './dotted'
 
 const resolverParserREST = (config) => async (variables) => {
     const fetchConfig = {
         method: (config.method || 'GET').toUpperCase(),
-        headers: config.headers || {},
-        body: config.body || {},
+        headers: clone(config.headers || {}),
+        body: clone(config.body || {}),
     }
 
     // handle variables in headers
@@ -23,7 +24,6 @@ const resolverParserREST = (config) => async (variables) => {
     fetchConfig.body = JSON.stringify(fetchConfig.body)
 
     const url = template(config.url, variables)
-    console.log(url)
     const res = await fetch(url, fetchConfig)
 
     const data = await res.json()

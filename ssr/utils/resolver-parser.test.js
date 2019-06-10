@@ -53,6 +53,27 @@ describe('resolverParser()', () => {
             })
         })
 
+        test('it should POST with different variables', async () => {
+            const config = {
+                type: 'rest',
+                method: 'POST',
+                url: 'https://jsonplaceholder.typicode.com/users',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                },
+                body: {
+                    name: '{{name}}',
+                },
+            }
+
+            const resolve = resolverParser(config)
+            const r1 = await resolve({ name: 'Marco' })
+            const r2 = await resolve({ name: 'Luca' })
+
+            expect(r1.name).toBe('Marco')
+            expect(r2.name).toBe('Luca')
+        })
+
         test('it should grab part of the response', async () => {
             const resolve = resolverParser({
                 type: 'rest',

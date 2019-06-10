@@ -33,8 +33,11 @@
   },
   "dependencies": {
     "@forrestjs/package-universal": "^2.9.3",
+    "clone-deep": "^4.0.1",
     "es6-promise": "^4.2.8",
     "flat": "^4.1.0",
+    "fs-extra": "^8.0.1",
+    "graphql-type-json": "^0.3.0",
     "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {

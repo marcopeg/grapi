@@ -81,9 +81,9 @@ export default createHookApp({
         require('@forrestjs/service-env'),
         require('@forrestjs/service-logger'),
         require('@forrestjs/service-express'),
-        require('@forrestjs/service-express-graphql'),
+        // require('@forrestjs/service-express-graphql'),
     ],
     features: [
-        require('./features/grapi'),
+        require('./features/grapi-server'),
     ],
 })
