@@ -4,6 +4,7 @@ import { parseExtension } from './extension-parser'
 
 import * as hooks from './hooks'
 import registerExtensionMutation from './register-extension.mutation'
+import registerExtensionJsonMutation from './register-extension-json.mutation'
 import * as extensionsRegistry from './extensions-registry'
 
 export const register = ({ registerAction, createHook }) => {
@@ -47,6 +48,7 @@ export const register = ({ registerAction, createHook }) => {
         handler: ({ queries, mutations }) => {
             // Add Grapi API
             mutations.registerExtension = registerExtensionMutation
+            mutations.registerExtensionJSON = registerExtensionJsonMutation
 
             // Add Extensions
             const extensions = extensionsRegistry.getList()

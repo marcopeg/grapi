@@ -65,3 +65,52 @@ export const parseExtension = definition =>
         ...(definition.queries ? { queries: reduceQueries(definition.queries) } : {}),
         ...(definition.mutations ? { mutations: reduceQueries(definition.mutations) } : {}),
     })
+
+// Reversed
+
+const reduceTypeFieldsReversed = fields =>
+    Object.keys(fields).reduce((acc, key) => [
+        ...acc,
+        { name: key, type: fields[key] },
+    ], [])
+
+const reduceTypeHeadersReversed = fields =>
+    Object.keys(fields).reduce((acc, key) => [
+        ...acc,
+        { name: key, value: fields[key] },
+    ], [])
+
+const reduceTypesReversed = types =>
+    Object.keys(types).reduce((acc, key) => [
+        ...acc,
+        { name: key, fields: reduceTypeFieldsReversed(types[key]) },
+    ], [])
+
+const reduceResolverReversed = resolve => ({
+    type: resolve.type,
+    url: resolve.url,
+    query: resolve.query,
+    grab: resolve.grab,
+    ...(resolve.headers ? { headers: reduceTypeHeadersReversed(resolve.headers) } : {}),
+    ...(resolve.body ? { body: reduceTypeHeadersReversed(resolve.body) } : {}),
+})
+
+const reduceQueriesReversed = queries =>
+    Object.keys(queries).reduce((acc, key) => [
+        ...acc,
+        {
+            name: key,
+            type: queries[key].type,
+            resolve: reduceResolverReversed(queries[key].resolve),
+            ...(queries[key].args ? { args: reduceTypeFieldsReversed(queries[key].args) } : {}),
+        },
+    ], [])
+
+export const reverseParseExtension = definition => ({
+    name: definition.name,
+    shouldRunQueries: definition.shouldRunQueries,
+    shouldRunMutations: definition.shouldRunMutations,
+    ...(definition.types ? { types: reduceTypesReversed(definition.types) } : {}),
+    ...(definition.inputTypes ? { inputTypes: reduceTypesReversed(definition.inputTypes) } : {}),
+    ...(definition.queries ? { queries: reduceQueriesReversed(definition.queries) } : {}),
+})
