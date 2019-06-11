@@ -21,8 +21,8 @@ const GraphQLExtensionRestMethods = new GraphQLEnumType({
 const GraphQLExtensionResolveTypes = new GraphQLEnumType({
     name: 'GraphQLExtension__ResolveTypes',
     values: {
-        REST: { value: 'rest' },
-        GRAPHQL: { value: 'graphql' },
+        rest: { value: 'rest' },
+        graphql: { value: 'graphql' },
     },
 })
 

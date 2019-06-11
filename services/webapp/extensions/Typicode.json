@@ -1,5 +1,7 @@
 {
   "name": "Typicode",
+  "shouldRunQueries": true,
+  "shouldRunMutations": true,
   "types": [
     {
       "name": "User",
@@ -56,7 +58,5 @@
         "body": [{ "name": "name", "value": "{{name}}" }]
       }
     }
-  ],
-  "shouldRunQueries": true,
-  "shouldRunMutations": true
+  ]
 }
