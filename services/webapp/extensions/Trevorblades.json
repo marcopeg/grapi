@@ -1,33 +1,37 @@
 {
-    "name": "Trevorblades",
-    "types": {
-        "Continent": {
-            "code": "ID!",
-            "name": "String"
-        }
+  "name": "Trevorblades",
+  "shouldRunQueries": true,
+  "shouldRunMutations": true,
+  "types": [
+    {
+      "name": "Continent",
+      "fields": [
+        { "name": "code", "type": "ID!" },
+        { "name": "name", "type": "String!" }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "name": "continents",
+      "type": "[Continent]!",
+      "resolve": {
+        "type": "graphql",
+        "url": "https://countries.trevorblades.com/",
+        "query": "{ continents { code name }}",
+        "grab": "data.continents"
+      }
     },
-    "queries": {
-        "continents": {
-            "type": "[Continent]",
-            "resolve": {
-                "type": "graphql",
-                "url": "https://countries.trevorblades.com/",
-                "query": "{ continents { code name }}",
-                "grab": "data.continents"
-            }
-        },
-        "continent": {
-            "type": "Continent",
-            "args": {
-                "code": "String!"
-            },
-            "resolve": {
-                "type": "graphql",
-                "url": "https://countries.trevorblades.com/",
-                "query": "query foo ($code: String!) { continent (code: $code) { code name }}",
-                "grab": "data.continent"
-            }
-        }
-    },
-    "shouldRunQueries": true
+    {
+      "name": "continent",
+      "args": [{ "name": "code", "type": "String!" }],
+      "type": "Continent",
+      "resolve": {
+        "type": "graphql",
+        "url": "https://countries.trevorblades.com/",
+        "query": "query foo ($code: String!) { continent (code: $code) { code name }}",
+        "grab": "data.continent"
+      }
+    }
+  ]
 }

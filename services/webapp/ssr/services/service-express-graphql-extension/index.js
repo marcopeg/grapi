@@ -1,6 +1,6 @@
 import { INIT_FEATURES } from '@forrestjs/hooks'
 import { EXPRESS_GRAPHQL, EXPRESS_GRAPHQL_MIDDLEWARE } from '@forrestjs/service-express-graphql'
-import { parseExtension } from 'graphql-extension'
+import { parseExtension } from './extension-parser'
 
 import * as hooks from './hooks'
 import registerExtensionMutation from './register-extension.mutation'
