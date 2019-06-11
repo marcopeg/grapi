@@ -1,6 +1,6 @@
 import { GraphQLBoolean, GraphQLNonNull } from 'graphql'
 import GraphQLJSON from 'graphql-type-json'
-import { register } from './extensions'
+import { register } from './extensions-registry'
 
 export default {
     description: 'Register or updates an extension',
@@ -10,9 +10,6 @@ export default {
         },
     },
     type: GraphQLBoolean,
-    resolve: async (_, args) => {
-        register(args.definition)
-        return true
-    },
+    resolve: async (_, args) => register(args.definition),
 }
 

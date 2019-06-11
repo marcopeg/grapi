@@ -2,16 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
-import { Switch, Route } from 'react-router-dom'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
-
-import { GigsGuideList, GigsGuideEvent } from 'features/gigsguide'
-import './App.css'
 
 const messages = defineMessages({
     welcome: {
         id: 'app.welcome',
-        defaultMessage: 'Hello Workd Gigs Guide',
+        defaultMessage: 'GraphQL API Gateway',
     },
 })
 
@@ -27,11 +23,6 @@ const App = ({ intl, name, locale }) => (
             <title>{name}</title>
         </Helmet>
         {intl.formatMessage(messages.welcome)}
-        <hr />
-        <Switch>
-            <Route exact path="/" component={GigsGuideList} />
-            <Route exact path="/:eventId" component={GigsGuideEvent} />
-        </Switch>
     </div>
 )
 

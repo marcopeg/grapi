@@ -23,6 +23,9 @@ dev-pg:
 	HUMBLE_ENV=dev humble up -d postgres
 	HUMBLE_ENV=dev humble logs -f
 
+dev-db:
+	HUMBLE_ENV=dev humble up postgres -d
+	HUMBLE_ENV=dev humble logs -f postgres
 
 
 ###
@@ -36,6 +39,9 @@ prod:
 unprod:
 	HUMBLE_ENV=prod humble down
 
+prod-db:
+	HUMBLE_ENV=prod humble up postgres -d
+	HUMBLE_ENV=prod humble logs -f postgres
 
 
 ###
