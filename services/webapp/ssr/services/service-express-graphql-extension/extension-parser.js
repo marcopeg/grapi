@@ -55,62 +55,23 @@ const reduceQueries = queries =>
         {}
     )
 
+/**
+ * definition.__type === 'gql'
+ * means that the file format uses the long array list, the structure
+ * that can be validated via GraphQL
+ *
+ * In that case there is the need to translate that format into the
+ * normal JSON object based that is used by `graphql-extension`.
+ */
 export const parseExtension = definition =>
-    buildExtensionSchema({
-        name: definition.name,
-        shouldRunQueries: definition.shouldRunQueries,
-        shouldRunMutations: definition.shouldRunMutations,
-        ...(definition.types ? { types: reduceTypes(definition.types) } : {}),
-        ...(definition.inputTypes ? { inputTypes: reduceTypes(definition.inputTypes) } : {}),
-        ...(definition.queries ? { queries: reduceQueries(definition.queries) } : {}),
-        ...(definition.mutations ? { mutations: reduceQueries(definition.mutations) } : {}),
-    })
-
-// Reversed
-
-const reduceTypeFieldsReversed = fields =>
-    Object.keys(fields).reduce((acc, key) => [
-        ...acc,
-        { name: key, type: fields[key] },
-    ], [])
-
-const reduceTypeHeadersReversed = fields =>
-    Object.keys(fields).reduce((acc, key) => [
-        ...acc,
-        { name: key, value: fields[key] },
-    ], [])
-
-const reduceTypesReversed = types =>
-    Object.keys(types).reduce((acc, key) => [
-        ...acc,
-        { name: key, fields: reduceTypeFieldsReversed(types[key]) },
-    ], [])
-
-const reduceResolverReversed = resolve => ({
-    type: resolve.type,
-    url: resolve.url,
-    query: resolve.query,
-    grab: resolve.grab,
-    ...(resolve.headers ? { headers: reduceTypeHeadersReversed(resolve.headers) } : {}),
-    ...(resolve.body ? { body: reduceTypeHeadersReversed(resolve.body) } : {}),
-})
-
-const reduceQueriesReversed = queries =>
-    Object.keys(queries).reduce((acc, key) => [
-        ...acc,
-        {
-            name: key,
-            type: queries[key].type,
-            resolve: reduceResolverReversed(queries[key].resolve),
-            ...(queries[key].args ? { args: reduceTypeFieldsReversed(queries[key].args) } : {}),
-        },
-    ], [])
-
-export const reverseParseExtension = definition => ({
-    name: definition.name,
-    shouldRunQueries: definition.shouldRunQueries,
-    shouldRunMutations: definition.shouldRunMutations,
-    ...(definition.types ? { types: reduceTypesReversed(definition.types) } : {}),
-    ...(definition.inputTypes ? { inputTypes: reduceTypesReversed(definition.inputTypes) } : {}),
-    ...(definition.queries ? { queries: reduceQueriesReversed(definition.queries) } : {}),
-})
+    definition.__type === 'gql'
+        ? buildExtensionSchema({
+            name: definition.name,
+            shouldRunQueries: definition.shouldRunQueries,
+            shouldRunMutations: definition.shouldRunMutations,
+            ...(definition.types ? { types: reduceTypes(definition.types) } : {}),
+            ...(definition.inputTypes ? { inputTypes: reduceTypes(definition.inputTypes) } : {}),
+            ...(definition.queries ? { queries: reduceQueries(definition.queries) } : {}),
+            ...(definition.mutations ? { mutations: reduceQueries(definition.mutations) } : {}),
+        })
+        : buildExtensionSchema(definition)
