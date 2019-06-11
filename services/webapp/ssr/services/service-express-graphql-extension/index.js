@@ -7,6 +7,8 @@ import registerExtensionMutation from './register-extension.mutation'
 import registerExtensionJsonMutation from './register-extension-json.mutation'
 import * as extensionsRegistry from './extensions-registry'
 
+// allows to directly register features in the in-memory registry
+// eg. this is used to sync different servers via pub/sub
 export const registerExtension = extensionsRegistry.register
 
 export const register = ({ registerAction, createHook }) => {

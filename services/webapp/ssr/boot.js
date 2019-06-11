@@ -10,7 +10,6 @@ registerAction({
     name: '♦ boot',
     handler: async ({ settings }) => {
         settings.postgres = [{
-            connectionName: 'default',
             host: config.get('PG_HOST'),
             port: config.get('PG_PORT'),
             database: config.get('PG_DATABASE'),
@@ -22,7 +21,6 @@ registerAction({
         }]
 
         settings.postgresPubsub = [{
-            connectionName: 'default',
             host: config.get('PG_HOST'),
             port: config.get('PG_PORT'),
             database: config.get('PG_DATABASE'),

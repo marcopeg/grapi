@@ -28,6 +28,7 @@ export const register = ({ registerAction, createHook }) => {
         trace: __filename,
         handler: async ({ postgresPubsub = [] }) => {
             postgresPubsub.forEach(config => {
+                const connectionName = config.connectionName || 'default'
                 const uri = [
                     'postgres://',
                     `${config.username}:${config.password}`,
@@ -37,8 +38,8 @@ export const register = ({ registerAction, createHook }) => {
                     config.database,
                 ].join('')
 
-                connections[config.connectionName] = new PGPubsub(uri)
-                connections[config.connectionName].publish('ping', Date.now())
+                connections[connectionName] = new PGPubsub(uri)
+                connections[connectionName].publish('ping', Date.now())
             })
 
             createHook(hooks.POSTGRES_PUBSUB_START, {
