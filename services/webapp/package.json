@@ -66,6 +66,9 @@
   ],
   "dependencies": {
     "@forrestjs/package-universal": "^2.9.4",
+    "@forrestjs/service-hash": "^2.9.4",
+    "@forrestjs/service-jwt": "^2.9.4",
+    "@forrestjs/service-postgres": "^2.9.4",
     "es6-promise": "^4.2.6",
     "fs-extra": "^8.0.1",
     "graphql-extension": "^0.0.3",
