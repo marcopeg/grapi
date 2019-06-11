@@ -1,4 +1,4 @@
-import { INIT_FEATURES } from '@forrestjs/hooks'
+import { START_FEATURES } from '@forrestjs/hooks'
 import { EXPRESS_GRAPHQL, EXPRESS_GRAPHQL_MIDDLEWARE } from '@forrestjs/service-express-graphql'
 import { parseExtension } from './extension-parser'
 
@@ -7,17 +7,19 @@ import registerExtensionMutation from './register-extension.mutation'
 import registerExtensionJsonMutation from './register-extension-json.mutation'
 import * as extensionsRegistry from './extensions-registry'
 
+export const registerExtension = extensionsRegistry.register
+
 export const register = ({ registerAction, createHook }) => {
     // Preload cached extensions
     registerAction({
-        hook: INIT_FEATURES,
+        hook: START_FEATURES,
         name: hooks.SERVICE_NAME,
         trace: __filename,
         handler: async ({ graphqlExtension = {} }) => {
             await extensionsRegistry.init(graphqlExtension)
 
             // boot time extension, allow to source more extensions at boot time
-            await createHook(hooks.GRAPHQL_EXTENSION_INIT, {
+            await createHook(hooks.GRAPHQL_EXTENSION_START, {
                 async: 'parallel',
                 args: {
                     loadFromDisk: extensionsRegistry.loadFromDisk,
@@ -35,7 +37,7 @@ export const register = ({ registerAction, createHook }) => {
         trace: __filename,
         handler: ({ middlewares }) =>
             middlewares.push((req, res, next) => {
-                req.bumpGraphQL(extensionsRegistry.getEtag())
+                req.bumpGraphqlETAG(extensionsRegistry.getEtag())
                 next()
             }),
     })

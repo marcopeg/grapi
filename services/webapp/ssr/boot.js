@@ -21,6 +21,15 @@ registerAction({
             models: [],
         }]
 
+        settings.postgresPubsub = [{
+            connectionName: 'default',
+            host: config.get('PG_HOST'),
+            port: config.get('PG_PORT'),
+            database: config.get('PG_DATABASE'),
+            username: config.get('PG_USERNAME'),
+            password: config.get('PG_PASSWORD'),
+        }]
+
         settings.express = {
             graphql: {
                 testIsEnabled: true,
@@ -62,6 +71,7 @@ export default createHookApp({
         require('@forrestjs/service-jwt'),
         require('@forrestjs/service-hash'),
         require('@forrestjs/service-postgres'),
+        require('./services/service-postgres-pubsub'),
         require('@forrestjs/service-express'),
         require('@forrestjs/service-express-cookies'),
         require('@forrestjs/service-express-graphql'),
@@ -72,5 +82,7 @@ export default createHookApp({
     features: [
         // require('./features/pages'),
         // require('./features/gigsguide'),
+        require('./features/auth'),
+        require('./features/graphql-extensions'),
     ],
 })
