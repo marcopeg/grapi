@@ -40,7 +40,7 @@ export const register = ({ registerAction }) => {
     registerAction({
         hook: EXPRESS_GRAPHQL_TEST,
         name: FEATURE_NAME,
-        handler: async ({ queries, mutations }) => {
+        handler: async ({ _, mutations }) => {
             mutations.createAuthUser = createTestUserMutation
             mutations.updateAuthUser = updateTestUserMutation
         },

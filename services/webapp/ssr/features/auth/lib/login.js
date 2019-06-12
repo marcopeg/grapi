@@ -11,7 +11,7 @@ export const login = async (req, res, uname, passw) => {
     const account = await AuthAccount.findLogin(uname, passw)
     if (!account) throw new Error('user not found or wrong password')
 
-    const payload = { id: account.id, etag: account.etag }
+    const payload = { id: account.id, status: account.status, etag: account.etag }
     const token = await jwtService.sign(payload)
 
     res.setAppCookie(COOKIE_NAME, token)
@@ -20,6 +20,7 @@ export const login = async (req, res, uname, passw) => {
 
     const info = {
         id: account.id,
+        status: account.status,
         lastLogin: account.lastLogin
             ? account.lastLogin.toISOString()
             : null,
@@ -30,7 +31,7 @@ export const login = async (req, res, uname, passw) => {
         async: 'serie',
         ctx: req.hooks.ctx,
         args: { ...info, req, res },
-        // logTrace: console.log,
+        logTrace: console.log,
     })
 
     return info

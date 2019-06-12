@@ -2,11 +2,11 @@ import { createHook } from '@forrestjs/hooks'
 import { register } from './extensions-registry'
 import * as hooks from './hooks'
 
-export const registerExtensionResolver = async (extension, req) => {
+export const registerExtensionResolver = async (extension, { req, res }) => {
     // allows to block a register action based on request informations
-    const r = await createHook(hooks.GRAPHQL_EXTENSION_VALIDATE, {
+    await createHook(hooks.GRAPHQL_EXTENSION_VALIDATE, {
         async: 'serie',
-        args: { extension, req },
+        args: { extension, req, res },
     })
 
     await register(extension)
@@ -14,7 +14,7 @@ export const registerExtensionResolver = async (extension, req) => {
     // allows to persist an extension after it gets registered
     await createHook(hooks.GRAPHQL_EXTENSION_REGISTER, {
         async: 'serie',
-        args: { extension, req },
+        args: { extension, req, res },
     })
 
     return true

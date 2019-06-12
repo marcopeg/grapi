@@ -36,14 +36,16 @@ const fields = {
         type: Sequelize.DATE,
         field: 'last_login',
     },
+    lastPing: {
+        type: Sequelize.DATE,
+        field: 'last_ping',
+    },
 }
 
 const options = {
     tableName: 'auth_accounts',
     freezeTableName: true,
     underscored: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
     hooks: {
         beforeCreate: async (user) => {
             user.passw = await encode(user.passw)
@@ -82,11 +84,11 @@ const updateByUsername = (conn, Model) => (uname, values) =>
         raw: true,
     })
 
-const findLogin = (conn, Model) => async (uname, passw) => {
+const findLogin = (conn, Model) => async (uname, passw, status = [ 0, 1 ]) => {
     const record = await Model.findOne({
         where: {
             uname,
-            status: 1,
+            status: { [Sequelize.Op.in]: status },
         },
         raw: true,
         // logging: console.log,
@@ -106,6 +108,7 @@ const findLogin = (conn, Model) => async (uname, passw) => {
 const bumpLastLogin = (conn, Model) => async userId =>
     Model.update({
         lastLogin: Sequelize.literal('NOW()'),
+        lastPing: Sequelize.literal('NOW()'),
     }, {
         where: {
             id: userId,
@@ -114,16 +117,19 @@ const bumpLastLogin = (conn, Model) => async userId =>
     })
 
 const validateSession = (conn, Model) => async (userId, etag, status = [ 0, 1 ]) => {
-    const record = await Model.findOne({
-        attributes: ['id'],
+    const results = await Model.update({
+        lastPing: Sequelize.literal('NOW()'),
+    }, {
         where: {
             id: userId,
             etag,
             status: { [Sequelize.Op.in]: status },
         },
+        returning: true,
         raw: true,
-        // logging: console.log,
     })
+
+    const record = results[1].shift()
 
     if (!record) {
         throw new Error('not found')

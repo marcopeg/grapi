@@ -15,6 +15,7 @@ export const getSession = async (req, res) => {
 
         req.session = {
             id: data.payload.id,
+            status: data.payload.status,
             created: new Date(data.iat * 1000),
             expiry: new Date(data.exp * 1000),
         }
@@ -39,12 +40,14 @@ export const validateSession = async (req, res) => {
 
         req.session = {
             id: newData.payload.id,
+            status: newData.payload.status,
             created: new Date(newData.iat * 1000),
             expiry: new Date(newData.exp * 1000),
         }
 
         return req.session
     } catch (err) {
+        res.deleteAppCookie(COOKIE_NAME)
         return null
     }
 }

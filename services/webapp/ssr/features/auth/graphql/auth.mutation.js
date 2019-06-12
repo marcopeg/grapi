@@ -2,6 +2,7 @@ import {
     GraphQLNonNull,
     GraphQLObjectType,
     GraphQLID,
+    GraphQLInt,
 } from 'graphql'
 
 import { GraphQLDateTime } from 'graphql-iso-date'
@@ -15,6 +16,9 @@ export default {
         fields: {
             id: {
                 type: new GraphQLNonNull(GraphQLID),
+            },
+            status: {
+                type: new GraphQLNonNull(GraphQLInt),
             },
             created: {
                 type: new GraphQLNonNull(GraphQLDateTime),

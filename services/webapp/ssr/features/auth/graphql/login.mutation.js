@@ -2,6 +2,7 @@ import {
     GraphQLNonNull,
     GraphQLObjectType,
     GraphQLID,
+    GraphQLInt,
     GraphQLString,
 } from 'graphql'
 
@@ -21,6 +22,7 @@ export default {
         name: 'AuthLogin',
         fields: {
             id: { type: new GraphQLNonNull(GraphQLID) },
+            status: { type: new GraphQLNonNull(GraphQLInt) },
             token: { type: new GraphQLNonNull(GraphQLString) },
             lastLogin: { type: GraphQLString },
         },
