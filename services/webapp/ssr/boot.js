@@ -80,7 +80,7 @@ export default createHookApp({
     features: [
         // require('./features/pages'),
         // require('./features/gigsguide'),
-        require('./features/auth'),
+        // require('./features/auth'),
         require('./features/graphql-extensions'),
     ],
 })

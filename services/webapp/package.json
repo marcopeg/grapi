@@ -75,7 +75,8 @@
     "graphql-extension": "^0.0.3",
     "graphql-iso-date": "^3.6.1",
     "isomorphic-fetch": "^2.2.1",
-    "pg-pubsub": "^0.4.1"
+    "pg-pubsub": "^0.4.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@forrestjs/package-universal-dev": "^2.9.6",

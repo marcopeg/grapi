@@ -1,25 +1,21 @@
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
-import { GRAPHQL_EXTENSION_START } from '../../services/service-express-graphql-extension/hooks'
-import { GRAPHQL_EXTENSION_REGISTER } from '../../services/service-express-graphql-extension/hooks'
 import { POSTGRES_PUBSUB_START, publish } from '@forrestjs/service-postgres-pubsub'
-import { getModel } from '@forrestjs/service-postgres'
-import { bumpGraphqlETAG } from '@forrestjs/service-express-graphql'
-import { registerExtension } from '../../services/service-express-graphql-extension'
+import { EXPRESS_GRAPHQL_TEST, bumpGraphqlETAG } from '@forrestjs/service-express-graphql'
+import { GRAPHQL_EXTENSION_START } from '../../services/service-express-graphql-extension/hooks'
+import { GRAPHQL_EXTENSION_VALIDATE } from '../../services/service-express-graphql-extension/hooks'
+import { GRAPHQL_EXTENSION_REGISTER } from '../../services/service-express-graphql-extension/hooks'
 import { FEATURE_NAME } from './hooks'
-import * as graphqlExtension from './graphql-extension.model'
+import graphqlTokenMutation from './graphql-token.mutation'
+
+// Libraries
+import * as graphqlToken from './graphql-token.lib'
+import * as graphqlExtension from './graphql-extension.lib'
+
+// Sequelize Models
+import * as graphqlExtensionModel from './graphql-extension.model'
+import * as graphqlTokenModel from './graphql-token.model'
 
 const REGISTER_EXTENSION_MSG = 'registerExtension'
-
-const flowDatabaseExtensions = async () => {
-    const extensions = await getModel('GraphqlExtension').findAll({ raw: true })
-    extensions.forEach(extension => registerExtension(extension.definition))
-}
-
-const upsertDatabaseExtension = extension =>
-    getModel('GraphqlExtension').upsert({
-        namespace: extension.name,
-        definition: extension,
-    })
 
 export const register = ({ registerAction }) => {
     // register database models
@@ -27,7 +23,8 @@ export const register = ({ registerAction }) => {
         hook: `${POSTGRES_BEFORE_START}/default`,
         name: FEATURE_NAME,
         handler: ({ options }) => {
-            options.models.push(graphqlExtension)
+            options.models.push(graphqlExtensionModel)
+            options.models.push(graphqlTokenModel)
         },
     })
 
@@ -35,7 +32,18 @@ export const register = ({ registerAction }) => {
     registerAction({
         hook: GRAPHQL_EXTENSION_START,
         name: FEATURE_NAME,
-        handler: flowDatabaseExtensions,
+        handler: graphqlExtension.register,
+    })
+
+    // validates a request to upsert an extension using a JWT as
+    // provided in "Authorization: Bearer xxx" header
+    registerAction({
+        hook: GRAPHQL_EXTENSION_VALIDATE,
+        name: FEATURE_NAME,
+        handler: async ({ extension, req }) => {
+            const token = req.headers['authorization'].split('Bearer').pop().trim()
+            req.graphqlToken = await graphqlToken.validate({ token, extension })
+        },
     })
 
     // persist an exension in the database and emit a signal so that
@@ -43,8 +51,9 @@ export const register = ({ registerAction }) => {
     registerAction({
         hook: GRAPHQL_EXTENSION_REGISTER,
         name: FEATURE_NAME,
-        handler: async ({ extension }) => {
-            await upsertDatabaseExtension(extension)
+        handler: async ({ extension, req }) => {
+            await graphqlExtension.upsert(extension)
+            await graphqlToken.bump(req.graphqlToken.payload.id)
             publish(REGISTER_EXTENSION_MSG, extension.name)
         },
     })
@@ -56,8 +65,16 @@ export const register = ({ registerAction }) => {
         name: FEATURE_NAME,
         handler: ({ addChannel }) =>
             addChannel(REGISTER_EXTENSION_MSG, async () => {
-                await flowDatabaseExtensions()
+                await graphqlExtension.register()
                 bumpGraphqlETAG()
             }),
+    })
+
+    registerAction({
+        hook: EXPRESS_GRAPHQL_TEST,
+        name: FEATURE_NAME,
+        handler: async ({ queries, mutations }) => {
+            mutations.graphqlToken = graphqlTokenMutation
+        },
     })
 }

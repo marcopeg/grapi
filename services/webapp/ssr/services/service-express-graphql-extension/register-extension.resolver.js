@@ -4,8 +4,8 @@ import * as hooks from './hooks'
 
 export const registerExtensionResolver = async (extension, req) => {
     // allows to block a register action based on request informations
-    await createHook(hooks.GRAPHQL_EXTENSION_VALIDATE, {
-        async: 'series',
+    const r = await createHook(hooks.GRAPHQL_EXTENSION_VALIDATE, {
+        async: 'serie',
         args: { extension, req },
     })
 
@@ -13,7 +13,7 @@ export const registerExtensionResolver = async (extension, req) => {
 
     // allows to persist an extension after it gets registered
     await createHook(hooks.GRAPHQL_EXTENSION_REGISTER, {
-        async: 'series',
+        async: 'serie',
         args: { extension, req },
     })
 
