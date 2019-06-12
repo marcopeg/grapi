@@ -69,7 +69,7 @@ export default createHookApp({
         require('@forrestjs/service-jwt'),
         require('@forrestjs/service-hash'),
         require('@forrestjs/service-postgres'),
-        require('./services/service-postgres-pubsub'),
+        require('@forrestjs/service-postgres-pubsub'),
         require('@forrestjs/service-express'),
         require('@forrestjs/service-express-cookies'),
         require('@forrestjs/service-express-graphql'),
