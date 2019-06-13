@@ -1,22 +1,23 @@
 import { GraphQLNonNull, GraphQLObjectType } from 'graphql'
-import { GraphQLID, GraphQLBoolean, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLID, GraphQLString } from 'graphql'
 import { GraphQLDateTime } from 'graphql-iso-date'
 import GraphQLJSON from 'graphql-type-json'
+import { updateSession } from './session.lib'
 
-import { validateSession } from './session.lib'
-
-export default async (queries = {}) => ({
-    description: 'Wraps session dependent queries',
+export default async () => ({
+    description: 'Updates a running session',
     args: {
-        token: {
-            type: GraphQLString,
+        payload: {
+            type: new GraphQLNonNull(GraphQLJSON),
+            defaultValue: {},
         },
-        validate: {
+        isPersistent: {
             type: GraphQLBoolean,
+            defaultValue: true,
         },
     },
-    type: new GraphQLObjectType({
-        name: 'SessionQuery',
+    type: new GraphQLNonNull(new GraphQLObjectType({
+        name: 'SessionUpdate',
         fields: {
             id: {
                 type: new GraphQLNonNull(GraphQLID),
@@ -30,8 +31,10 @@ export default async (queries = {}) => ({
             payload: {
                 type: new GraphQLNonNull(GraphQLJSON),
             },
-            ...queries,
+            token: {
+                type: new GraphQLNonNull(GraphQLString),
+            },
         },
-    }),
-    resolve: (params, args, { req, res }) => validateSession(args, req, res),
+    })),
+    resolve: (params, args, { req, res }) => updateSession(args, req, res),
 })

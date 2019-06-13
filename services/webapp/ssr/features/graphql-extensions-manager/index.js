@@ -74,7 +74,7 @@ export const register = ({ registerAction }) => {
         hook: EXPRESS_GRAPHQL_TEST,
         name: FEATURE_NAME,
         handler: async ({ queries, mutations }) => {
-            mutations.graphqlToken = graphqlTokenMutation
+            mutations.createGraphqlExtensionToken = graphqlTokenMutation
         },
     })
 }

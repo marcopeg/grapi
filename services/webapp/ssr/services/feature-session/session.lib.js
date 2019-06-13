@@ -19,7 +19,6 @@ export const createSession = async (args, req, res) => {
     const jwtOptions = { expiresIn }
 
     // @TODO: hook to extend `jwtData` and `jwtOptions`
-
     const token = await jwtService.sign(jwtData, jwtOptions)
     const tokenData = await jwtService.verify(token)
 
@@ -77,6 +76,40 @@ export const validateSession = async (args, req, res) => {
     return req.session
 }
 
-export const destroySession = async () => {
-    // res.deleteAppCookie(COOKIE_NAME, token)
+export const updateSession = async (args, req, res) => {
+    const { payload, isPersistent } = args
+    const jwtData = { ...payload, id: req.session.id }
+    const jwtOptions = {}
+
+    // @TODO: hook to extend `jwtData` and `jwtOptions`
+    const token = await jwtService.sign(jwtData, jwtOptions)
+    const tokenData = await jwtService.verify(token)
+
+    const record = await getModel('SessionToken').updateSession(req.session.id, {
+        payload,
+        validUntil: new Date(tokenData.exp * 1000),
+    })
+
+    // Force to destroy the client cookie in case the persisted session is not valid
+    if (!record) {
+        res.deleteAppCookie(COOKIE_NAME, token)
+        req.session = null
+        throw new Error('Bad session')
+    }
+
+    // Refresh the client cookie with the new token
+    if (isPersistent) {
+        res.setAppCookie(COOKIE_NAME, token)
+    }
+
+    return {
+        ...record,
+        token,
+    }
+}
+
+export const destroySession = async (args, req, res) => {
+    await getModel('SessionToken').endSession(req.session.id)
+    res.deleteAppCookie(COOKIE_NAME)
+    return true
 }

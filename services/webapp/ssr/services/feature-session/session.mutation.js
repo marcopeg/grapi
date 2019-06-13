@@ -4,9 +4,11 @@ import { GraphQLDateTime } from 'graphql-iso-date'
 import GraphQLJSON from 'graphql-type-json'
 
 import { validateSession } from './session.lib'
+import updateSessionMutation from './session-update.mutation'
+import destroySessionMutation from './session-destroy.mutation'
 
-export default async (queries = {}) => ({
-    description: 'Wraps session dependent queries',
+export default async (mutations = {}) => ({
+    description: 'Wraps session dependent mutations',
     args: {
         token: {
             type: GraphQLString,
@@ -16,7 +18,7 @@ export default async (queries = {}) => ({
         },
     },
     type: new GraphQLObjectType({
-        name: 'SessionQuery',
+        name: 'SessionMutation',
         fields: {
             id: {
                 type: new GraphQLNonNull(GraphQLID),
@@ -30,7 +32,9 @@ export default async (queries = {}) => ({
             payload: {
                 type: new GraphQLNonNull(GraphQLJSON),
             },
-            ...queries,
+            update: await updateSessionMutation(),
+            destroy: await destroySessionMutation(),
+            ...mutations,
         },
     }),
     resolve: (params, args, { req, res }) => validateSession(args, req, res),

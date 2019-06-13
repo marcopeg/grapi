@@ -5,6 +5,7 @@ import { FEATURE_NAME, SESSION_GRAPHQL } from './hooks'
 import * as sessionModel from './session.model'
 import testSessionCreateMutation from './test.session-create.mutation'
 import sessionQuery from './session.query'
+import sessionMutation from './session.mutation'
 
 export const register = ({ registerAction, createHook }) => {
     registerAction({
@@ -33,7 +34,7 @@ export const register = ({ registerAction, createHook }) => {
 
             // extend the general schema
             queries.session = await sessionQuery(sessionQueries)
-            // mutations.session = await sessionMutation(sessionMutations)
+            mutations.session = await sessionMutation(sessionMutations)
             // mutations.sessionCreate = sessionCreateMutation
         },
     })
