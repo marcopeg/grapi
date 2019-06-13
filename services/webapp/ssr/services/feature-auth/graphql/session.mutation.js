@@ -1,8 +1,8 @@
-import { GraphQLNonNull, GraphQLObjectType } from 'graphql'
-import { GraphQLID, GraphQLBoolean, GraphQLString, GraphQLInt } from 'graphql'
-import { GraphQLDateTime } from 'graphql-iso-date'
+import { GraphQLObjectType, GraphQLString } from 'graphql'
 import { getSession } from '../lib/session'
-import { logout } from '../lib/login'
+
+import sessionRefreshMutation from './session-refresh.mutation'
+import sessionDestroyMutation from './session-destroy.mutation'
 
 export default async mutations => ({
     description: 'Wraps session dependent mutations',
@@ -12,25 +12,11 @@ export default async mutations => ({
         },
     },
     type: new GraphQLObjectType({
-        name: 'AuthSessionMutation',
+        name: 'SessionMutation',
         fields: {
+            refresh: sessionRefreshMutation,
+            destroy: sessionDestroyMutation,
             ...mutations,
-            id: {
-                type: new GraphQLNonNull(GraphQLID),
-            },
-            status: {
-                type: new GraphQLNonNull(GraphQLInt),
-            },
-            created: {
-                type: new GraphQLNonNull(GraphQLDateTime),
-            },
-            expiry: {
-                type: new GraphQLNonNull(GraphQLDateTime),
-            },
-            logout: {
-                type: new GraphQLNonNull(GraphQLBoolean),
-                resolve: (params, args, { req, res }) => logout(req, res),
-            },
         },
     }),
     resolve: (params, args, { req, res }) => getSession({ ...args, req, res }),

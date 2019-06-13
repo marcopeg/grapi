@@ -1,15 +1,9 @@
-import {
-    GraphQLNonNull,
-    GraphQLString,
-    GraphQLInt,
-} from 'graphql'
-
+import { GraphQLNonNull, GraphQLString, GraphQLInt } from 'graphql'
 import GraphQLJSON from 'graphql-type-json'
-
 import { updateTestUser } from '../lib/test'
 
 export default {
-    description: 'Creates an "auth" user',
+    description: 'Updates and existing Auth account',
     args: {
         uname: {
             type: new GraphQLNonNull(GraphQLString),

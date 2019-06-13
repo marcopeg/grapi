@@ -5,9 +5,9 @@ export const name = 'AuthAccount'
 
 const fields = {
     id: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.UUID,
         primaryKey: true,
-        autoIncrement: true,
+        defaultValue: Sequelize.DataTypes.UUIDV4,
     },
     uname: {
         type: Sequelize.STRING,

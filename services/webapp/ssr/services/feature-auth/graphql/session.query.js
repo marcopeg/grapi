@@ -11,9 +11,8 @@ export default async queries => ({
         },
     },
     type: new GraphQLObjectType({
-        name: 'AuthSession',
+        name: 'Session',
         fields: {
-            ...queries,
             id: {
                 type: new GraphQLNonNull(GraphQLID),
             },
@@ -26,6 +25,7 @@ export default async queries => ({
             expiry: {
                 type: new GraphQLNonNull(GraphQLDateTime),
             },
+            ...queries,
         },
     }),
     resolve: (params, args, { req, res }) => getSession({ ...args, req, res }),

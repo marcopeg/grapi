@@ -10,7 +10,7 @@ export default {
         },
     },
     type: new GraphQLObjectType({
-        name: 'AuthVerifiedSession',
+        name: 'SessionRefresh',
         fields: {
             id: {
                 type: new GraphQLNonNull(GraphQLID),

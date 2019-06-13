@@ -1,10 +1,9 @@
 import * as account from './account.model'
 import sessionQuery from './graphql/session.query'
 import sessionMutation from './graphql/session.mutation'
-import authMutation from './graphql/auth.mutation'
-import loginMutation from './graphql/login.mutation'
-import createTestUserMutation from './graphql/test.create-user.mutation'
-import updateTestUserMutation from './graphql/test.update-user.mutation'
+import sessionCreateMutation from './graphql/session-create.mutation'
+import createAccountMutation from './graphql/test.create-account.mutation'
+import updateAccountMutation from './graphql/test.update-account.mutation'
 import { shouldRender, getCacheKey } from './lib/ssr'
 
 // list of hooks that I plan to use here
@@ -44,8 +43,7 @@ export const register = ({ registerAction, createHook }) => {
             // extend the general schema
             queries.session = await sessionQuery(sessionQueries)
             mutations.session = await sessionMutation(sessionMutations)
-            mutations.auth = authMutation
-            mutations.login = loginMutation
+            mutations.sessionCreate = sessionCreateMutation
         },
     })
 
@@ -54,8 +52,8 @@ export const register = ({ registerAction, createHook }) => {
         hook: EXPRESS_GRAPHQL_TEST,
         name: FEATURE_NAME,
         handler: async ({ mutations }) => {
-            mutations.createAuthUser = createTestUserMutation
-            mutations.updateAuthUser = updateTestUserMutation
+            mutations.createAccount = createAccountMutation
+            mutations.updateAccount = updateAccountMutation
         },
     })
 

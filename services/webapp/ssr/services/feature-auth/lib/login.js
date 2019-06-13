@@ -13,6 +13,7 @@ export const login = async (req, res, uname, passw) => {
 
     const payload = { id: account.id, status: account.status, etag: account.etag }
     const token = await jwtService.sign(payload)
+    const tokenData = await jwtService.verify(token)
 
     res.setAppCookie(COOKIE_NAME, token)
 
@@ -21,6 +22,7 @@ export const login = async (req, res, uname, passw) => {
     const info = {
         id: account.id,
         status: account.status,
+        expiry: new Date(tokenData.exp * 1000),
         lastLogin: account.lastLogin
             ? account.lastLogin.toISOString()
             : null,
