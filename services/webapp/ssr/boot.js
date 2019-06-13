@@ -33,12 +33,12 @@ registerAction({
                 testIsEnabled: true,
                 testIsValid: (token, req) => (token === 'xxx'),
             },
-            ssr: {
-                disableJs: 'yes',
-                // multilanguage cache policy
-                // shouldCache: (req) => (req.query.locale === undefined),
-                // getCacheKey: (req) => ({ value: [ req.url, req.locale.language, req.locale.region ] }),
-            },
+            // ssr: {
+            //     disableJs: 'yes',
+            //     // multilanguage cache policy
+            //     // shouldCache: (req) => (req.query.locale === undefined),
+            //     // getCacheKey: (req) => ({ value: [ req.url, req.locale.language, req.locale.region ] }),
+            // },
         }
 
         settings.graphqlExtension = {
@@ -78,7 +78,7 @@ export default createHookApp({
         require('@forrestjs/feature-locale'),
     ],
     features: [
-        require('./features/auth'),
-        require('./features/graphql-extensions'),
+        require('./services/feature-auth'),
+        require('./services/feature-graphql-extensions-manager'),
     ],
 })
