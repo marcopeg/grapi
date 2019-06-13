@@ -1,47 +1,37 @@
-import {
-    GraphQLNonNull,
-    GraphQLObjectType,
-    GraphQLID,
-    GraphQLBoolean,
-} from 'graphql'
-
+import { GraphQLNonNull, GraphQLObjectType } from 'graphql'
+import { GraphQLID, GraphQLBoolean, GraphQLString, GraphQLInt } from 'graphql'
 import { GraphQLDateTime } from 'graphql-iso-date'
-
-import { createHook } from '@forrestjs/hooks'
 import { getSession } from '../lib/session'
 import { logout } from '../lib/login'
-import { AUTH_SESSION_MUTATION } from '../hooks'
 
-export default async () => {
-    const fields = {
-        id: {
-            type: new GraphQLNonNull(GraphQLID),
+export default async mutations => ({
+    description: 'Wraps session dependent mutations',
+    args: {
+        token: {
+            type: GraphQLString,
         },
-        created: {
-            type: new GraphQLNonNull(GraphQLDateTime),
+    },
+    type: new GraphQLObjectType({
+        name: 'AuthSessionMutation',
+        fields: {
+            ...mutations,
+            id: {
+                type: new GraphQLNonNull(GraphQLID),
+            },
+            status: {
+                type: new GraphQLNonNull(GraphQLInt),
+            },
+            created: {
+                type: new GraphQLNonNull(GraphQLDateTime),
+            },
+            expiry: {
+                type: new GraphQLNonNull(GraphQLDateTime),
+            },
+            logout: {
+                type: new GraphQLNonNull(GraphQLBoolean),
+                resolve: (params, args, { req, res }) => logout(req, res),
+            },
         },
-        expiry: {
-            type: new GraphQLNonNull(GraphQLDateTime),
-        },
-        logout: {
-            type: new GraphQLNonNull(GraphQLBoolean),
-            resolve: (params, args, { req, res }) =>
-                logout(req, res),
-        },
-    }
-
-    await createHook(AUTH_SESSION_MUTATION, {
-        async: 'serie',
-        args: { fields },
-    })
-
-    return {
-        description: 'Wraps session dependent mutations',
-        type: new GraphQLObjectType({
-            name: 'AuthSessionMutation',
-            fields,
-        }),
-        resolve: (params, args, { req, res }) =>
-            getSession(req, res),
-    }
-}
+    }),
+    resolve: (params, args, { req, res }) => getSession({ ...args, req, res }),
+})

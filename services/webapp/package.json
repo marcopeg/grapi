@@ -65,11 +65,11 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@forrestjs/package-universal": "^2.9.8",
-    "@forrestjs/service-hash": "^2.9.8",
-    "@forrestjs/service-jwt": "^2.9.8",
-    "@forrestjs/service-postgres": "^2.9.8",
-    "@forrestjs/service-postgres-pubsub": "^2.9.8",
+    "@forrestjs/package-universal": "^2.9.10",
+    "@forrestjs/service-hash": "^2.9.10",
+    "@forrestjs/service-jwt": "^2.9.10",
+    "@forrestjs/service-postgres": "^2.9.10",
+    "@forrestjs/service-postgres-pubsub": "^2.9.10",
     "es6-promise": "^4.2.6",
     "fs-extra": "^8.0.1",
     "graphql-extension": "^0.0.3",
@@ -79,7 +79,7 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@forrestjs/package-universal-dev": "^2.9.8",
+    "@forrestjs/package-universal-dev": "^2.9.10",
     "babel-polyfill": "^6.26.0"
   }
 }

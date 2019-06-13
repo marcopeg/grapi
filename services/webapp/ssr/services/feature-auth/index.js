@@ -1,4 +1,3 @@
-import { FEATURE } from '@forrestjs/hooks'
 import * as account from './account.model'
 import sessionQuery from './graphql/session.query'
 import sessionMutation from './graphql/session.mutation'
@@ -15,9 +14,9 @@ import { EXPRESS_SSR } from '@forrestjs/service-express-ssr'
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
 import { getSessionMiddleware } from './lib/session'
 
-const FEATURE_NAME = `${FEATURE} auth`
+import { FEATURE_NAME, AUTH_GRAPHQL } from './hooks'
 
-export const register = ({ registerAction }) => {
+export const register = ({ registerAction, createHook }) => {
     registerAction({
         hook: `${POSTGRES_BEFORE_START}/default`,
         name: FEATURE_NAME,
@@ -26,21 +25,35 @@ export const register = ({ registerAction }) => {
         },
     })
 
+    // Extends GraphQL Schema
     registerAction({
         hook: EXPRESS_GRAPHQL,
         name: FEATURE_NAME,
         handler: async ({ queries, mutations }) => {
-            queries.session = await sessionQuery()
-            mutations.session = await sessionMutation()
+            // collect queries and mutations that needs session validation
+            const sessionQueries = {}
+            const sessionMutations = {}
+            await createHook(AUTH_GRAPHQL, {
+                async: 'serie',
+                args: {
+                    queries: sessionQueries,
+                    mutations: sessionMutations,
+                },
+            })
+
+            // extend the general schema
+            queries.session = await sessionQuery(sessionQueries)
+            mutations.session = await sessionMutation(sessionMutations)
             mutations.auth = authMutation
             mutations.login = loginMutation
         },
     })
 
+    // Extends Testing GraphQL Schema
     registerAction({
         hook: EXPRESS_GRAPHQL_TEST,
         name: FEATURE_NAME,
-        handler: async ({ _, mutations }) => {
+        handler: async ({ mutations }) => {
             mutations.createAuthUser = createTestUserMutation
             mutations.updateAuthUser = updateTestUserMutation
         },
