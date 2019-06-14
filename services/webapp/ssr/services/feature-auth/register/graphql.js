@@ -5,7 +5,8 @@ import { FEATURE_NAME, AUTH_GRAPHQL } from '../hooks'
 
 import authMutation from '../graphql/mutations/auth-wrapper.mutation'
 import authQuery from '../graphql/queries/auth-wrapper.query'
-import authSessionQuery from '../graphql/queries/session/auth-session-wrapper.query'
+import authSessionQuery from '../graphql/queries/session/auth-wrapper.query'
+import authSessionMutation from '../graphql/mutations/session/auth-wrapper.mutation'
 import testCreateAccountMutation from '../graphql/mutations/test/create-account.mutation'
 import testUpdateAccountMutation from '../graphql/mutations/test/update-account.mutation'
 import testLogoutAccountMutation from '../graphql/mutations/test/logout-account.mutation'
@@ -40,7 +41,7 @@ export default ({ registerAction, createHook }) => {
         handler: async ({ queries, mutations }) => {
             // collect queries and mutations that needs session validation
             const authQueries = {}
-            // const authMutations = {}
+            const authMutations = {}
             // await createHook(AUTH_GRAPHQL, {
             //     async: 'serie',
             //     args: {
@@ -51,7 +52,7 @@ export default ({ registerAction, createHook }) => {
 
             // extend the general schema
             queries.auth = await authSessionQuery(authQueries)
-            // mutations.auth = await authMutation(authMutations)
+            mutations.auth = await authSessionMutation(authMutations)
         },
     })
 

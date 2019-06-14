@@ -73,7 +73,7 @@ export default createHookApp({
         require('@forrestjs/service-express'),
         require('@forrestjs/service-express-cookies'),
         require('@forrestjs/service-express-graphql'),
-        // require('./services/service-express-graphql-extension'),
+        require('./services/service-express-graphql-extension'),
         // require('@forrestjs/service-express-ssr'),
         // require('@forrestjs/feature-locale'),
     ],
@@ -82,7 +82,7 @@ export default createHookApp({
         require('./services/feature-session-info'),
         require('./services/feature-auth'),
         // require('./services/feature-auth'),
-        // require('./features/graphql-extensions-manager'),
-        // require('./features/graphql-namespace-manager'),
+        require('./features/graphql-extensions-manager'),
+        require('./features/graphql-namespace-manager'),
     ],
 })
