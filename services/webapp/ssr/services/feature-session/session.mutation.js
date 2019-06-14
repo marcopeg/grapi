@@ -15,6 +15,7 @@ export default async (mutations = {}) => ({
         },
         validate: {
             type: GraphQLBoolean,
+            defaultValue: true,
         },
     },
     type: new GraphQLObjectType({

@@ -1,8 +1,8 @@
 import { GraphQLNonNull, GraphQLString, GraphQLInt } from 'graphql'
 import GraphQLJSON from 'graphql-type-json'
-import { createTestUser } from '../lib/test'
+import { create } from '../../../auth-account.lib'
 
-export default {
+export default () => ({
     description: 'Creates a brand new Auth account',
     args: {
         uname: {
@@ -14,8 +14,10 @@ export default {
         status: {
             type: GraphQLInt,
         },
+        payload: {
+            type: GraphQLJSON,
+        },
     },
     type: GraphQLJSON,
-    resolve: (params, args, { req, res }) =>
-        createTestUser({ ...args }),
-}
+    resolve: (params, args, { req, res }) => create({ ...args }, req, res),
+})

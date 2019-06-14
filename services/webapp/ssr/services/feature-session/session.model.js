@@ -85,7 +85,7 @@ const endSession = (conn, Model) => async (id) => {
         isActive: false,
         endedAt: Sequelize.literal('NOW()'),
     }, {
-        where: { id },
+        where: { id, isActive: true },
         returning: true,
         raw: true,
     })
@@ -94,11 +94,30 @@ const endSession = (conn, Model) => async (id) => {
     return record
 }
 
+const endMultipleSessions = (conn, Model) => async (where) => {
+    const results = await Model.update({
+        isActive: false,
+        endedAt: Sequelize.literal('NOW()'),
+    }, {
+        where: {
+            [Sequelize.Op.and]: [
+                { isActive: true },
+                where,
+            ],
+        },
+        returning: true,
+        raw: true,
+    })
+
+    return results[1]
+}
+
 export const init = (conn) => {
     const Model = conn.define(name, fields, options)
     Model.validateSession = validateSession(conn, Model)
     Model.updateSession = updateSession(conn, Model)
     Model.endSession = endSession(conn, Model)
+    Model.endMultipleSessions = endMultipleSessions(conn, Model)
     return Model.sync()
 }
 

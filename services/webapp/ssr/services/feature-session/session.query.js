@@ -13,6 +13,7 @@ export default async (queries = {}) => ({
         },
         validate: {
             type: GraphQLBoolean,
+            defaultValue: true,
         },
     },
     type: new GraphQLObjectType({

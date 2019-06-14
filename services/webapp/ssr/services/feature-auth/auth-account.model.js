@@ -1,3 +1,4 @@
+import uuidValidate from 'uuid-validate'
 import Sequelize from 'sequelize'
 import { encode, compare } from '@forrestjs/service-hash'
 
@@ -32,13 +33,13 @@ const fields = {
         type: Sequelize.INTEGER,
         defaultValue: 0,
     },
+    payload: {
+        type: Sequelize.JSONB,
+        defaultValue: {},
+    },
     lastLogin: {
         type: Sequelize.DATE,
         field: 'last_login',
-    },
-    lastPing: {
-        type: Sequelize.DATE,
-        field: 'last_ping',
     },
 }
 
@@ -69,28 +70,49 @@ const register = (conn, Model) => (values) =>
             'uname',
             'passw',
             'status',
+            'payload',
         ],
-        raw: true,
     })
 
-const updateByUsername = (conn, Model) => (uname, values) =>
-    Model.update(values, {
-        where: { uname },
+const findByRef = (conn, Model) => async (ref) =>
+    await Model.findOne({
+        where: (
+            uuidValidate(ref)
+                ? { id: ref }
+                : { uname: ref }
+        ),
+    })
+
+const updateByRef = (conn, Model) => async (ref, values) => {
+    const res = await Model.update(values, {
+        where: (
+            uuidValidate(ref)
+                ? { id: ref }
+                : { uname: ref }
+        ),
         fields: [
+            'uname',
             'passw',
             'status',
+            'payload',
+            'etag',
         ],
         returning: true,
-        raw: true,
     })
 
-const findLogin = (conn, Model) => async (uname, passw, status = [ 0, 1 ]) => {
+    if (!res[0]) {
+        throw new Error(`[AuthAccount] ref "${ref}" now found`)
+    }
+
+    return res[1][0]
+}
+
+const findLogin = (conn, Model) => async ({ uname, passw, status = [ 0, 1 ] }) => {
     const record = await Model.findOne({
         where: {
-            uname,
+            ...(uuidValidate(uname) ? { id: uname } : { uname }),
             status: { [Sequelize.Op.in]: status },
         },
-        raw: true,
         // logging: console.log,
     })
 
@@ -108,43 +130,18 @@ const findLogin = (conn, Model) => async (uname, passw, status = [ 0, 1 ]) => {
 const bumpLastLogin = (conn, Model) => async userId =>
     Model.update({
         lastLogin: Sequelize.literal('NOW()'),
-        lastPing: Sequelize.literal('NOW()'),
     }, {
-        where: {
-            id: userId,
-        },
+        where: { id: userId },
         // logging: console.log,
     })
 
-const validateSession = (conn, Model) => async (userId, etag, status = [ 0, 1 ]) => {
-    const results = await Model.update({
-        lastPing: Sequelize.literal('NOW()'),
-    }, {
-        where: {
-            id: userId,
-            etag,
-            status: { [Sequelize.Op.in]: status },
-        },
-        returning: true,
-        raw: true,
-    })
-
-    const record = results[1].shift()
-
-    if (!record) {
-        throw new Error('not found')
-    }
-
-    return record
-}
-
 export const init = (conn) => {
     const Model = conn.define(name, fields, options)
-    Model.register = register(conn, Model)
-    Model.updateByUsername = updateByUsername(conn, Model)
+    Model.findByRef = findByRef(conn, Model)
     Model.findLogin = findLogin(conn, Model)
+    Model.register = register(conn, Model)
+    Model.updateByRef = updateByRef(conn, Model)
     Model.bumpLastLogin = bumpLastLogin(conn, Model)
-    Model.validateSession = validateSession(conn, Model)
     return Model.sync()
 }
 

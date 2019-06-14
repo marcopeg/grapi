@@ -7,6 +7,8 @@ import testSessionCreateMutation from './test.session-create.mutation'
 import sessionQuery from './session.query'
 import sessionMutation from './session.mutation'
 
+export { createSession, destroySession } from './session.lib'
+
 export const register = ({ registerAction, createHook }) => {
     registerAction({
         hook: `${POSTGRES_BEFORE_START}/default`,
