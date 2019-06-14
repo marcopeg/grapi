@@ -2,7 +2,7 @@ import { GraphQLNonNull, GraphQLObjectType } from 'graphql'
 import { GraphQLBoolean, GraphQLID, GraphQLString } from 'graphql'
 import { GraphQLDateTime } from 'graphql-iso-date'
 import GraphQLJSON from 'graphql-type-json'
-import { updateSession } from './session.lib'
+import { updateSession } from '../../../session.lib'
 
 export default async () => ({
     description: 'Updates a running session',

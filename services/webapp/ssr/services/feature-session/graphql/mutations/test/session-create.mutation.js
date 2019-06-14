@@ -1,7 +1,7 @@
 import { GraphQLBoolean, GraphQLString } from 'graphql'
 import GraphQLJSON from 'graphql-type-json'
 
-import { createSession } from './session.lib'
+import { createSession } from '../../../session.lib'
 
 export default async () => ({
     description: 'Creates a new Session',

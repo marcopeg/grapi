@@ -3,9 +3,9 @@ import { EXPRESS_GRAPHQL, EXPRESS_GRAPHQL_TEST } from '@forrestjs/service-expres
 
 import { FEATURE_NAME, SESSION_GRAPHQL } from './hooks'
 import * as sessionModel from './session.model'
-import testSessionCreateMutation from './test.session-create.mutation'
-import sessionQuery from './session.query'
-import sessionMutation from './session.mutation'
+import testSessionCreateMutation from './graphql/mutations/test/session-create.mutation'
+import sessionQuery from './graphql/queries/session-wrapper.query'
+import sessionMutation from './graphql/mutations/session-wrapper.mutation'
 
 export { createSession, destroySession } from './session.lib'
 

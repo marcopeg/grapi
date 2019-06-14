@@ -1,5 +1,5 @@
 import { GraphQLBoolean } from 'graphql'
-import { destroySession } from './session.lib'
+import { destroySession } from '../../../session.lib'
 
 export default async () => ({
     description: 'Destroy a running session',

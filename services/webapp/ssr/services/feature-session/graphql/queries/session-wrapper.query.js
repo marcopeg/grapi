@@ -3,7 +3,7 @@ import { GraphQLID, GraphQLBoolean, GraphQLString } from 'graphql'
 import { GraphQLDateTime } from 'graphql-iso-date'
 import GraphQLJSON from 'graphql-type-json'
 
-import { validateSession } from './session.lib'
+import { validateSession } from '../../session.lib'
 
 export default async (queries = {}) => ({
     description: 'Wraps session dependent queries',

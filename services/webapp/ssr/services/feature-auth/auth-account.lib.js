@@ -45,10 +45,12 @@ export const login = async ({ uname, passw, ...args }, req, res) => {
         return null
     }
 
+    // Hooks integrations will be able to access the current data model
+    req.authAccountModel = record
+
     const sessionData = {
         id: record.get('id'),
         etag: record.get('etag'),
-        status: record.get('status'),
         lastLogin: record.get('lastLogin'),
     }
 
@@ -74,13 +76,13 @@ export const findSessionAccount = async (args, req, res) => {
         return req.auth
     }
 
-    const record = await getModel('AuthAccount').findByRef(req.session.payload.account.id)
+    const record = await getModel('AuthAccount').findByRef(req.session.token.data.payload.account.id)
     if (!record) {
         return null
     }
 
     // Validate session's account ETAG
-    if (record.get('etag') !== req.session.payload.account.etag) {
+    if (record.get('etag') !== req.session.token.data.payload.account.etag) {
         await destroySession(args, req, res)
         return null
     }
@@ -90,7 +92,7 @@ export const findSessionAccount = async (args, req, res) => {
             model: record,
             data: {
                 ...record.get({ plain: true }),
-                lastLogin: req.session.payload.account.lastLogin,
+                lastLogin: req.session.token.data.payload.account.lastLogin,
             },
         },
     }
@@ -105,11 +107,7 @@ export const destroyAllSessions = async ({ find }, req, res) => {
     }
 
     const sessions = await getModel('SessionToken').endMultipleSessions({
-        payload: {
-            account: {
-                id: account.get('id'),
-            },
-        },
+        accountId: account.get('id'),
     })
 
     return sessions

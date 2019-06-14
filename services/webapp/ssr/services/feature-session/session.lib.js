@@ -82,8 +82,9 @@ export const validateSession = async (args, req, res) => {
     const tokenData = await jwtService.verify(token)
     const { id, ...payload } = tokenData.payload
 
+    let record = null
     if (validate) {
-        const record = await getModel('SessionToken').validateSession(id)
+        record = await getModel('SessionToken').validateSession(id)
         if (!record) {
             res.deleteAppCookie(COOKIE_NAME, token)
             req.session = null
@@ -92,10 +93,15 @@ export const validateSession = async (args, req, res) => {
     }
 
     req.session = {
-        id,
-        payload,
-        createdAt: new Date(tokenData.iat * 1000),
-        validUntil: new Date(tokenData.exp * 1000),
+        token: {
+            model: record,
+            data: {
+                id,
+                payload,
+                createdAt: new Date(tokenData.iat * 1000),
+                validUntil: new Date(tokenData.exp * 1000),
+            },
+        },
     }
 
     return req.session
@@ -103,14 +109,14 @@ export const validateSession = async (args, req, res) => {
 
 export const updateSession = async (args, req, res) => {
     const { payload, isPersistent } = args
-    const jwtData = { ...payload, id: req.session.id }
+    const jwtData = { ...payload, id: req.session.token.data.id }
     const jwtOptions = {}
 
     // @TODO: hook to extend `jwtData` and `jwtOptions`
     const token = await jwtService.sign(jwtData, jwtOptions)
     const tokenData = await jwtService.verify(token)
 
-    const record = await getModel('SessionToken').updateSession(req.session.id, {
+    const record = await getModel('SessionToken').updateSession(req.session.token.data.id, {
         payload,
         validUntil: new Date(tokenData.exp * 1000),
     })
@@ -134,7 +140,7 @@ export const updateSession = async (args, req, res) => {
 }
 
 export const destroySession = async (args, req, res) => {
-    await getModel('SessionToken').endSession(req.session.id)
+    await getModel('SessionToken').endSession(req.session.token.data.id)
     res.deleteAppCookie(COOKIE_NAME)
     return true
 }
