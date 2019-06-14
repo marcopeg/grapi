@@ -79,6 +79,7 @@ export default createHookApp({
     ],
     features: [
         require('./services/feature-session'),
+        require('./services/feature-session-info'),
         require('./services/feature-auth'),
         // require('./services/feature-auth'),
         // require('./features/graphql-extensions-manager'),

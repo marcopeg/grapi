@@ -1,6 +1,9 @@
+import { createHook } from '@forrestjs/hooks'
 import { getModel } from '@forrestjs/service-postgres'
 import jwtService from '@forrestjs/service-jwt'
 import uuid from 'uuid/v4'
+
+import { SESSION_DECORATE_TOKEN, SESSION_DECORATE_RECORD } from './hooks'
 
 const COOKIE_NAME = 'session'
 
@@ -18,18 +21,40 @@ export const createSession = async (args, req, res) => {
     const jwtData = { ...payload, id: uuid() }
     const jwtOptions = { expiresIn }
 
-    // @TODO: hook to extend `jwtData` and `jwtOptions`
+    await createHook(SESSION_DECORATE_TOKEN, {
+        async: 'serie',
+        args: {
+            data: jwtData,
+            optiosn: jwtOptions,
+            args,
+            req,
+            res,
+        },
+    })
+
+    // Generate token and record data
     const token = await jwtService.sign(jwtData, jwtOptions)
     const tokenData = await jwtService.verify(token)
-
-    const record = await getModel('SessionToken').create({
+    const recordFields = {
         id: tokenData.payload.id,
         validUntil: new Date(tokenData.exp * 1000),
         lastExtended: new Date(),
         lastPing: new Date(),
         isActive,
         payload,
+    }
+
+    await createHook(SESSION_DECORATE_RECORD, {
+        async: 'serie',
+        args: {
+            fields: recordFields,
+            args,
+            req,
+            res,
+        },
     })
+
+    const record = await getModel('SessionToken').create(recordFields)
 
     if (isPersistent) {
         res.setAppCookie(COOKIE_NAME, token)

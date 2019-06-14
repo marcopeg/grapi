@@ -1,4 +1,6 @@
 import Sequelize from 'sequelize'
+import { createHook } from '@forrestjs/hooks'
+import { CONFIG_SESSION_TOKEN_MODEL, DECORATE_SESSION_TOKEN_MODEL } from './hooks'
 
 export const name = 'SessionToken'
 
@@ -112,12 +114,23 @@ const endMultipleSessions = (conn, Model) => async (where) => {
     return results[1]
 }
 
-export const init = (conn) => {
+export const init = async (conn) => {
+    await createHook(CONFIG_SESSION_TOKEN_MODEL, {
+        async: 'serie',
+        args: { name, fields, options },
+    })
+
     const Model = conn.define(name, fields, options)
     Model.validateSession = validateSession(conn, Model)
     Model.updateSession = updateSession(conn, Model)
     Model.endSession = endSession(conn, Model)
     Model.endMultipleSessions = endMultipleSessions(conn, Model)
+
+    await createHook(DECORATE_SESSION_TOKEN_MODEL, {
+        async: 'serie',
+        args: { name, fields, options, Model },
+    })
+
     return Model.sync()
 }
 
