@@ -4,12 +4,12 @@ export const name = 'GraphqlNamespace'
 
 const fields = {
     id: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.DataTypes.UUIDV4,
         primaryKey: true,
-        autoIncrement: true,
     },
     accountId: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.STRING,
         allowNull: false,
     },
     namespace: {

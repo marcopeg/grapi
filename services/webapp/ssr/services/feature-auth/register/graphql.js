@@ -1,7 +1,7 @@
 import { EXPRESS_GRAPHQL, EXPRESS_GRAPHQL_TEST } from '@forrestjs/service-express-graphql'
 import { SESSION_GRAPHQL } from '../../feature-session/hooks'
 
-import { FEATURE_NAME, AUTH_GRAPHQL } from '../hooks'
+import { FEATURE_NAME, AUTH_GRAPHQL, AUTH_SESSION_GRAPHQL } from '../hooks'
 
 import authMutation from '../graphql/mutations/auth-wrapper.mutation'
 import authQuery from '../graphql/queries/auth-wrapper.query'
@@ -42,13 +42,13 @@ export default ({ registerAction, createHook }) => {
             // collect queries and mutations that needs session validation
             const authQueries = {}
             const authMutations = {}
-            // await createHook(AUTH_GRAPHQL, {
-            //     async: 'serie',
-            //     args: {
-            //         // queries: authQueries,
-            //         mutations: authMutations,
-            //     },
-            // })
+            await createHook(AUTH_SESSION_GRAPHQL, {
+                async: 'serie',
+                args: {
+                    queries: authQueries,
+                    mutations: authMutations,
+                },
+            })
 
             // extend the general schema
             queries.auth = await authSessionQuery(authQueries)

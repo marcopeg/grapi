@@ -1,5 +1,5 @@
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
-import { AUTH_GRAPHQL } from '../../services/feature-auth/hooks'
+import { AUTH_SESSION_GRAPHQL } from '../../services/feature-auth/hooks'
 import { FEATURE_NAME } from './hooks'
 
 // Sequelize Models
@@ -20,7 +20,7 @@ export const register = ({ registerAction }) => {
 
     // register GraphQL Endpoints
     registerAction({
-        hook: AUTH_GRAPHQL,
+        hook: AUTH_SESSION_GRAPHQL,
         name: FEATURE_NAME,
         handler: async ({ mutations }) => {
             mutations.createNamespace = createNamespaceMutation

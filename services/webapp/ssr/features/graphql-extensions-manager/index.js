@@ -17,6 +17,8 @@ import * as graphqlTokenModel from './graphql-token.model'
 
 const REGISTER_EXTENSION_MSG = 'registerExtension'
 
+export const issueExtensionToken = graphqlToken.issue
+
 export const register = ({ registerAction }) => {
     // register database models
     registerAction({

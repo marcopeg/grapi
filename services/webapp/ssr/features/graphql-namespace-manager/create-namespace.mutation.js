@@ -3,17 +3,19 @@ import {
     GraphQLString,
 } from 'graphql'
 
-// import { issue } from './graphql-token.lib'
+import { createNamespace } from './graphql-namespace.lib'
 
 export default {
     description: 'Reserves a new namespace tied to the session user',
     args: {
-        name: {
+        namespace: {
             type: new GraphQLNonNull(GraphQLString),
         },
     },
     type: new GraphQLNonNull(GraphQLString),
-    resolve: (_, args) => {
+    resolve: async (_, args, { req, res }) => {
+        const accountId = req.auth.account.data.id
+        await createNamespace({ ...args, accountId }, req, res)
         return 'foo'
     },
 }
