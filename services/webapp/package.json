@@ -72,7 +72,7 @@
     "@forrestjs/service-postgres-pubsub": "^2.9.12",
     "es6-promise": "^4.2.6",
     "fs-extra": "^8.0.1",
-    "graphql-extension": "^0.0.3",
+    "graphql-extension": "^0.1.4",
     "graphql-iso-date": "^3.6.1",
     "isomorphic-fetch": "^2.2.1",
     "pg-pubsub": "^0.4.1",

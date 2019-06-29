@@ -104,7 +104,7 @@ export const validateSession = async (args, req, res) => {
         },
     }
 
-    return req.session
+    return req.session.token.data
 }
 
 export const updateSession = async (args, req, res) => {

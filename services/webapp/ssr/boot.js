@@ -33,12 +33,9 @@ registerAction({
                 testIsEnabled: true,
                 testIsValid: (token, req) => (token === 'xxx'),
             },
-            // ssr: {
-            //     disableJs: 'yes',
-            //     // multilanguage cache policy
-            //     // shouldCache: (req) => (req.query.locale === undefined),
-            //     // getCacheKey: (req) => ({ value: [ req.url, req.locale.language, req.locale.region ] }),
-            // },
+            session: {
+                initialize: true,
+            },
         }
 
         settings.graphqlExtension = {
@@ -79,10 +76,10 @@ export default createHookApp({
     ],
     features: [
         require('./services/feature-session'),
-        require('./services/feature-session-info'),
-        require('./services/feature-auth'),
+        // require('./services/feature-session-info'),
         // require('./services/feature-auth'),
-        require('./features/graphql-extensions-manager'),
-        require('./features/graphql-namespace-manager'),
+        // require('./services/feature-auth'),
+        // require('./features/graphql-extensions-manager'),
+        // require('./features/graphql-namespace-manager'),
     ],
 })
