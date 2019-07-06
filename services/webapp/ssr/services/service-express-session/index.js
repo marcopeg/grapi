@@ -1,6 +1,6 @@
 import * as hooks from './hooks'
 import { addSession } from './add-session.middleware'
-// import { deviceIdQuery } from './graphql/queries/device-id.query'
+import { sessionQuery } from './graphql/queries/session.query'
 
 const buildConfig = ({ getConfig }) => ({
     ...getConfig('express.session', {}),
@@ -29,15 +29,15 @@ export default ({ registerAction, registerHook, ...ctx }) => {
         },
     })
 
-    // // Express GraphQL is an optional hook as the service may not be registered
-    // registerAction({
-    //     hook: '$EXPRESS_GRAPHQL',
-    //     name: hooks.SERVICE_NAME,
-    //     optional: true,
-    //     trace: __filename,
-    //     handler: ({ registerQuery }, ctx) => {
-    //         const config = buildConfig(ctx)
-    //         registerQuery('deviceId', deviceIdQuery(config))
-    //     },
-    // })
+    // Express GraphQL is an optional hook as the service may not be registered
+    registerAction({
+        hook: '$EXPRESS_GRAPHQL',
+        name: hooks.SERVICE_NAME,
+        optional: true,
+        trace: __filename,
+        handler: ({ registerQuery }, ctx) => {
+            const config = buildConfig(ctx)
+            registerQuery('session', sessionQuery(config, ctx))
+        },
+    })
 }

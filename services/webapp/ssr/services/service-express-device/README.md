@@ -1,4 +1,4 @@
-# service-express-device-id
+# service-express-device
 
 Generates a `uuid` for a newly connected device and saves it into a cookie.
 
@@ -6,31 +6,35 @@ Generates a `uuid` for a newly connected device and saves it into a cookie.
 
 ## Configuration
 
-#### express.deviceId.setHeader
+#### express.device.setHeader
 
 default `true`
 
-#### express.deviceId.headerName
+#### express.device.headerName
 
 default `X-Device-Id`
 
-#### express.deviceId.uuidVersion
+#### express.device.uuidVersion
 
 default `v4`
 
-#### express.deviceId.attributeName
+#### express.device.attributeName
 
 default `deviceId`
 
-#### express.deviceId.cookieName
+#### express.device.setCookie
+
+default `true`
+
+#### express.device.cookieName
 
 default `deviceId`
 
-#### express.deviceId.cookieMaxAge
+#### express.device.cookieMaxAge
 
 default `300y`
 
-#### express.deviceId.useClientCookie
+#### express.device.useClientCookie
 
 default `false`
 

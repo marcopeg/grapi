@@ -1,8 +1,8 @@
 import * as hooks from './hooks'
 import addRequestId from 'express-request-id'
-import { requestIdQuery } from './graphql/queries/request-id.query'
+import { requestQuery } from './graphql/queries/request.query'
 
-const buildConfig = ({ getConfig }) => getConfig('express.requestId', {})
+const buildConfig = ({ getConfig }) => getConfig('express.request', {})
 
 export default ({ registerAction, registerHook, ...ctx }) => {
     registerHook(hooks)
@@ -25,7 +25,7 @@ export default ({ registerAction, registerHook, ...ctx }) => {
         trace: __filename,
         handler: ({ registerQuery }, ctx) => {
             const config = buildConfig(ctx)
-            registerQuery('requestId', requestIdQuery(config))
+            registerQuery('request', requestQuery(config, ctx))
         },
     })
 }

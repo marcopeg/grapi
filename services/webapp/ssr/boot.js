@@ -52,9 +52,10 @@ export default createHookApp({
             rounds: Number(getEnv('BCRYPT_ROUNDS')),
         })
 
-        setConfig('express.session.autoStart', false)
-        setConfig('express.session.autoExtend', false)
+        // setConfig('express.session.autoStart', false)
+        // setConfig('express.session.autoExtend', false)
         setConfig('express.session.duration', '5s')
+        // setConfig('express.device.setCookie', false)
     },
     services: [
         require('@forrestjs/service-env'),
@@ -66,8 +67,8 @@ export default createHookApp({
         require('@forrestjs/service-express'),
         require('@forrestjs/service-express-cookies'),
         require('@forrestjs/service-express-graphql'),
-        require('./services/service-request-id'),
-        require('./services/service-device-id'),
+        require('./services/service-express-request'),
+        require('./services/service-express-device'),
         require('./services/service-express-session'),
         // require('@forrestjs/service-express-graphql-test'),
         // require('./services/service-express-graphql-extension'),
@@ -83,7 +84,7 @@ export default createHookApp({
         // require('./features/graphql-namespace-manager'),
         [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
             registerRoute.get('/', async (req, res) => {
-                !req.session.id && await res.session.start()
+                // !req.session.id && await res.session.start()
                 res.send(`Hello ${req.session.id}`)
             })
         } ],

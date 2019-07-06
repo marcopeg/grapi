@@ -2,6 +2,7 @@ import uuid from 'uuid'
 
 export const addDeviceId = ({
     attributeName,
+    setCookie: useCookies,
     cookieName,
     cookieMaxAge,
     setHeader,
@@ -15,16 +16,16 @@ export const addDeviceId = ({
     const getCookie = useClientCookie ? req.getClientCookie : req.getCookie
     const setCookie = useClientCookie ? res.setClientCookie : res.setCookie
 
-    if (!getCookie || !setCookie) {
+    if (useCookies && (!getCookie || !setCookie)) {
         // eslint-disable-next-line
         throw new Error('[express-device-id] please install "service-express-cookies" before "service-express-device-id"')
     }
 
-    // Get the deviceId from the cookie, or generate a new one
-    req[attributeName] = getCookie(cookieName) || uuid[uuidVersion](config, buffer, offset)
+    // Get the deviceId from the headers, cookie, or generate a new one
+    req[attributeName] = req.headers[headerName] || getCookie(cookieName) || uuid[uuidVersion](config, buffer, offset)
 
     // Set header and cookie value
-    setCookie(cookieName, req[attributeName], { maxAge: cookieMaxAge })
+    useCookies && setCookie(cookieName, req[attributeName], { maxAge: cookieMaxAge })
     setHeader && res.set(headerName, req[attributeName])
 
     next()

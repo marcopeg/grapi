@@ -1,12 +1,17 @@
 import uuid from 'uuid'
 
 // Generate a new session payload with an ID.
-const createSession = async ({
+const createSessionId = async ({
     uuidVersion,
     buffer,
     offset,
     ...config
 }, ctx, res) => uuid[uuidVersion](config, buffer, offset)
+
+const initSession = async (config, ctx, req, res) => ({
+    id: null,
+    jwt: null,
+})
 
 const flushSession = async ({
     duration,
@@ -17,10 +22,6 @@ const flushSession = async ({
     useClientCookie,
     cookieName,
 }, ctx, req, res) => {
-    if (!req[attributeName].id) {
-        return
-    }
-
     const setCookie = useClientCookie ? res.setClientCookie : res.setCookie
     const token = await ctx.jwt.sign(req[attributeName].id, { expiresIn: duration })
     setHeader && res.set(headerName, token)
@@ -49,7 +50,7 @@ export const addSession = (config, ctx) => async (req, res, next) => {
     }
 
     // initialize the request namespace
-    req[attributeName] = { id: null, jwt: null }
+    req[attributeName] = await initSession(config, ctx, req, res)
 
     // Get existing session from request informations
     // (handle auto extension of the headers)
@@ -64,7 +65,7 @@ export const addSession = (config, ctx) => async (req, res, next) => {
 
     // generate a new session
     if (!req[attributeName].id && autoStart) {
-        req[attributeName].id = await createSession(config, ctx, res)
+        req[attributeName].id = await createSessionId(config, ctx, res)
         req[attributeName].jwt = await flushSession(config, ctx, req, res)
     }
 
@@ -72,12 +73,12 @@ export const addSession = (config, ctx) => async (req, res, next) => {
     // req[attributeName] = { id: req[attributeName].id }
     res[attributeName] = {
         start: async () => {
-            req[attributeName].id = await createSession(config, ctx, res)
+            req[attributeName].id = await createSessionId(config, ctx, res)
             req[attributeName].jwt = await flushSession(config, ctx, req, res)
             return req[attributeName]
         },
-        destroy: () => {
-            req[attributeName] = { id: null, jwt: null }
+        destroy: async () => {
+            req[attributeName] = await initSession(config, ctx, req, res)
             deleteCookie(cookieName)
         },
     }
