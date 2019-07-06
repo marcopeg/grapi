@@ -7,8 +7,8 @@ import { validateSession } from '../../session.lib'
 import updateSessionMutation from './session/update.mutation'
 import destroySessionMutation from './session/destroy.mutation'
 
-export default async (mutations = {}) => ({
-    description: 'Wraps session dependent mutations',
+export default async ({ name, description, fields }) => ({
+    description,
     args: {
         token: {
             type: GraphQLString,
@@ -19,7 +19,7 @@ export default async (mutations = {}) => ({
         },
     },
     type: new GraphQLObjectType({
-        name: 'SessionMutation',
+        name,
         fields: {
             id: {
                 type: new GraphQLNonNull(GraphQLID),
@@ -35,7 +35,7 @@ export default async (mutations = {}) => ({
             },
             update: await updateSessionMutation(),
             destroy: await destroySessionMutation(),
-            ...mutations,
+            ...fields,
         },
     }),
     resolve: (params, args, { req, res }) => validateSession(args, req, res),

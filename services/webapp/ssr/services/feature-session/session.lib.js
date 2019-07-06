@@ -1,6 +1,6 @@
 import { createHook } from '@forrestjs/hooks'
 import { getModel } from '@forrestjs/service-postgres'
-import jwtService from '@forrestjs/service-jwt'
+import * as jwtService from '@forrestjs/service-jwt'
 import uuid from 'uuid/v4'
 
 import { SESSION_DECORATE_TOKEN, SESSION_DECORATE_RECORD } from './hooks'
@@ -15,6 +15,8 @@ const getBearerToken = req => {
         return null
     }
 }
+
+// const createToken = ()
 
 export const createSession = async (args, req, res) => {
     const { expiresIn, payload, isPersistent, isActive } = args
@@ -57,7 +59,7 @@ export const createSession = async (args, req, res) => {
     const record = await getModel('SessionToken').create(recordFields)
 
     if (isPersistent) {
-        res.setAppCookie(COOKIE_NAME, token)
+        res.setCookie(COOKIE_NAME, token)
     }
 
     return {
@@ -74,11 +76,18 @@ export const validateSession = async (args, req, res) => {
 
     const { token: receivedToken, validate } = args
 
+    // console.log('VALIDATE', req.hooks)
+    // req.hooks.logTrace(true)
+
+    // console.log('CREATE HOOK', req.hooks.traceId)
+    // req.hooks.createHook.sync('foo')
+    // req.hooks.logTrace()
+
     // get token from multiple sources
     // - argument
     // - Authentication Bearer
     // - Cookie
-    const token = receivedToken || getBearerToken(req) || req.getAppCookie(COOKIE_NAME)
+    const token = receivedToken || getBearerToken(req) || req.getCookie(COOKIE_NAME)
     const tokenData = await jwtService.verify(token)
     const { id, ...payload } = tokenData.payload
 
@@ -86,11 +95,13 @@ export const validateSession = async (args, req, res) => {
     if (validate) {
         record = await getModel('SessionToken').validateSession(id)
         if (!record) {
-            res.deleteAppCookie(COOKIE_NAME, token)
+            res.deleteCookie(COOKIE_NAME, token)
             req.session = null
             return req.session
         }
     }
+
+    console.log({ token, tokenData, record })
 
     req.session = {
         token: {

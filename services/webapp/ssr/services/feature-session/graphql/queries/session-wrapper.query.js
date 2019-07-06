@@ -5,8 +5,8 @@ import GraphQLJSON from 'graphql-type-json'
 
 import { validateSession } from '../../session.lib'
 
-export default async (queries = {}) => ({
-    description: 'Wraps session dependent queries',
+export default async ({ name, description, fields }) => ({
+    description,
     args: {
         token: {
             type: GraphQLString,
@@ -17,7 +17,7 @@ export default async (queries = {}) => ({
         },
     },
     type: new GraphQLObjectType({
-        name: 'SessionQuery',
+        name,
         fields: {
             id: {
                 type: new GraphQLNonNull(GraphQLID),
@@ -31,7 +31,7 @@ export default async (queries = {}) => ({
             payload: {
                 type: new GraphQLNonNull(GraphQLJSON),
             },
-            ...queries,
+            ...fields,
         },
     }),
     resolve: (params, args, { req, res }) => validateSession(args, req, res),
