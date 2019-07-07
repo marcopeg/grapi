@@ -6,7 +6,7 @@ require('isomorphic-fetch')
 export default createHookApp({
     trace: true,
     settings: ({ setConfig, getEnv }) => {
-        setConfig('postgres', [{
+        setConfig('postgres.connections', [{
             host: getEnv('PG_HOST'),
             port: getEnv('PG_PORT'),
             database: getEnv('PG_DATABASE'),
@@ -15,6 +15,10 @@ export default createHookApp({
             maxAttempts: Number(getEnv('PG_MAX_CONN_ATTEMPTS', 25)),
             attemptDelay: Number(getEnv('PG_CONN_ATTEMPTS_DELAY', 5000)),
             models: [],
+            onConnection: async (conn) => {
+                await conn.handler.query('drop schema public cascade;')
+                await conn.handler.query('create schema public;')
+            },
         }])
 
         setConfig('postgresPubSub', [{
@@ -54,7 +58,7 @@ export default createHookApp({
 
         // setConfig('express.session.autoStart', false)
         // setConfig('express.session.autoExtend', false)
-        setConfig('express.session.duration', '5s')
+        // setConfig('express.session.duration', '5s')
         // setConfig('express.device.setCookie', false)
     },
     services: [
@@ -62,8 +66,8 @@ export default createHookApp({
         require('@forrestjs/service-logger'),
         require('@forrestjs/service-jwt'),
         require('@forrestjs/service-hash'),
-        // require('@forrestjs/service-postgres'),
-        // require('@forrestjs/service-postgres-pubsub'),
+        require('@forrestjs/service-postgres'),
+        require('@forrestjs/service-postgres-pubsub'),
         require('@forrestjs/service-express'),
         require('@forrestjs/service-express-cookies'),
         require('@forrestjs/service-express-graphql'),
@@ -76,7 +80,7 @@ export default createHookApp({
         // require('@forrestjs/feature-locale'),
     ],
     features: [
-        // require('./services/feature-session'),
+        require('./features/feature-session-pg-storage'),
         // require('./services/feature-session-info'),
         // require('./services/feature-auth'),
         // require('./services/feature-auth'),
@@ -85,7 +89,7 @@ export default createHookApp({
         [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
             registerRoute.get('/', async (req, res) => {
                 // !req.session.id && await res.session.start()
-                res.send(`Hello ${req.session.id}`)
+                res.send(`Hello ${req.id} / ${req.session.id}`)
             })
         } ],
     ],

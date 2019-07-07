@@ -11,6 +11,7 @@ const createSessionId = async ({
 const initSession = async (config, ctx, req, res) => ({
     id: null,
     jwt: null,
+    validUntil: null,
 })
 
 const flushSession = async ({
@@ -29,6 +30,10 @@ const flushSession = async ({
     return token
 }
 
+const getJwtExpiryDate = async (token, ctx) => {
+    const data = await ctx.jwt.verify(token)
+    return new Date(data.exp * 1000)
+}
 
 export const addSession = (config, ctx) => async (req, res, next) => {
     const {
@@ -61,12 +66,14 @@ export const addSession = (config, ctx) => async (req, res, next) => {
         req[attributeName].jwt = autoExtend
             ? await await flushSession(config, ctx, req, res)
             : receivedJWT
+        req[attributeName].validUntil = await getJwtExpiryDate(req[attributeName].jwt, ctx)
     } catch (err) {} // eslint-disable-line
 
     // generate a new session
     if (!req[attributeName].id && autoStart) {
         req[attributeName].id = await createSessionId(config, ctx, res)
         req[attributeName].jwt = await flushSession(config, ctx, req, res)
+        req[attributeName].validUntil = await getJwtExpiryDate(req[attributeName].jwt, ctx)
     }
 
     // decorate the Express app with references to the session id
@@ -75,6 +82,7 @@ export const addSession = (config, ctx) => async (req, res, next) => {
         start: async () => {
             req[attributeName].id = await createSessionId(config, ctx, res)
             req[attributeName].jwt = await flushSession(config, ctx, req, res)
+            req[attributeName].validUntil = await getJwtExpiryDate(req[attributeName].jwt, ctx)
             return req[attributeName]
         },
         destroy: async () => {
