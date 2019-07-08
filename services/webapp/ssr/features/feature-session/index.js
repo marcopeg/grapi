@@ -1,7 +1,7 @@
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
 import * as hooks from './hooks'
 import * as sessionModel from './session.model'
-import { addSessionPgStorage } from './session-pg-storate.middleware'
+import { addSession } from './session.middleware'
 
 export default ({ registerHook, registerAction }) => {
     registerHook(hooks)
@@ -20,7 +20,7 @@ export default ({ registerHook, registerAction }) => {
         name: hooks.FEATURE_NAME,
         trace: __filename,
         handler: ({ registerMiddleware }, ctx) => {
-            registerMiddleware(addSessionPgStorage({}, ctx))
+            registerMiddleware(addSession({}, ctx))
         },
     })
 }

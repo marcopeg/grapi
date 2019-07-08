@@ -15,10 +15,10 @@ export default createHookApp({
             maxAttempts: Number(getEnv('PG_MAX_CONN_ATTEMPTS', 25)),
             attemptDelay: Number(getEnv('PG_CONN_ATTEMPTS_DELAY', 5000)),
             models: [],
-            onConnection: async (conn) => {
-                await conn.handler.query('drop schema public cascade;')
-                await conn.handler.query('create schema public;')
-            },
+            // onConnection: async (conn) => {
+            //     await conn.handler.query('drop schema public cascade;')
+            //     await conn.handler.query('create schema public;')
+            // },
         }])
 
         setConfig('postgresPubSub', [{
@@ -74,13 +74,14 @@ export default createHookApp({
         require('./services/service-express-request'),
         require('./services/service-express-device'),
         require('./services/service-express-session'),
-        // require('@forrestjs/service-express-graphql-test'),
+        require('@forrestjs/service-express-graphql-test'),
         // require('./services/service-express-graphql-extension'),
         // require('@forrestjs/service-express-ssr'),
         // require('@forrestjs/feature-locale'),
     ],
     features: [
-        require('./features/feature-session-pg-storage'),
+        require('./features/feature-session'),
+        require('./features/feature-auth'),
         // require('./services/feature-session-info'),
         // require('./services/feature-auth'),
         // require('./services/feature-auth'),
@@ -89,6 +90,7 @@ export default createHookApp({
         [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
             registerRoute.get('/', async (req, res) => {
                 // !req.session.id && await res.session.start()
+                console.log(Object.keys(req.hooks))
                 await req.session.validate()
                 res.send(`Hello ${req.id} / ${req.session.id}`)
             })

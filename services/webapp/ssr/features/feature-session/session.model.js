@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize'
 import * as hooks from './hooks'
 
-export const name = 'Session'
+export const name = 'SessionRecord'
 
 const fields = {
     id: {
@@ -13,10 +13,10 @@ const fields = {
         allowNull: false,
         defaultValue: true,
     },
-    // payload: {
-    //     type: Sequelize.JSONB,
-    //     defaultValue: {},
-    // },
+    payload: {
+        type: Sequelize.JSONB,
+        defaultValue: {},
+    },
     hits: {
         type: Sequelize.BIGINT,
         defaultValue: 0,
@@ -35,7 +35,7 @@ const fields = {
 }
 
 const options = {
-    tableName: 'sessions',
+    tableName: 'session_records',
     freezeTableName: true,
     underscored: true,
 }
@@ -121,17 +121,42 @@ const validateSession = (conn, Model) => async (id, validUntil) => {
 //     return results[1]
 // }
 
+
+const setValue = (conn, Model) => (id, key, val) =>
+    Model.update({
+        payload: Sequelize.literal(`payload || '${JSON.stringify({ [key]: val })}'`),
+    }, {
+        where: { id },
+    })
+
+const getValue = (conn, Model) => async (id, key) => {
+    try {
+        const res = await Model.findOne({
+            where: { id },
+            attributes: [
+                [ Sequelize.json(`payload.${key}`), 'value' ],
+            ],
+            raw: true,
+        })
+        return res.value
+    } catch (err) {
+        return undefined
+    }
+}
+
 export const init = async (conn, { createHook }) => {
-    await createHook.serie(hooks.SESSION_PG_STORAGE_INIT_MODEL, { name, fields, options })
+    await createHook.serie(hooks.SESSION_INIT_MODEL, { name, fields, options })
 
     const Model = conn.define(name, fields, options)
     Model.upsertSession = upsertSession(conn, Model)
     Model.validateSession = validateSession(conn, Model)
+    Model.setValue = setValue(conn, Model)
+    Model.getValue = getValue(conn, Model)
     // Model.updateSession = updateSession(conn, Model)
     // Model.endSession = endSession(conn, Model)
     // Model.endMultipleSessions = endMultipleSessions(conn, Model)
 
-    await createHook.serie(hooks.SESSION_PG_STORAGE_DECORATE_MODEL, { name, fields, options, Model })
+    await createHook.serie(hooks.SESSION_DECORATE_MODEL, { name, fields, options, Model })
 
     return Model.sync()
 }
