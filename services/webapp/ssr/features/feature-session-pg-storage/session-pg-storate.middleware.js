@@ -20,7 +20,5 @@ export const addSessionPgStorage = (config, ctx) => async (req, res, next) => {
         }
     }
 
-    // await req.session.validate()
-
     next()
 }

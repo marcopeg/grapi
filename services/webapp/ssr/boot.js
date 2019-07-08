@@ -89,6 +89,7 @@ export default createHookApp({
         [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
             registerRoute.get('/', async (req, res) => {
                 // !req.session.id && await res.session.start()
+                await req.session.validate()
                 res.send(`Hello ${req.id} / ${req.session.id}`)
             })
         } ],
