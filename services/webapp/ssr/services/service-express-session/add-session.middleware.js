@@ -95,7 +95,7 @@ export const addSession = (config, ctx) => async (req, res, next) => {
 
     req[attributeName].destroy = async () => {
         req[attributeName] = await initSession(config, ctx, req, res)
-        deleteCookie(cookieName)
+        useCookies && deleteCookie(cookieName)
     }
 
     // set('foo', 124)

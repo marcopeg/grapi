@@ -1,20 +1,35 @@
 import * as hooks from './hooks'
 import { addSession } from './add-session.middleware'
 import { sessionQuery } from './graphql/queries/session.query'
+import { sessionMutation } from './graphql/mutations/session.mutation'
 
-const buildConfig = ({ getConfig }) => ({
-    ...getConfig('express.session', {}),
-    autoStart: getConfig('express.session.autoStart', true),
-    autoExtend: getConfig('express.session.autoExtend', true),
-    duration: getConfig('express.session.duration', '20m'),
-    attributeName: getConfig('express.session.attributeName', 'session'),
-    setHeader: getConfig('express.session.setHeader', false),
-    headerName: getConfig('express.session.headerName', 'X-Session-Id'),
-    useCookies: getConfig('express.session.useCookies', true),
-    useClientCookie: getConfig('express.session.useClientCookie', false),
-    cookieName: getConfig('express.session.cookieName', 'session-id'),
-    uuidVersion: getConfig('express.session.uuidVersion', 'v4'),
-})
+// Applied default values to `express.session` config object
+const buildConfig = ({ getConfig, setConfig }) => {
+    const config = {
+        ...getConfig('express.session', {}),
+        autoStart: getConfig('express.session.autoStart', true),
+        autoExtend: getConfig('express.session.autoExtend', true),
+        duration: getConfig('express.session.duration', '20m'),
+        attributeName: getConfig('express.session.attributeName', 'session'),
+        setHeader: getConfig('express.session.setHeader', false),
+        headerName: getConfig('express.session.headerName', 'X-Session-Id'),
+        useCookies: getConfig('express.session.useCookies', true),
+        useClientCookie: getConfig('express.session.useClientCookie', false),
+        cookieName: getConfig('express.session.cookieName', 'session-id'),
+        uuidVersion: getConfig('express.session.uuidVersion', 'v4'),
+        queries: getConfig('express.session.queries', {}),
+        mutations: getConfig('express.session.mutations', {}),
+        useGraphQL: getConfig('express.session.useGraphQL', true),
+        wrapperName: getConfig('express.session.wrapperName', 'session'),
+        queryName: getConfig('express.session.queryName', 'SessionQuery'),
+        queryDesc: getConfig('express.session.queryDesc', 'Provides info about the running session'),
+        mutationName: getConfig('express.session.mutationName', 'SessionMutation'),
+        mutationDesc: getConfig('express.session.mutationDesc', 'Change the course of the running session'),
+    }
+
+    setConfig('express.session', config)
+    return config
+}
 
 export default ({ registerAction, registerHook, ...ctx }) => {
     registerHook(hooks)
@@ -35,9 +50,38 @@ export default ({ registerAction, registerHook, ...ctx }) => {
         name: hooks.SERVICE_NAME,
         optional: true,
         trace: __filename,
-        handler: ({ registerQuery }, ctx) => {
-            const config = buildConfig(ctx)
-            registerQuery('session', sessionQuery(config, ctx))
+        handler: async ({ registerQuery, registerMutation }, ctx) => {
+            const {
+                useGraphQL,
+                wrapperName,
+                queries,
+                mutations,
+                ...config } = buildConfig(ctx)
+
+            // Disable the GraphQL wrapper
+            if (!useGraphQL) {
+                return
+            }
+
+            await ctx.createHook.serie(hooks.EXPRESS_SESSION_GRAPHQL, {
+                registerQuery: (key, val) => {
+                    if (queries[key]) {
+                        throw new Error(`[express-session] Query "${key}" was already defined`)
+                    }
+                    queries[key] = val
+                },
+                registerMutation: (key, val) => {
+                    if (mutations[key]) {
+                        throw new Error(`[express-session] Mutation "${key}" was already defined`)
+                    }
+                    mutations[key] = val
+                },
+            })
+
+            registerQuery(wrapperName, sessionQuery({ ...config, queries }, ctx))
+            if (Object.keys(mutations).length) {
+                registerMutation(wrapperName, sessionMutation({ ...config, mutations }, ctx))
+            }
         },
     })
 }

@@ -20,7 +20,8 @@ export default ({ registerHook, registerAction }) => {
         name: hooks.FEATURE_NAME,
         trace: __filename,
         handler: ({ registerMiddleware }, ctx) => {
-            registerMiddleware(addSession({}, ctx))
+            const config = ctx.getConfig('express.session')
+            registerMiddleware(addSession(config, ctx))
         },
     })
 }

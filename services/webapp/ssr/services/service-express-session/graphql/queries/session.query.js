@@ -1,12 +1,17 @@
 import { GraphQLObjectType, GraphQLNonNull } from 'graphql'
 import { GraphQLID, GraphQLString } from 'graphql'
 
-// @TODO: let extensions enrich the selection of fields
-export const sessionQuery = ({ attributeName }, ctx) => ({
-    description: 'Provides the current session id',
+export const sessionQuery = ({
+    attributeName,
+    queryName,
+    queryDesc,
+    queries = {},
+}, ctx) => ({
+    description: queryDesc,
     type: new GraphQLNonNull(new GraphQLObjectType({
-        name: 'SessionQuery',
+        name: queryName,
         fields: {
+            ...queries,
             id: {
                 type: GraphQLID,
             },

@@ -121,13 +121,19 @@ const validateSession = (conn, Model) => async (id, validUntil) => {
 //     return results[1]
 // }
 
+// setValue('key', 'value)
+// setValue({ key1: 123, key2: 'aaa' })
+const setValue = (conn, Model) => (id, key, val) => {
+    const data = (typeof key === 'object')
+        ? key
+        : { [key]: val }
 
-const setValue = (conn, Model) => (id, key, val) =>
-    Model.update({
-        payload: Sequelize.literal(`payload || '${JSON.stringify({ [key]: val })}'`),
+    return Model.update({
+        payload: Sequelize.literal(`payload || '${JSON.stringify(data)}'`),
     }, {
         where: { id },
     })
+}
 
 const getValue = (conn, Model) => async (id, key) => {
     try {

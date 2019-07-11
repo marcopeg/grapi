@@ -1,39 +1,40 @@
 
 export const addSession = (config, ctx) => async (req, res, next) => {
-    if (!req.session.id) {
-        next()
-        return
-    }
-
+    const { attributeName } = config
     const SessionRecord = ctx.pg.getModel('SessionRecord')
 
-    req.session.validate = async () => {
+    req[attributeName].validate = async () => {
+        // check that an existing running session exists
+        if (!req[attributeName].id) {
+            throw new Error('[pg-session] Session not started')
+        }
+
         // try to get hold of the current session
-        await SessionRecord.upsertSession(req.session.id, req.session.validUntil)
-        const session = await SessionRecord.validateSession(req.session.id, req.session.validUntil)
+        await SessionRecord.upsertSession(req[attributeName].id, req[attributeName].validUntil)
+        const session = await SessionRecord.validateSession(req[attributeName].id, req[attributeName].validUntil)
 
         // generate a new session
         if (!session) {
-            await res.session.start()
-            await SessionRecord.upsertSession(req.session.id, req.session.validUntil)
-            await SessionRecord.validateSession(req.session.id, req.session.validUntil)
+            await req[attributeName].start()
+            await SessionRecord.upsertSession(req[attributeName].id, req[attributeName].validUntil)
+            await SessionRecord.validateSession(req[attributeName].id, req[attributeName].validUntil)
         }
     }
 
-    req.session.retrieve = (key) => {
-        if (!req.session.id) {
+    req[attributeName].read = (key) => {
+        if (!req[attributeName].id) {
             throw new Error('[feature-session] Session not started')
         }
 
-        return SessionRecord.getValue(req.session.id, key)
+        return SessionRecord.getValue(req[attributeName].id, key)
     }
 
-    req.session.store = async (key, val) => {
-        if (!req.session.id) {
+    req[attributeName].write = async (key, val) => {
+        if (!req[attributeName].id) {
             throw new Error('[feature-session] Session not started')
         }
 
-        await SessionRecord.setValue(req.session.id, key, val)
+        await SessionRecord.setValue(req[attributeName].id, key, val)
     }
 
     next()
