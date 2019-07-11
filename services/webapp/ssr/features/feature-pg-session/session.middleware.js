@@ -20,7 +20,7 @@ export const addSession = (config, ctx) => async (req, res, next) => {
         }
     }
 
-    req.session.get = (key) => {
+    req.session.retrieve = (key) => {
         if (!req.session.id) {
             throw new Error('[feature-session] Session not started')
         }
@@ -28,7 +28,7 @@ export const addSession = (config, ctx) => async (req, res, next) => {
         return SessionRecord.getValue(req.session.id, key)
     }
 
-    req.session.set = async (key, val) => {
+    req.session.store = async (key, val) => {
         if (!req.session.id) {
             throw new Error('[feature-session] Session not started')
         }

@@ -24,8 +24,8 @@ export const login = async ({ uname, passw }, req, res) => {
     // Initialize a new session if doesn't exits and connect it with the
     // authenticated account
     await req.session.validate()
-    await req.session.set('auth_id', record.id)
-    await req.session.set('auth_etag', record.etag)
+    await req.session.store('auth_id', record.id)
+    await req.session.store('auth_etag', record.etag)
 
     await getModel('AuthAccount').bumpLastLogin(record.id)
     return record.get({ plain: true })

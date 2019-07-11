@@ -80,8 +80,8 @@ export default createHookApp({
         // require('@forrestjs/feature-locale'),
     ],
     features: [
-        require('./features/feature-session'),
-        require('./features/feature-auth'),
+        require('./features/feature-pg-session'),
+        require('./features/feature-pg-auth'),
         // require('./services/feature-session-info'),
         // require('./services/feature-auth'),
         // require('./services/feature-auth'),
@@ -89,9 +89,12 @@ export default createHookApp({
         // require('./features/graphql-namespace-manager'),
         [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
             registerRoute.get('/', async (req, res) => {
+                console.log(req.session)
                 // !req.session.id && await res.session.start()
-                console.log(Object.keys(req.hooks))
-                await req.session.validate()
+                // console.log(Object.keys(req.hooks))
+                // await req.session.validate()
+                // await req.session.set({ foo: 23, a: 'Marco' })
+                console.log('SESSION', await req.session.get())
                 res.send(`Hello ${req.id} / ${req.session.id}`)
             })
         } ],

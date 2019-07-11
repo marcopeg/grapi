@@ -4,16 +4,16 @@ import { sessionQuery } from './graphql/queries/session.query'
 
 const buildConfig = ({ getConfig }) => ({
     ...getConfig('express.session', {}),
-    duration: getConfig('express.session.duration', '20m'),
-    attributeName: getConfig('express.session.attributeName', 'session'),
     autoStart: getConfig('express.session.autoStart', true),
     autoExtend: getConfig('express.session.autoExtend', true),
-    uuidVersion: getConfig('express.session.uuidVersion', 'v4'),
-    setHeader: getConfig('express.session.setHeader', true),
+    duration: getConfig('express.session.duration', '20m'),
+    attributeName: getConfig('express.session.attributeName', 'session'),
+    setHeader: getConfig('express.session.setHeader', false),
     headerName: getConfig('express.session.headerName', 'X-Session-Id'),
     useCookies: getConfig('express.session.useCookies', true),
     useClientCookie: getConfig('express.session.useClientCookie', false),
     cookieName: getConfig('express.session.cookieName', 'session-id'),
+    uuidVersion: getConfig('express.session.uuidVersion', 'v4'),
 })
 
 export default ({ registerAction, registerHook, ...ctx }) => {
