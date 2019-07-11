@@ -59,7 +59,10 @@ export default createHookApp({
         // setConfig('express.session.autoStart', false)
         // setConfig('express.session.autoExtend', false)
         // setConfig('express.session.duration', '5s')
-        // setConfig('express.device.setCookie', false)
+        setConfig('express.device.setCookie', false)
+        // setConfig('express.session.setCookie', false)
+        // setConfig('express.session.setHeader', true)
+        // setConfig('express.session.autoValidate', true)
     },
     services: [
         require('@forrestjs/service-env'),
@@ -81,40 +84,40 @@ export default createHookApp({
     ],
     features: [
         require('./features/feature-pg-session'),
-        // require('./features/feature-pg-auth'),
+        require('./features/feature-pg-auth'),
         // require('./services/feature-session-info'),
         // require('./services/feature-auth'),
         // require('./services/feature-auth'),
         // require('./features/graphql-extensions-manager'),
         // require('./features/graphql-namespace-manager'),
-        [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
-            registerRoute.get('/', async (req, res) => {
-                try {
-                    // console.log(req.session)
-                    // !req.session.id && await res.session.start()
-                    // console.log(Object.keys(req.hooks))
-                    await req.session.validate()
-                    await req.session.set({ a: 1, b: 'ma' })
-                    // await req.session.set({ foo: 23, a: 'Marco' })
-                    // console.log('SESSION', await req.session.get())
-                    res.send(`Hello ${req.id} / ${req.session.id}`)
-                } catch (err) {
-                    res.send(err.message)
-                }
-            })
-        } ],
+        // [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
+        //     registerRoute.get('/', async (req, res) => {
+        //         try {
+        //             // console.log(req.session)
+        //             // !req.session.id && await res.session.start()
+        //             // console.log(Object.keys(req.hooks))
+        //             await req.session.validate()
+        //             await req.session.set({ a: 1, b: 'ma' })
+        //             // await req.session.set({ foo: 23, a: 'Marco' })
+        //             // console.log('SESSION', await req.session.get())
+        //             res.send(`Hello ${req.id} / ${req.session.id}`)
+        //         } catch (err) {
+        //             res.send(err.message)
+        //         }
+        //     })
+        // } ],
 
         // Inject some session stuff
-        [ '$EXPRESS_SESSION_GRAPHQL', ({ registerQuery, registerMutation }) => {
-            registerQuery('foo', {
-                description: 'Add Foo',
-                type: require('graphql').GraphQLString,
-                resolve: () => 'Fooo',
-            })
-            registerMutation('data', {
-                type: require('graphql-type-json').default,
-                resolve: (params) => params.data,
-            })
-        } ],
+        // [ '$EXPRESS_SESSION_GRAPHQL', ({ registerQuery, registerMutation }) => {
+        //     registerQuery('foo', {
+        //         description: 'Add Foo',
+        //         type: require('graphql').GraphQLString,
+        //         resolve: () => 'Fooo',
+        //     })
+        //     registerMutation('data', {
+        //         type: require('graphql-type-json').default,
+        //         resolve: (params) => params.data,
+        //     })
+        // } ],
     ],
 })

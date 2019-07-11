@@ -20,8 +20,18 @@ export default ({ registerHook, registerAction }) => {
         name: hooks.FEATURE_NAME,
         trace: __filename,
         handler: ({ registerMiddleware }, ctx) => {
-            const config = ctx.getConfig('express.session')
+            const config = {
+                ...(ctx.getConfig('express.session')),
+                autoValidate: ctx.getConfig('express.session.autoValidate', false),
+            }
             registerMiddleware(addSession(config, ctx))
         },
+    })
+
+    registerAction({
+        hook: '$EXPRESS_SESSION_VALIDATE',
+        name: hooks.FEATURE_NAME,
+        trace: __filename,
+        handler: async ({ session }, ctx) => session.validate(),
     })
 }

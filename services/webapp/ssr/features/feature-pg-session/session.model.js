@@ -25,10 +25,6 @@ const fields = {
         type: Sequelize.DATE,
         allowNull: false,
     },
-    // lastPing: {
-    //     type: Sequelize.DATE,
-    //     allowNull: false,
-    // },
     endedAt: {
         type: Sequelize.DATE,
     },
@@ -135,13 +131,17 @@ const setValue = (conn, Model) => (id, key, val) => {
     })
 }
 
-const getValue = (conn, Model) => async (id, key) => {
+// getValue(id, null) -> full payload
+// getValue(id, key) -> single key
+const getValue = (conn, Model) => async (id, key = null) => {
     try {
         const res = await Model.findOne({
             where: { id },
-            attributes: [
-                [ Sequelize.json(`payload.${key}`), 'value' ],
-            ],
+            attributes: (
+                key
+                    ? [[ Sequelize.json(`payload.${key}`), 'value' ]]
+                    : [[ 'payload', 'value' ]]
+            ),
             raw: true,
         })
         return res.value
@@ -151,7 +151,7 @@ const getValue = (conn, Model) => async (id, key) => {
 }
 
 export const init = async (conn, { createHook }) => {
-    await createHook.serie(hooks.SESSION_INIT_MODEL, { name, fields, options })
+    await createHook.serie(hooks.SESSION_INIT_MODEL, { name, fields, options, conn })
 
     const Model = conn.define(name, fields, options)
     Model.upsertSession = upsertSession(conn, Model)
@@ -162,7 +162,7 @@ export const init = async (conn, { createHook }) => {
     // Model.endSession = endSession(conn, Model)
     // Model.endMultipleSessions = endMultipleSessions(conn, Model)
 
-    await createHook.serie(hooks.SESSION_DECORATE_MODEL, { name, fields, options, Model })
+    await createHook.serie(hooks.SESSION_DECORATE_MODEL, { name, fields, options, Model, conn })
 
     return Model.sync()
 }

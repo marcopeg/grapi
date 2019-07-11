@@ -3,7 +3,7 @@ import { addSession } from './add-session.middleware'
 import { sessionQuery } from './graphql/queries/session.query'
 import { sessionMutation } from './graphql/mutations/session.mutation'
 
-// Applied default values to `express.session` config object
+// Applies default values to `express.session` config object
 const buildConfig = ({ getConfig, setConfig }) => {
     const config = {
         ...getConfig('express.session', {}),
@@ -13,7 +13,7 @@ const buildConfig = ({ getConfig, setConfig }) => {
         attributeName: getConfig('express.session.attributeName', 'session'),
         setHeader: getConfig('express.session.setHeader', false),
         headerName: getConfig('express.session.headerName', 'X-Session-Id'),
-        useCookies: getConfig('express.session.useCookies', true),
+        setCookie: getConfig('express.session.setCookie', true),
         useClientCookie: getConfig('express.session.useClientCookie', false),
         cookieName: getConfig('express.session.cookieName', 'session-id'),
         uuidVersion: getConfig('express.session.uuidVersion', 'v4'),
@@ -63,6 +63,7 @@ export default ({ registerAction, registerHook, ...ctx }) => {
                 return
             }
 
+            // make the session wrapper extensible
             await ctx.createHook.serie(hooks.EXPRESS_SESSION_GRAPHQL, {
                 registerQuery: (key, val) => {
                     if (queries[key]) {
@@ -78,6 +79,7 @@ export default ({ registerAction, registerHook, ...ctx }) => {
                 },
             })
 
+            // register query and optinal mutation
             registerQuery(wrapperName, sessionQuery({ ...config, queries }, ctx))
             if (Object.keys(mutations).length) {
                 registerMutation(wrapperName, sessionMutation({ ...config, mutations }, ctx))

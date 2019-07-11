@@ -20,17 +20,17 @@ const flushSession = async ({
     attributeName,
     setHeader,
     headerName,
-    useCookies,
+    setCookie,
     useClientCookie,
     cookieName,
 }, ctx, req, res) => {
-    const setCookie = useClientCookie ? res.setClientCookie : res.setCookie
+    const writeCookie = useClientCookie ? res.setClientCookie : res.setCookie
     const token = await ctx.jwt.sign({
         ...req[attributeName].data,
         id: req[attributeName].id,
     }, { expiresIn: duration })
     setHeader && res.set(headerName, token)
-    useCookies && setCookie(cookieName, token, { maxAge: duration })
+    setCookie && writeCookie(cookieName, token, { maxAge: duration })
     return token
 }
 
@@ -45,7 +45,7 @@ export const addSession = (config, ctx) => async (req, res, next) => {
         autoExtend,
         attributeName,
         headerName,
-        useCookies,
+        setCookie,
         useClientCookie,
         cookieName,
     } = config
@@ -54,48 +54,58 @@ export const addSession = (config, ctx) => async (req, res, next) => {
     const getCookie = useClientCookie ? req.getClientCookie : req.getCookie
     const deleteCookie = useClientCookie ? res.deleteClientCookie : res.deleteCookie
 
-    if (useCookies && (!getCookie || !deleteCookie)) {
+    if (setCookie && (!getCookie || !deleteCookie)) {
         throw new Error('[express-session] please install "service-express-cookies" before "service-express-session"')
     }
 
     // initialize the request namespace
     req[attributeName] = await initSession(config, ctx, req, res)
 
-    // Get existing session from request informations
-    // (handle auto extension of the headers)
-    try {
-        const receivedJWT = req.headers[headerName] || (useCookies && getCookie(cookieName))
-        const receivedData = receivedJWT && (await ctx.jwt.verify(receivedJWT))
-        const { id, ...data } = receivedData.payload
-        req[attributeName].id = id
+    // generates a new session with an optional custom sessionId and inital client data
+    req[attributeName].create = async (sessionId = null, data = {}) => {
+        req[attributeName].id = sessionId || await createSessionId(config, ctx, res)
         req[attributeName].data = data
-        req[attributeName].jwt = autoExtend
-            ? await await flushSession(config, ctx, req, res)
-            : receivedJWT
-        req[attributeName].validUntil = await getJwtExpiryDate(req[attributeName].jwt, ctx)
-    } catch (err) {} // eslint-disable-line
-
-    // generate a new session
-    if (!req[attributeName].id && autoStart) {
-        req[attributeName].id = await createSessionId(config, ctx, res)
-        req[attributeName].data = {}
         req[attributeName].jwt = await flushSession(config, ctx, req, res)
         req[attributeName].validUntil = await getJwtExpiryDate(req[attributeName].jwt, ctx)
     }
 
-    // Decorate Express's request with helper methods to work with the
-    // running session
-
-    req[attributeName].start = async () => {
-        req[attributeName].id = await createSessionId(config, ctx, res)
-        req[attributeName].jwt = await flushSession(config, ctx, req, res)
-        req[attributeName].validUntil = await getJwtExpiryDate(req[attributeName].jwt, ctx)
-        return req[attributeName]
-    }
-
+    // resets the data properties of the running session and removes the cookie (optional)
     req[attributeName].destroy = async () => {
-        req[attributeName] = await initSession(config, ctx, req, res)
-        useCookies && deleteCookie(cookieName)
+        req[attributeName] = {
+            ...req[attributeName],
+            ...(await initSession(config, ctx, req, res)),
+        }
+        setCookie && deleteCookie(cookieName)
+    }
+
+    // restore a running session from token, header or cookie and fallback into creating
+    // a brand new session
+    req[attributeName].start = async (jwt = null) => {
+        // avoid multiple initializations per request
+        // if a new "jwt" is passed as argument, then the session will be switched accordingly
+        if (req[attributeName].id && (req[attributeName].jwt === jwt || !jwt)) {
+            return req[attributeName]
+        }
+
+        // try to restore an existing session from a token
+        try {
+            const receivedJWT = jwt || req.headers[headerName] || (setCookie && getCookie(cookieName))
+            const receivedData = receivedJWT && (await ctx.jwt.verify(receivedJWT))
+            const { id, ...data } = receivedData.payload
+            req[attributeName].id = id
+            req[attributeName].data = data
+            req[attributeName].jwt = autoExtend
+                ? await flushSession(config, ctx, req, res)
+                : receivedJWT
+            req[attributeName].validUntil = await getJwtExpiryDate(req[attributeName].jwt, ctx)
+
+        // generate a new session
+        } catch (err) {
+            await req[attributeName].create()
+        }
+
+        // console.log('>>>> START', req[attributeName].id)
+        return req[attributeName]
     }
 
     // set('foo', 124)
@@ -138,5 +148,6 @@ export const addSession = (config, ctx) => async (req, res, next) => {
         }
     }
 
+    autoStart && await req[attributeName].start()
     next()
 }
