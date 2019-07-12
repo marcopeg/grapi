@@ -80,9 +80,9 @@ export default ({ registerAction, registerHook, ...ctx }) => {
             })
 
             // register query and optinal mutation
-            registerQuery(wrapperName, sessionQuery({ ...config, queries }, ctx))
+            registerQuery(wrapperName, await sessionQuery({ ...config, queries }, ctx))
             if (Object.keys(mutations).length) {
-                registerMutation(wrapperName, sessionMutation({ ...config, mutations }, ctx))
+                registerMutation(wrapperName, await sessionMutation({ ...config, mutations }, ctx))
             }
         },
     })

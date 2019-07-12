@@ -1,3 +1,4 @@
+import { GraphQLBoolean } from 'graphql'
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
 import * as hooks from './hooks'
 import * as sessionModel from './session.model'
@@ -6,7 +7,6 @@ import { addSession } from './session.middleware'
 export default ({ registerHook, registerAction }) => {
     registerHook(hooks)
 
-    // Add Data Model
     registerAction({
         hook: `${POSTGRES_BEFORE_START}/default`,
         name: hooks.FEATURE_NAME,
@@ -29,9 +29,23 @@ export default ({ registerHook, registerAction }) => {
     })
 
     registerAction({
-        hook: '$EXPRESS_SESSION_VALIDATE',
+        hook: '$EXPRESS_SESSION_GRAPHQL_ARGS',
         name: hooks.FEATURE_NAME,
         trace: __filename,
-        handler: async ({ session }, ctx) => session.validate(),
+        handler: async ({ registerArg }, ctx) =>
+            registerArg('validate', {
+                type: GraphQLBoolean,
+                defaultValue: true,
+            }),
+    })
+
+    registerAction({
+        hook: '$EXPRESS_SESSION_GRAPHQL_VALIDATE',
+        name: hooks.FEATURE_NAME,
+        trace: __filename,
+        handler: async ({ session, args }, ctx) =>
+            args.validate
+                ? session.validate()
+                : null,
     })
 }
