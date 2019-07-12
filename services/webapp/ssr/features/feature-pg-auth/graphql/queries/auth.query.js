@@ -1,26 +1,10 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
-import { getModel } from '@forrestjs/service-postgres'
+import { GraphQLObjectType } from 'graphql'
 
-export const authQuery = async (queries = {}) => ({
+export const authQuery = async (queries = {}, config, ctx) => ({
     description: 'Wraps Auth dependent queries',
     type: new GraphQLObjectType({
         name: 'AuthQuery',
-        fields: {
-            // ...queries,
-            foo: {
-                type: GraphQLString,
-                resolve: (data) => data.uname,
-            },
-        },
+        fields: queries,
     }),
-    resolve: async (_, args, { req, res }) => {
-        const data = await req.session.read()
-        return await getModel('AuthAccount').findOne({
-            where: {
-                id: data.auth_id,
-                etag: data.auth_etag,
-            },
-            raw: true,
-        })
-    },
+    resolve: (_, args, { req, res }) => req.auth.validate(),
 })

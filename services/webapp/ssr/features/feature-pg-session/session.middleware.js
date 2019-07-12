@@ -23,6 +23,14 @@ export const addSession = (config) => async (req, res, next) => {
         await SessionRecord.setValue(req[attributeName].id, key, val)
     }
 
+    req[attributeName].delete = async (keys) => {
+        if (!req[attributeName].id) {
+            throw new Error('[feature-session] Session not started')
+        }
+
+        await SessionRecord.unsetValue(req[attributeName].id, keys)
+    }
+
     autoValidate && await req[attributeName].validate()
     next()
 }

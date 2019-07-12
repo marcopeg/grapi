@@ -119,5 +119,12 @@ export default createHookApp({
         //         resolve: (params) => params.data,
         //     })
         // } ],
+
+        [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
+            registerQuery('foo', {
+                type: require('graphql').GraphQLString,
+                resolve: $ => $.uname,
+            })
+        } ],
     ],
 })

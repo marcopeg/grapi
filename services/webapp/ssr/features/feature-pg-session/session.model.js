@@ -150,6 +150,19 @@ const getValue = (conn, Model) => async (id, key = null) => {
     }
 }
 
+const unsetValue = (conn, Model) => async (id, keys = []) => {
+    const sql = Array.isArray(keys)
+        ? keys.map(key => `'${key}'`).join(' - ')
+        : `'${keys}'`
+
+    return Model.update({
+        payload: Sequelize.literal(`payload  - ${sql}`),
+    }, {
+        where: { id },
+        logging: console.log,
+    })
+}
+
 export const init = async (conn, { createHook }) => {
     await createHook.serie(hooks.SESSION_INIT_MODEL, { name, fields, options, conn })
 
@@ -157,6 +170,7 @@ export const init = async (conn, { createHook }) => {
     Model.upsertSession = upsertSession(conn, Model)
     Model.validateSession = validateSession(conn, Model)
     Model.setValue = setValue(conn, Model)
+    Model.unsetValue = unsetValue(conn, Model)
     Model.getValue = getValue(conn, Model)
     // Model.updateSession = updateSession(conn, Model)
     // Model.endSession = endSession(conn, Model)

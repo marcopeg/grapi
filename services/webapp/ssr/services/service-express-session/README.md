@@ -10,6 +10,7 @@ await req.session.start()
 await req.session.destroy()
 await req.session.set({ foo: 123, name: 'Marco' })
 await req.session.get('id')
+await req.session.unset([ 'foo', 'name' ])
 ```
 
 #### get/set

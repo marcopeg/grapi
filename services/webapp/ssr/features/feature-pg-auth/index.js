@@ -1,10 +1,12 @@
-import Sequelize from 'sequelize'
+// import Sequelize from 'sequelize'
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
 import * as hooks from './hooks'
 import * as authAccountModel from './auth-account.model'
 import { testCreateAccountMutation } from './graphql/mutations/test/create-account.mutation'
 import { loginMutation } from './graphql/mutations/login.mutation'
+import { logoutMutation } from './graphql/mutations/logout.mutation'
 import { authQuery } from './graphql/queries/auth.query'
+import { authMutation } from './graphql/mutations/auth.mutation'
 import { addAuth } from './auth.middleware'
 
 // Applies default values to `express.session` config object
@@ -75,17 +77,42 @@ export default ({ registerHook, registerAction }) => {
         trace: __filename,
         handler: async ({ registerMutation }, ctx) => {
             registerMutation('login', await loginMutation())
+            registerMutation('logout', await logoutMutation())
         },
     })
 
-    // Extends Session Schema
+    // Extends Session Schema with the Auth Wrapper
     registerAction({
         hook: '$EXPRESS_SESSION_GRAPHQL',
         name: hooks.FEATURE_NAME,
         trace: __filename,
-        handler: async ({ registerQuery }, ctx) => {
-            const config = buildConfig(ctx)
-            registerQuery('auth', await authQuery(config))
+        handler: async ({ registerQuery, registerMutation }, ctx) => {
+            const { queries, mutations, ...config } = buildConfig(ctx)
+
+            // make the Auth wrapper extensible
+            await ctx.createHook.serie(hooks.PG_AUTH_GRAPHQL, {
+                registerQuery: (key, val) => {
+                    if (queries[key]) {
+                        throw new Error(`[pg-auth] Query "${key}" was already defined`)
+                    }
+                    queries[key] = val
+                },
+                registerMutation: (key, val) => {
+                    if (mutations[key]) {
+                        throw new Error(`[pg-auth] Mutation "${key}" was already defined`)
+                    }
+                    mutations[key] = val
+                },
+            })
+
+            // register query and optinal mutation
+            // registerQuery(wrapperName, await sessionQuery({ ...config, queries }, ctx))
+            if (Object.keys(queries).length) {
+                registerQuery('auth', await authQuery(queries, config, ctx))
+            }
+            if (Object.keys(mutations).length) {
+                registerMutation('auth', await authMutation(mutations, config, ctx))
+            }
         },
     })
 

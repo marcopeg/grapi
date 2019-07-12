@@ -33,3 +33,10 @@ export const login = async ({ uname, passw }, req, res) => {
     await getModel('AuthAccount').bumpLastLogin(record.id)
     return record.get({ plain: true })
 }
+
+export const logout = async (req, res) => {
+    const auth = [ 'auth_id', 'auth_etag' ]
+    await req.session.unset(auth)
+    await req.session.delete(auth)
+    return { token: req.session.jwt }
+}

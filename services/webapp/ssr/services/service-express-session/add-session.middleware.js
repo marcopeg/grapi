@@ -129,6 +129,24 @@ export const addSession = (config, ctx) => async (req, res, next) => {
         return true
     }
 
+    req[attributeName].unset = async (keys = []) => {
+        if (!req[attributeName].id) {
+            throw new Error('[service-express-session] Session not started')
+        }
+
+        if (Array.isArray(keys)) {
+            keys.forEach(key => {
+                delete req[attributeName].data[key]
+            })
+        } else {
+            delete req[attributeName].data[keys]
+        }
+
+        req[attributeName].jwt = await flushSession(config, ctx, req, res)
+        req[attributeName].validUntil = await getJwtExpiryDate(req[attributeName].jwt, ctx)
+        return true
+    }
+
     req[attributeName].get = async (key = null) => {
         if (!req[attributeName].id) {
             throw new Error('[service-express-session] Session not started')

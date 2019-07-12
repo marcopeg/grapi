@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLObjectType, GraphQLInt, GraphQLBoolean } from 'graphql'
+import { GraphQLNonNull, GraphQLObjectType, GraphQLInt } from 'graphql'
 import { GraphQLString, GraphQLID } from 'graphql'
 import GraphQLJSON from 'graphql-type-json'
 import { GraphQLDateTime } from 'graphql-iso-date'
@@ -24,12 +24,12 @@ export const loginMutation = () => ({
             uname: {
                 type: new GraphQLNonNull(GraphQLString),
             },
-            // status: {
-            //     type: new GraphQLNonNull(GraphQLInt),
-            // },
-            // etag: {
-            //     type: new GraphQLNonNull(GraphQLInt),
-            // },
+            status: {
+                type: new GraphQLNonNull(GraphQLInt),
+            },
+            etag: {
+                type: new GraphQLNonNull(GraphQLInt),
+            },
             payload: {
                 type: GraphQLJSON,
             },
@@ -39,8 +39,13 @@ export const loginMutation = () => ({
             createdAt: {
                 type: GraphQLDateTime,
             },
+            token: {
+                type: GraphQLString,
+            },
         },
     })),
-    resolve: (_, args, { req, res }) =>
-        login(args, req, res),
+    resolve: async (_, args, { req, res }) => ({
+        ...(await login(args, req, res)),
+        token: req.session.jwt,
+    }),
 })
