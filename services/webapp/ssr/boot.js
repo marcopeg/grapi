@@ -72,6 +72,11 @@ export default createHookApp({
         require('@forrestjs/service-postgres'),
         require('@forrestjs/service-postgres-pubsub'),
         require('@forrestjs/service-express'),
+        // In order to catch the graphql query
+        [ '$EXPRESS_MIDDLEWARE', ({ registerMiddleware }) => {
+            registerMiddleware(require('body-parser').json())
+            registerMiddleware(require('body-parser').urlencoded({ extended: true }))
+        } ],
         require('@forrestjs/service-express-cookies'),
         require('@forrestjs/service-express-graphql'),
         require('./services/service-express-request'),
@@ -85,6 +90,7 @@ export default createHookApp({
     features: [
         require('./features/feature-pg-session'),
         require('./features/feature-pg-session-info'),
+        require('./features/feature-pg-session-history'),
         require('./features/feature-pg-auth'),
         // require('./services/feature-auth'),
         // require('./services/feature-auth'),
