@@ -84,8 +84,8 @@ export default createHookApp({
     ],
     features: [
         require('./features/feature-pg-session'),
+        require('./features/feature-pg-session-info'),
         require('./features/feature-pg-auth'),
-        // require('./services/feature-session-info'),
         // require('./services/feature-auth'),
         // require('./services/feature-auth'),
         // require('./features/graphql-extensions-manager'),

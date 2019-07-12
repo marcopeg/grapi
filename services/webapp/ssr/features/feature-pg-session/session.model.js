@@ -36,10 +36,10 @@ const options = {
     underscored: true,
 }
 
-const upsertSession = (conn, Model) => async (id, validUntil) => {
+const upsertSession = (conn, Model) => async (id, defaults) => {
     const res = await Model.findOrCreate({
         where: { id },
-        defaults: { id, validUntil },
+        defaults,
     })
     return res[0]
 }
@@ -159,12 +159,12 @@ const unsetValue = (conn, Model) => async (id, keys = []) => {
         payload: Sequelize.literal(`payload  - ${sql}`),
     }, {
         where: { id },
-        logging: console.log,
+        // logging: console.log,
     })
 }
 
 export const init = async (conn, { createHook }) => {
-    await createHook.serie(hooks.SESSION_INIT_MODEL, { name, fields, options, conn })
+    await createHook.serie(hooks.PG_SESSION_INIT_MODEL, { name, fields, options, conn })
 
     const Model = conn.define(name, fields, options)
     Model.upsertSession = upsertSession(conn, Model)
@@ -176,7 +176,7 @@ export const init = async (conn, { createHook }) => {
     // Model.endSession = endSession(conn, Model)
     // Model.endMultipleSessions = endMultipleSessions(conn, Model)
 
-    await createHook.serie(hooks.SESSION_DECORATE_MODEL, { name, fields, options, Model, conn })
+    await createHook.serie(hooks.PG_SESSION_DECORATE_MODEL, { name, fields, options, Model, conn })
 
     return Model.sync()
 }
