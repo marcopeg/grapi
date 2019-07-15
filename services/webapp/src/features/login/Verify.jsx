@@ -16,11 +16,11 @@ class Verify extends React.Component {
     }
 
     async componentDidMount () {
-        const res = await this.props.dispatch(runQuery('query { session { id auth { origin } } }'))
+        const res = await this.props.dispatch(runQuery('query { session { id auth { origin uname } } }'))
         try {
             this.setState({
                 verified: true,
-                origin: res.data.session.auth.origin,
+                origin: res.data.session.auth.origin || res.data.session.auth.uname,
             })
         } catch (err) {
             this.setState({
@@ -37,7 +37,7 @@ class Verify extends React.Component {
 
         return (
             <div>
-                verifying... {this.state.origin}
+                {this.state.origin || 'verifying...'}
                 <hr />
                 <a href="/auth/logout">Logout</a>
             </div>
