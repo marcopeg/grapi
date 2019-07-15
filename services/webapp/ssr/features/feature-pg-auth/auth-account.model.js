@@ -12,7 +12,7 @@ const fields = {
     },
     uname: {
         type: Sequelize.STRING,
-        allowNull: false,
+        // allowNull: false,
         unique: true,
         // validate: {
         //     isEmail: true,
@@ -20,7 +20,7 @@ const fields = {
     },
     passw: {
         type: Sequelize.STRING,
-        allowNull: false,
+        // allowNull: false,
     },
     // 0: pending
     // 1: confirmed
@@ -49,7 +49,9 @@ const options = {
     underscored: true,
     hooks: {
         beforeCreate: async (user) => {
-            user.passw = await encode(user.passw)
+            if (user.passw) {
+                user.passw = await encode(user.passw)
+            }
         },
         beforeUpdate: async (user) => {
             if (user.passw) {

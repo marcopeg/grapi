@@ -10,6 +10,7 @@ const features = [
     require('@forrestjs/feature-network/client'),
     require('@forrestjs/feature-locale/client'),
     require('features/locale'),
+    require('features/login'),
 ]
 
 export const createState = createSSRState(reducers, features)

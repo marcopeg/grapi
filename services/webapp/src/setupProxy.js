@@ -13,4 +13,5 @@ module.exports = function (app) {
     const proxyUrl = process.env.REACT_APP_PROXY || `http://localhost:${proxyPort}/`
     app.use(proxy('/api', { target: proxyUrl }))
     app.use(proxy('/media', { target: proxyUrl }))
+    app.use(proxy('/auth', { target: proxyUrl }))
 }

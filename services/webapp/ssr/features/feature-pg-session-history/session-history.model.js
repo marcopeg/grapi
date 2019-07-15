@@ -9,7 +9,7 @@ const fields = {
         primaryKey: true,
     },
     url: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         primaryKey: true,
     },
     sessionId: {

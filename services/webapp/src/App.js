@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
 
+import { Login } from 'features/login'
+
 const messages = defineMessages({
     welcome: {
         id: 'app.welcome',
@@ -23,6 +25,8 @@ const App = ({ intl, name, locale }) => (
             <title>{name}</title>
         </Helmet>
         {intl.formatMessage(messages.welcome)}
+        <hr />
+        <Login />
     </div>
 )
 

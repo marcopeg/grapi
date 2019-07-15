@@ -29,19 +29,7 @@ export default createHookApp({
             password: getEnv('PG_PASSWORD'),
         }])
 
-        // setConfig('expressGraphqlTest', {
-
-        // })
-
-        // settings.express = {
-        //     graphql: {
-        //         testIsEnabled: true,
-        //         testIsValid: (token, req) => (token === 'xxx'),
-        //     },
-        //     session: {
-        //         initialize: true,
-        //     },
-        // }
+        // setConfig('expressGraphqlTest.isValid', ({ token }) => token === 'ali')
 
         // settings.graphqlExtension = {
         //     // sourcePath: 'foo',
@@ -59,7 +47,7 @@ export default createHookApp({
         // setConfig('express.session.autoStart', false)
         // setConfig('express.session.autoExtend', false)
         // setConfig('express.session.duration', '5s')
-        setConfig('express.device.setCookie', false)
+        // setConfig('express.device.setCookie', false)
         // setConfig('express.session.setCookie', false)
         // setConfig('express.session.setHeader', true)
         // setConfig('express.session.autoValidate', true)
@@ -70,7 +58,7 @@ export default createHookApp({
         require('@forrestjs/service-jwt'),
         require('@forrestjs/service-hash'),
         require('@forrestjs/service-postgres'),
-        require('@forrestjs/service-postgres-pubsub'),
+        // require('@forrestjs/service-postgres-pubsub'),
         require('@forrestjs/service-express'),
         // In order to catch the graphql query
         [ '$EXPRESS_MIDDLEWARE', ({ registerMiddleware }) => {
@@ -92,6 +80,8 @@ export default createHookApp({
         require('./features/feature-pg-session-info'),
         require('./features/feature-pg-session-history'),
         require('./features/feature-pg-auth'),
+        require('./features/feature-passport'),
+
         // require('./services/feature-auth'),
         // require('./services/feature-auth'),
         // require('./features/graphql-extensions-manager'),
@@ -127,10 +117,48 @@ export default createHookApp({
         // } ],
 
         [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
-            registerQuery('foo', {
+            registerQuery('origin', {
+                type: require('graphql').GraphQLString,
+                resolve: $ => $.payload.origin,
+            })
+        } ],
+        [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
+            registerQuery('etag', {
+                type: require('graphql').GraphQLInt,
+                resolve: $ => $.etag,
+            })
+        } ],
+        [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
+            registerQuery('uname', {
                 type: require('graphql').GraphQLString,
                 resolve: $ => $.uname,
             })
         } ],
+
+        // [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
+        //     registerRoute.get('/', async (req, res) => {
+        //         await req.session.validate()
+        //         const count = await req.session.read('count') || 0
+        //         await req.session.write('count', parseInt(count, 10) + 1)
+        //         res.send(`hello ${count}`)
+        //     })
+        //     registerRoute.get('/hggh', (req, res) => {
+        //         res.send('hellod ddewdewdew' + req.foooo)
+        //     })
+        // } ],
+
+
+        // ({ registerAction }) => {
+        //     registerAction({
+        //         hook: '$EXPRESS_MIDDLEWARE',
+        //         optional: true,
+        //         handler: ({ registerMiddleware }) => {
+        //             registerMiddleware((req, res, next) => {
+        //                 req.foooo = 12345
+        //                 next()
+        //             })
+        //         },
+        //     })
+        // },
     ],
 })

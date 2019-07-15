@@ -121,7 +121,7 @@ export default ({ registerHook, registerAction }) => {
         hook: '$EXPRESS_GRAPHQL_TEST',
         name: hooks.FEATURE_NAME,
         handler: async ({ registerMutation }, ctx) => {
-            registerMutation('createAccount', await testCreateAccountMutation())  
+            registerMutation('createAccount', await testCreateAccountMutation())
         },
     })
 }

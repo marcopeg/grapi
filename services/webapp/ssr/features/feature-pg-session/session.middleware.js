@@ -23,7 +23,10 @@ export const addSession = (config, ctx) => async (req, res, next) => {
         // generate a new session
         if (!record) {
             await req[attributeName].create()
-            await SessionRecord.upsertSession(req[attributeName].id, req[attributeName].validUntil)
+            await SessionRecord.upsertSession(req[attributeName].id, {
+                ...defaults,
+                id: req[attributeName].id,
+            })
             await SessionRecord.validateSession(req[attributeName].id, req[attributeName].validUntil)
         }
     }

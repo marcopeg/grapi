@@ -1,4 +1,5 @@
 import { getModel } from '@forrestjs/service-postgres'
+import { logout } from './auth-account.lib'
 
 export const addAuth = (config, ctx) => (req, res, next) => {
     const AuthAccount = getModel('AuthAccount')
@@ -18,6 +19,8 @@ export const addAuth = (config, ctx) => (req, res, next) => {
         req.auth.record = record
         return record.dataValues
     }
+
+    req.auth.logout = () => logout(req, res)
 
     next()
 }
