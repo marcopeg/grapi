@@ -3,21 +3,9 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { runQuery } from '@forrestjs/feature-network'
+import { login } from './auth.service'
 import Verify from './Verify'
 
-const query = `
-mutation (
-    $uname:String!
-    $passw:String!
-  ) {
-    login (
-      uname: $uname
-      passw:$passw
-    ) {
-        id
-    }
-}`
 
 class Login extends React.Component {
     constructor (props) {
@@ -29,13 +17,7 @@ class Login extends React.Component {
     onSubmit = async (evt) => {
         evt.preventDefault()
         evt.stopPropagation()
-
-        await this.props.dispatch(runQuery(query, {
-            uname: evt.target[0].value,
-            passw: evt.target[1].value,
-        }))
-
-        this.setState({ logged: true })
+        await this.props.dispatch(login(evt.target[0].value, evt.target[1].value))
     }
 
     render () {

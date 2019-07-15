@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
 
 import { Login } from 'features/login'
+import { JournalWriteRouter } from 'features/journal-write'
 
 const messages = defineMessages({
     welcome: {
@@ -27,6 +28,7 @@ const App = ({ intl, name, locale }) => (
         {intl.formatMessage(messages.welcome)}
         <hr />
         <Login />
+        <JournalWriteRouter />
     </div>
 )
 

@@ -134,6 +134,12 @@ export default createHookApp({
                 resolve: $ => $.uname,
             })
         } ],
+        [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
+            registerQuery('id', {
+                type: require('graphql').GraphQLString,
+                resolve: $ => $.id,
+            })
+        } ],
 
         // [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
         //     registerRoute.get('/', async (req, res) => {
