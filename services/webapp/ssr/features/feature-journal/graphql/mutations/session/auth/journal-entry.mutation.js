@@ -17,16 +17,10 @@ export const journalEntryMutation = async () => ({
     },
     type: GraphQLJournalEntry,
     resolve: async (auth, args) => {
-        const [model] = await getModel('JournalEntry').upsert({
+        const [model] = await getModel('JournalEntry').upsertEncrypted({
             accountId: auth.id,
             day: args.day,
             content: args.content,
-        }, {
-            where: {
-                accountId: auth.id,
-                day: args.day,
-            },
-            returning: true,
         })
 
         return model

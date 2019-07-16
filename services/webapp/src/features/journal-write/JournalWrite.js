@@ -52,9 +52,10 @@ class JournalWrite extends React.Component {
             )
         }
         return (
-            <>  
-                <button onClick={this.save}>save</button>
-                <hr />
+            <div style={{
+                margin: '50px auto',
+                maxWidth: '800px',
+            }}>
                 <Editor
                     ref={this.editor}
                     value={entry.content}
@@ -65,12 +66,12 @@ class JournalWrite extends React.Component {
                         outline: 'none',
                         fontFamily: 'Verdana',
                         fontSize: '14pt',
-                        margin: '5px 10px',
+                        margin: '5px 0',
                     }}
                 />
                 <hr />
-                (last saved: {lastSaved.toISOString()})
-            </>
+                <small>(last saved: {lastSaved.toISOString()})</small>
+            </div>
         )
     }
 }

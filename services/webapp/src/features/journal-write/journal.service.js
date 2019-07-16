@@ -43,11 +43,11 @@ export const fetchJournal = () => async (dispatch) => {
     entry.createdAt = new Date(entry.createdAt)
     entry.updatedAt = new Date(entry.updatedAt)
     entry.day = new Date(entry.day)
-    entry.content = entry.content.map(part => ({
+    entry.content = entry.content ? entry.content.map(part => ({
         ...part,
         createdAt: new Date(part.createdAt),
         updatedAt: new Date(part.updatedAt),
-    }))
+    })) : null
 
     return entry
 }

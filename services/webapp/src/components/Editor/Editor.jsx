@@ -7,8 +7,10 @@ class Editor extends React.Component {
     constructor (props) {
         super(props)
 
-        const list = data2list(this.props.value)
-        const map = data2map(this.props.value)
+        // prepare the content for editing an existing document or creating a new part
+        const parts = (this.props.value && this.props.value.length) ? this.props.value : [newPart()]
+        const list = data2list(parts)
+        const map = data2map(parts)
         const refs = list.reduce((acc, curr) => ({ ...acc, [curr]: React.createRef() }), {})
 
         this.state = {
@@ -160,7 +162,7 @@ Editor.propTypes = {
 }
 
 Editor.defaultProps = {
-    value: [newPart()],
+    value: null,
     className: '',
     style: {},
     inputWrapper: undefined,

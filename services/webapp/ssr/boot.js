@@ -16,8 +16,9 @@ export default createHookApp({
             attemptDelay: Number(getEnv('PG_CONN_ATTEMPTS_DELAY', 5000)),
             models: [],
             // onConnection: async (conn) => {
-            //     await conn.handler.query('drop schema public cascade;')
-            //     await conn.handler.query('create schema public;')
+            //     // await conn.handler.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
+            //     // await conn.handler.query('drop schema public cascade;')
+            //     // await conn.handler.query('create schema public;')
             // },
         }])
 

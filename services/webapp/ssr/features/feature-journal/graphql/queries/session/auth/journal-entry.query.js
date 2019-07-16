@@ -1,3 +1,4 @@
+
 import { GraphQLYYYYMMDD as GraphQLDate } from 'graphql-moment'
 import { getModel } from '@forrestjs/service-postgres'
 import { GraphQLJournalEntry } from '../../../types/journal-entry.type'
@@ -11,12 +12,19 @@ export const journalEntryQuery = async () => ({
         },
     },
     type: GraphQLJournalEntry,
-    resolve: async (auth, args, { req, res }) =>
-        getModel('JournalEntry').findOne({
-            where: {
-                accountId: auth.id,
-                ...args,
-            },
-            raw: true,
-        }),
+    resolve: async (auth, args) => {
+        const entry = await getModel('JournalEntry').findOneEncrypted({
+            accountId: auth.id,
+            ...args,
+        })
+
+        // default into a new document for the day
+        return entry || {
+            accountId: auth.id,
+            day: args.day,
+            content: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        }
+    },
 })
