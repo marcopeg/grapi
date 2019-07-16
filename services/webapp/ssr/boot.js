@@ -81,6 +81,7 @@ export default createHookApp({
         require('./features/feature-pg-session-history'),
         require('./features/feature-pg-auth'),
         require('./features/feature-passport'),
+        require('./features/feature-journal'),
 
         // require('./services/feature-auth'),
         // require('./services/feature-auth'),

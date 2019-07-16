@@ -71,6 +71,7 @@
     "fs-extra": "^8.0.1",
     "graphql-extension": "^0.1.4",
     "graphql-iso-date": "^3.6.1",
+    "graphql-moment": "^0.0.2",
     "isomorphic-fetch": "^2.2.1",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
