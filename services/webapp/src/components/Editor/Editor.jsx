@@ -32,6 +32,10 @@ class Editor extends React.Component {
         this.__focusTimer = setTimeout(() => this.state.refs[id].current.focus(position))
     }
 
+    triggerOnChange = () => {
+        this.props.onChange(this.getContent())
+    }
+
     onInputChange = (id) => (text) => {
         this.setState({ map: {
             ...this.state.map,
@@ -41,6 +45,8 @@ class Editor extends React.Component {
                 text,
             },
         } })
+
+        this.triggerOnChange()
     }
 
     onRequestFocusPrev = (id) => () => {
@@ -73,6 +79,8 @@ class Editor extends React.Component {
 
         this.setState({ map, list, refs })
         this.focus(part.id)
+
+        this.triggerOnChange()
     }
 
     onRequestDeletePart = (id) => () => {
@@ -106,6 +114,8 @@ class Editor extends React.Component {
         } else {
             target && this.focus(target, -1)
         }
+
+        this.triggerOnChange()
     }
 
     render () {
@@ -146,6 +156,7 @@ Editor.propTypes = {
     inputWrapper: PropTypes.any, // eslint-disable-line
     inputClassName: PropTypes.any, // eslint-disable-line
     inputStyle: PropTypes.object,
+    onChange: PropTypes.func,
 }
 
 Editor.defaultProps = {
@@ -155,6 +166,7 @@ Editor.defaultProps = {
     inputWrapper: undefined,
     inputClassName: undefined,
     inputStyle: undefined,
+    onChange: () => {},
 }
 
 export default Editor
