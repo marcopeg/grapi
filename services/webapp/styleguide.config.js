@@ -5,25 +5,25 @@ module.exports = {
      * Include all the (almost) pure component examples here:
      */
     sections: [
-        // {
-        //     name: 'Components',
-        //     description: 'Application level dumb components',
-        //     components: [
-        //         'src/components/Markdown/Markdown.js',
-        //     ],
-        // },
         {
-            name: 'Features',
-            description: 'Produce examples for each feature',
-            sections: [
-                {
-                    name: 'features/locale',
-                    components: [
-                        'src/features/locale/LocaleSelectorUI.js',
-                    ],
-                },
+            name: 'Components',
+            description: 'Application level dumb components',
+            components: [
+                'src/components/Editor/Editor.jsx',
             ],
         },
+        // {
+        //     name: 'Features',
+        //     description: 'Produce examples for each feature',
+        //     sections: [
+        //         {
+        //             name: 'features/locale',
+        //             components: [
+        //                 'src/features/locale/LocaleSelectorUI.js',
+        //             ],
+        //         },
+        //     ],
+        // },
     ],
 
     /**
