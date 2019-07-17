@@ -1,4 +1,4 @@
-import { GraphQLList, GraphQLNonNull } from 'graphql'
+import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql'
 import { GraphQLYYYYMMDD as GraphQLDate } from 'graphql-moment'
 import { getModel } from '@forrestjs/service-postgres'
 import { GraphQLJournalEntryContentInput } from '../../../types/journal-entry-content.input'
@@ -11,6 +11,9 @@ export const journalEntryMutation = async () => ({
             type: GraphQLDate,
             defaultValue: new Date(),
         },
+        key: {
+            type: new GraphQLNonNull(GraphQLString),
+        },
         content: {
             type: new GraphQLNonNull(new GraphQLList(GraphQLJournalEntryContentInput)),
         },
@@ -21,7 +24,7 @@ export const journalEntryMutation = async () => ({
             accountId: auth.id,
             day: args.day,
             content: args.content,
-        })
+        }, args.key)
 
         return model
     },

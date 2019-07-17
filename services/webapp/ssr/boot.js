@@ -59,7 +59,7 @@ export default createHookApp({
         require('@forrestjs/service-jwt'),
         require('@forrestjs/service-hash'),
         require('@forrestjs/service-postgres'),
-        // require('@forrestjs/service-postgres-pubsub'),
+        require('@forrestjs/service-postgres-pubsub'),
         require('@forrestjs/service-express'),
         // In order to catch the graphql query
         [ '$EXPRESS_MIDDLEWARE', ({ registerMiddleware }) => {
@@ -74,7 +74,7 @@ export default createHookApp({
         require('@forrestjs/service-express-graphql-test'),
         // require('./services/service-express-graphql-extension'),
         // require('@forrestjs/service-express-ssr'),
-        // require('@forrestjs/feature-locale'),
+        require('@forrestjs/feature-locale'),
     ],
     features: [
         require('./features/feature-pg-session'),
@@ -118,38 +118,38 @@ export default createHookApp({
         //     })
         // } ],
 
-        [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
-            registerQuery('origin', {
-                type: require('graphql').GraphQLString,
-                resolve: $ => $.payload.origin,
-            })
-        } ],
-        [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
-            registerQuery('etag', {
-                type: require('graphql').GraphQLInt,
-                resolve: $ => $.etag,
-            })
-        } ],
-        [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
-            registerQuery('uname', {
-                type: require('graphql').GraphQLString,
-                resolve: $ => $.uname,
-            })
-        } ],
-        [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
-            registerQuery('id', {
-                type: require('graphql').GraphQLString,
-                resolve: $ => $.id,
-            })
-        } ],
+        // [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
+        //     registerQuery('origin', {
+        //         type: require('graphql').GraphQLString,
+        //         resolve: $ => $.payload.origin,
+        //     })
+        // } ],
+        // [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
+        //     registerQuery('etag', {
+        //         type: require('graphql').GraphQLInt,
+        //         resolve: $ => $.etag,
+        //     })
+        // } ],
+        // [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
+        //     registerQuery('uname', {
+        //         type: require('graphql').GraphQLString,
+        //         resolve: $ => $.uname,
+        //     })
+        // } ],
+        // [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
+        //     registerQuery('id', {
+        //         type: require('graphql').GraphQLString,
+        //         resolve: $ => $.id,
+        //     })
+        // } ],
 
         // [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
-        //     registerRoute.get('/', async (req, res) => {
-        //         await req.session.validate()
-        //         const count = await req.session.read('count') || 0
-        //         await req.session.write('count', parseInt(count, 10) + 1)
-        //         res.send(`hello ${count}`)
-        //     })
+        //     // registerRoute.get('/', async (req, res) => {
+        //     //     await req.session.validate()
+        //     //     const count = await req.session.read('count') || 0
+        //     //     await req.session.write('count', parseInt(count, 10) + 1)
+        //     //     res.send(`hello ${count}`)
+        //     // })
         //     registerRoute.get('/hggh', (req, res) => {
         //         res.send('hellod ddewdewdew' + req.foooo)
         //     })
