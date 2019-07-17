@@ -1,7 +1,8 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLString } from 'graphql'
 import { GraphQLYYYYMMDD as GraphQLDate } from 'graphql-moment'
 import { getModel } from '@forrestjs/service-postgres'
 import { GraphQLJournalEntry } from '../../../types/journal-entry.type'
+import { decryptKey } from '../../../../journal-utils'
 
 export const journalEntryQuery = async () => ({
     description: 'Reads a journal entry related to the identity',
@@ -11,15 +12,15 @@ export const journalEntryQuery = async () => ({
             defaultValue: new Date(),
         },
         key: {
-            type: new GraphQLNonNull(GraphQLString),
+            type: GraphQLString,
         },
     },
     type: GraphQLJournalEntry,
-    resolve: async (auth, args) => {
+    resolve: async (auth, args, { req }) => {
         const entry = await getModel('JournalEntry').findOneEncrypted({
             accountId: auth.id,
             ...args,
-        }, args.key)
+        }, args.key || await decryptKey(req))
 
         // default into a new document for the day
         return entry || {

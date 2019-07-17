@@ -25,7 +25,7 @@ const options = {
 }
 
 const upsertEncrypted = (conn, Model, encryptionKey) =>
-    async ({ accountId, day, content }, userEncryptionKey = 'qqq') =>
+    async ({ accountId, day, content }, userEncryptionKey) =>
         Model.upsert({
             accountId,
             day,
@@ -48,7 +48,7 @@ const upsertEncrypted = (conn, Model, encryptionKey) =>
         })
 
 const findOneEncrypted = (conn, Model, encryptionKey) =>
-    async ({ accountId, day }, userEncryptionKey = 'qqq') => {
+    async ({ accountId, day }, userEncryptionKey) => {
         const data = await Model.findOne({
             where: {
                 accountId,
@@ -83,7 +83,7 @@ const findOneEncrypted = (conn, Model, encryptionKey) =>
     }
 
 const updateUserEncryptionKey = (conn, Model, encryptionKey) =>
-    async ({ accountId, oldKey, newKey }) =>
+    async ({ accountId, key, newKey }) =>
         Model.update({
             content: Sequelize.fn(
                 'PGP_SYM_ENCRYPT',
@@ -96,13 +96,25 @@ const updateUserEncryptionKey = (conn, Model, encryptionKey) =>
                             Sequelize.cast(Sequelize.col('content'), 'bytea'),
                             encryptionKey
                         ), 'bytea'),
-                        oldKey
+                        key
                     ),
                     newKey
                 ), 'text'),
                 encryptionKey
             ),
         }, { where: { accountId } })
+
+const encryptValue = (conn, Model) =>
+    async ({ key, val }) => {
+        const res = await conn.query(`SELECT PGP_SYM_ENCRYPT('${val}', '${key}')::text as value;`)
+        return res[0][0]['value']
+    }
+
+const decryptValue = (conn, Model) =>
+    async ({ key, val }) => {
+        const res = await conn.query(`SELECT PGP_SYM_DECRYPT('${val}'::bytea, '${key}')::text as value;`)
+        return res[0][0]['value']
+    }
 
 export const init = async (conn, { getEnv }) => {
     const encryptionKey = getEnv('PG_ENCRYPTION_KEY')
@@ -111,6 +123,8 @@ export const init = async (conn, { getEnv }) => {
     Model.upsertEncrypted = upsertEncrypted(conn, Model, encryptionKey)
     Model.findOneEncrypted = findOneEncrypted(conn, Model, encryptionKey)
     Model.updateUserEncryptionKey = updateUserEncryptionKey(conn, Model, encryptionKey)
+    Model.encryptValue = encryptValue(conn, Model)
+    Model.decryptValue = decryptValue(conn, Model)
 
     await conn.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
     return Model.sync()

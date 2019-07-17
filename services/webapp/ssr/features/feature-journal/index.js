@@ -1,10 +1,11 @@
-// import Sequelize from 'sequelize'
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
 import * as hooks from './hooks'
 import * as journalEntryModel from './journal-entry.model'
 import { journalEntryQuery } from './graphql/queries/session/auth/journal-entry.query'
 import { journalEntryMutation } from './graphql/mutations/session/auth/journal-entry.mutation'
+import { journalUpdateKeyMutation } from './graphql/mutations/session/auth/journal-update-key.mutation'
 import { journalSetKeyMutation } from './graphql/mutations/session/auth/journal-set-key.mutation'
+import { cleanSession } from './journal-utils'
 
 export default ({ registerHook, registerAction }) => {
     registerHook(hooks)
@@ -18,6 +19,7 @@ export default ({ registerHook, registerAction }) => {
         },
     })
 
+    // Inject the GraphQL APIs
     registerAction({
         hook: '$PG_AUTH_GRAPHQL',
         name: hooks.FEATURE_NAME,
@@ -25,6 +27,14 @@ export default ({ registerHook, registerAction }) => {
             registerQuery('journalEntry', await journalEntryQuery())
             registerMutation('journalEntry', await journalEntryMutation())
             registerMutation('journalSetKey', await journalSetKeyMutation())
+            registerMutation('journalUpdateKey', await journalUpdateKeyMutation())
         },
+    })
+
+    // Cleanup session on logout
+    registerAction({
+        hook: '$PG_AUTH_LOGOUT',
+        name: hooks.FEATURE_NAME,
+        handler: ({ req }) => cleanSession(req),
     })
 }

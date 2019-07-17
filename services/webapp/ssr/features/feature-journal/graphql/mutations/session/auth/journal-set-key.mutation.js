@@ -1,25 +1,13 @@
 import { GraphQLNonNull, GraphQLString } from 'graphql'
-import { getModel } from '@forrestjs/service-postgres'
+import { encryptKey } from '../../../../journal-utils'
 
 export const journalSetKeyMutation = async () => ({
-    description: 'Updates the encrypted data with a new key ',
+    description: 'Hashes the user encryption PIN',
     args: {
-        oldKey: {
-            type: new GraphQLNonNull(GraphQLString),
-        },
-        newKey: {
+        key: {
             type: new GraphQLNonNull(GraphQLString),
         },
     },
     type: GraphQLString,
-    resolve: async (auth, args) => {
-        const res = await getModel('JournalEntry').updateUserEncryptionKey({
-            ...args,
-            accountId: auth.id,
-        })
-
-        console.log(res)
-
-        return 'yes'
-    },
+    resolve: async (auth, args, { req }) => encryptKey(req, args.key),
 })
