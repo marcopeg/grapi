@@ -1,10 +1,11 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import JournalWrite from './JournalWrite'
+import JournalMain from './JournalMain'
 
 const JournalWriteRouter = () => (
     <Switch>
-        <Route path="/write" component={JournalWrite} />
+        <Route exact path="/" component={JournalMain} />
+        <Route path="/write/:day" component={JournalMain} />
     </Switch>
 )
 

@@ -1,17 +1,17 @@
 
 export const initialState = {
-    id: null,
+    pin: null,
 }
 
 /**
  * Actions
  */
 
-export const SET_ID = 'setId@auth'
+export const SET_PIN = 'setPin@journal'
 
-export const setId = id => ({
-    type: SET_ID,
-    payload: { id },
+export const setPin = pin => ({
+    type: SET_PIN,
+    payload: { pin },
 })
 
 
@@ -21,7 +21,7 @@ export const setId = id => ({
 
 export const actionHandlers = {
     '@reset': () => ({ ...initialState }),
-    [SET_ID]: (state, { payload }) => ({
+    [SET_PIN]: (state, { payload }) => ({
         ...state,
         ...payload,
     }),

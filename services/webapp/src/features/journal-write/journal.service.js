@@ -1,10 +1,14 @@
 import { runQuery } from '@forrestjs/feature-network'
+import { localStorage } from '@forrestjs/feature-storage'
+import { setPin } from './journal.reducer'
 
 const fetchQuery = `
-    query getJournalEntry {
+    query getJournalEntry (
+        $day: YearMonthDay
+    ) {
         session {
             auth {
-                journalEntry {
+                journalEntry (day: $day) {
                     createdAt
                     updatedAt
                     day
@@ -29,33 +33,64 @@ const saveQuery = `
         }
     }`
 
+const savePinQuery = `
+    mutation setJournalPin(
+        $pin: String!
+    ) {
+        session {
+            auth {
+                journalSetKey (key: $pin)
+            }
+        }
+    }
+`
+
 const formatDate = date => [
     date.getFullYear(),
     String(date.getMonth() + 1).padStart(2, '0'),
     String(date.getDate()).padStart(2, 0),
 ].join('-')
 
-export const fetchJournal = () => async (dispatch) => {
-    const res = await dispatch(runQuery(fetchQuery))
-    const entry = res.data.session.auth.journalEntry
+export const fetchJournal = (date = new Date()) => async (dispatch) => {
+    try {
+        const res = await dispatch(runQuery(fetchQuery, { day: formatDate(date) }))
+        const entry = res.data.session.auth.journalEntry
 
-    // Inflate dates
-    entry.createdAt = new Date(entry.createdAt)
-    entry.updatedAt = new Date(entry.updatedAt)
-    entry.day = new Date(entry.day)
-    entry.content = entry.content ? entry.content.map(part => ({
-        ...part,
-        createdAt: new Date(part.createdAt),
-        updatedAt: new Date(part.updatedAt),
-    })) : null
+        // Inflate dates
+        entry.createdAt = new Date(entry.createdAt)
+        entry.updatedAt = new Date(entry.updatedAt)
+        entry.day = new Date(entry.day)
+        entry.content = entry.content ? entry.content.map(part => ({
+            ...part,
+            createdAt: new Date(part.createdAt),
+            updatedAt: new Date(part.updatedAt),
+        })) : null
 
-    return entry
+        return entry
+    } catch (err) {
+        dispatch(setPin(null))
+    }
 }
 
 export const saveJournal = (day, content) => async (dispatch) => {
-    const res = await dispatch(runQuery(saveQuery, {
-        day: formatDate(day),
-        content,
-    }))
-    return res.data.session.auth.journalEntry
+    try {
+        const res = await dispatch(runQuery(saveQuery, {
+            day: formatDate(day),
+            content,
+        }))
+        return res.data.session.auth.journalEntry
+    } catch (err) {
+        dispatch({ type: '@reset' })
+    }
+}
+
+export const savePin = (pin) => async (dispatch) => {
+    await dispatch(runQuery(savePinQuery, { pin }))
+    dispatch(localStorage.setItem('journal::pin', true))
+    dispatch(setPin(true))
+}
+
+export const checkPin = () => (dispatch) => {
+    const pin = dispatch(localStorage.getItem('journal::pin'))
+    dispatch(setPin(pin ? true : null))
 }
