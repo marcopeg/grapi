@@ -1,4 +1,5 @@
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
+import { getModel } from '@forrestjs/service-postgres'
 import * as hooks from './hooks'
 import * as journalEntryModel from './journal-entry.model'
 import { journalEntryQuery } from './graphql/queries/session/auth/journal-entry.query'
@@ -36,5 +37,20 @@ export default ({ registerHook, registerAction }) => {
         hook: '$PG_AUTH_LOGOUT',
         name: hooks.FEATURE_NAME,
         handler: ({ req }) => cleanSession(req),
+    })
+
+    // Cleanup session on session end detection
+    registerAction({
+        hook: '$PG_SESSION_CLEANUP',
+        name: hooks.FEATURE_NAME,
+        handler: (args, { logError, logVerbose }) => {
+            const promises = args.records
+                .filter(data => data.payload.journal_key)
+                .map(data => getModel('SessionRecord').unsetValue(data.id, 'journal_key'))
+
+            Promise.all(promises)
+                .then(() => logVerbose(`[feature-journal] cleared ${promises.length} session from the "journal_key"`))
+                .catch(err => logError(`[feature-journal] ${err.message}`))
+        },
     })
 }

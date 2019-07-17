@@ -1,4 +1,5 @@
 import uuid from 'uuid'
+import * as hooks from './hooks'
 
 // Generate a new session payload with an ID.
 const createSessionId = async ({
@@ -67,6 +68,7 @@ export const addSession = (config, ctx) => async (req, res, next) => {
         req[attributeName].data = data
         req[attributeName].jwt = await flushSession(config, ctx, req, res)
         req[attributeName].validUntil = await getJwtExpiryDate(req[attributeName].jwt, ctx)
+        await req.hooks.createHook.sync(hooks.EXPRESS_SESSION_START, { req, res })
     }
 
     // resets the data properties of the running session and removes the cookie (optional)

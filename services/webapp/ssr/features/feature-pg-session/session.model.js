@@ -44,7 +44,7 @@ const upsertSession = (conn, Model) => async (id, defaults) => {
     return res[0]
 }
 
-const validateSession = (conn, Model) => async (id, validUntil) => {
+const validateSession = (conn, Model, createHook) => async (id, validUntil) => {
     const results = await Model.update({
         validUntil,
         hits: Sequelize.literal('hits + 1'),
@@ -60,62 +60,54 @@ const validateSession = (conn, Model) => async (id, validUntil) => {
     })
 
     const record = results[1].shift()
+
+    // Try to mark an ended session with a timestamp
+    if (!record) {
+        const updates = await Model.update({
+            isActive: false,
+            endedAt: new Date(),
+        }, {
+            where: {
+                id,
+                endedAt: null,
+            },
+            returning: true,
+            raw: true,
+        })
+
+        // Run cleanup hooks
+        updates[0] && await createHook.serie(hooks.PG_SESSION_CLEANUP, { records: updates[1] })
+    }
+
     return record
 }
 
-// const updateSession = (conn, Model) => async (id, { payload, validUntil }) => {
-//     const results = await Model.update({
-//         payload,
-//         validUntil,
-//         lastPing: Sequelize.literal('NOW()'),
-//         hits: Sequelize.literal('hits + 1'),
-//     }, {
-//         where: {
-//             id,
-//             isActive: true,
-//             validUntil: { [Sequelize.Op.gte]: Sequelize.literal('NOW()') },
-//             endedAt: null,
-//         },
-//         returning: true,
-//         raw: true,
-//     })
+const cleanup = (conn, Model, createHook) => async () => {
+    const updates = await Model.update({
+        isActive: false,
+        endedAt: new Date(),
+    }, {
+        where: {
+            [Sequelize.Op.or]: [
+                {
+                    endedAt: null,
+                    isActive: false,
+                },
+                {
+                    endedAt: null,
+                    validUntil: { [Sequelize.Op.lt]: Sequelize.literal('NOW()') },
+                },
+            ],
+        },
+        returning: true,
+        raw: true,
+    })
 
-//     const record = results[1].shift()
-//     return record
-// }
+    // Run cleanup hooks
+    updates[0] && await createHook.serie(hooks.PG_SESSION_CLEANUP, { records: updates[1] })
 
-
-// const endSession = (conn, Model) => async (id) => {
-//     const results = await Model.update({
-//         isActive: false,
-//         endedAt: Sequelize.literal('NOW()'),
-//     }, {
-//         where: { id, isActive: true },
-//         returning: true,
-//         raw: true,
-//     })
-
-//     const record = results[1].shift()
-//     return record
-// }
-
-// const endMultipleSessions = (conn, Model) => async (where) => {
-//     const results = await Model.update({
-//         isActive: false,
-//         endedAt: Sequelize.literal('NOW()'),
-//     }, {
-//         where: {
-//             [Sequelize.Op.and]: [
-//                 { isActive: true },
-//                 where,
-//             ],
-//         },
-//         returning: true,
-//         raw: true,
-//     })
-
-//     return results[1]
-// }
+    return updates
+}
 
 // setValue('key', 'value)
 // setValue({ key1: 123, key2: 'aaa' })
@@ -168,13 +160,11 @@ export const init = async (conn, { createHook }) => {
 
     const Model = conn.define(name, fields, options)
     Model.upsertSession = upsertSession(conn, Model)
-    Model.validateSession = validateSession(conn, Model)
+    Model.validateSession = validateSession(conn, Model, createHook)
+    Model.cleanup = cleanup(conn, Model, createHook)
     Model.setValue = setValue(conn, Model)
     Model.unsetValue = unsetValue(conn, Model)
     Model.getValue = getValue(conn, Model)
-    // Model.updateSession = updateSession(conn, Model)
-    // Model.endSession = endSession(conn, Model)
-    // Model.endMultipleSessions = endMultipleSessions(conn, Model)
 
     await createHook.serie(hooks.PG_SESSION_DECORATE_MODEL, { name, fields, options, Model, conn })
 

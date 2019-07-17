@@ -1,5 +1,6 @@
 import { GraphQLBoolean } from 'graphql'
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
+import { getModel } from '@forrestjs/service-postgres'
 import * as hooks from './hooks'
 import * as sessionModel from './session.model'
 import { addSession } from './session.middleware'
@@ -26,6 +27,12 @@ export default ({ registerHook, registerAction }) => {
             }
             registerMiddleware(addSession(config, ctx))
         },
+    })
+
+    registerAction({
+        hook: '$EXPRESS_SESSION_START',
+        name: hooks.FEATURE_NAME,
+        handler: () => getModel('SessionRecord').cleanup(),
     })
 
     registerAction({

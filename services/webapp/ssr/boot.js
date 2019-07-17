@@ -47,7 +47,7 @@ export default createHookApp({
 
         // setConfig('express.session.autoStart', false)
         // setConfig('express.session.autoExtend', false)
-        setConfig('express.session.duration', '5s')
+        // setConfig('express.session.duration', '5s')
         // setConfig('express.device.setCookie', false)
         // setConfig('express.session.setCookie', false)
         // setConfig('express.session.setHeader', true)
