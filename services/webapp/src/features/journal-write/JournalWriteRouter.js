@@ -4,8 +4,7 @@ import JournalMain from './JournalMain'
 
 const JournalWriteRouter = () => (
     <Switch>
-        <Route exact path="/" component={JournalMain} />
-        <Route path="/write/:day" component={JournalMain} />
+        <Route exact path="/journal/:day?" component={JournalMain} />
     </Switch>
 )
 

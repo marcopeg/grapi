@@ -43,7 +43,7 @@ class JournalWrite extends React.Component {
     }
 
     countWords = (content) => {
-        const words = content.reduce((acc, curr) => (acc + curr.text.split(' ').length), 0)
+        const words = content ? content.reduce((acc, curr) => (acc + curr.text.split(' ').length), 0) : 0
         this.setState({ words })
     }
 

@@ -41,6 +41,8 @@ export default createHookApp({
             duration: getEnv('JWT_DURATION'),
         })
 
+        setConfig('express.session.duration', '30d')
+
         // setConfig('hash', {
         //     rounds: Number(getEnv('BCRYPT_ROUNDS')),
         // })

@@ -51,8 +51,9 @@ const formatDate = date => [
     String(date.getDate()).padStart(2, 0),
 ].join('-')
 
-export const fetchJournal = (date = new Date()) => async (dispatch) => {
+export const fetchJournal = (receivedDate = new Date()) => async (dispatch) => {
     try {
+        const date = typeof receivedDate === 'string' ? new Date(receivedDate) : receivedDate
         const res = await dispatch(runQuery(fetchQuery, { day: formatDate(date) }))
         const entry = res.data.session.auth.journalEntry
 
@@ -68,6 +69,7 @@ export const fetchJournal = (date = new Date()) => async (dispatch) => {
 
         return entry
     } catch (err) {
+        console.warn(`[fetchJournal] ${err.message}`)
         dispatch(setPin(null))
     }
 }
@@ -80,6 +82,7 @@ export const saveJournal = (day, content) => async (dispatch) => {
         }))
         return res.data.session.auth.journalEntry
     } catch (err) {
+        console.warn(`[saveJournal] ${err.message}`)
         dispatch({ type: '@reset' })
     }
 }
