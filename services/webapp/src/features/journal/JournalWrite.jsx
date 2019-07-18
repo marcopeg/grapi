@@ -66,7 +66,7 @@ class JournalWrite extends React.Component {
                 margin: '50px auto',
                 maxWidth: '800px',
             }}>
-                <h2>Write your stuff:</h2>
+                <h2>What makes you feel good?</h2>
                 <div style={{ border: '1px solid #ddd', padding: 10 }}>
                     <Editor
                         ref={this.editor}

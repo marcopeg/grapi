@@ -3,10 +3,12 @@
 #
 
 # Running container's name
-name?=forrest-starter-universal
+organization?=marcopeg
+name?=apps
+version:= $(shell node -p "require('../../project.json').version")
 
 # Docker image tag name
-tag?=${name}
+tag?=${organization}/${name}
 
 # Docker Development Options
 cmd?=build
@@ -22,7 +24,15 @@ app?=3000
 
 # Build the project using cache
 image:
-	docker build -t ${tag} .
+	docker build -t ${tag} -t ${tag}:${version} .
+
+publish:
+	docker tag ${tag}:${version} ${tag}:${version}
+	docker tag ${tag}:${version} ${tag}:latest
+	docker push ${tag}:${version}
+	docker push ${tag}:latest
+
+release: image publish
 
 # Spins up a container from the latest available image
 # this is useful to test locally
@@ -30,8 +40,9 @@ prod: image
 	docker run \
 		--rm \
 		--name ${name} \
+		--env-file .env.docker.local \
 		-p 8080:8080 \
-		${name}
+		${tag}
 
 # Like start, but in background
 # classic way to launch it on a server
@@ -40,7 +51,7 @@ boot: image
 		-d \
 		--name ${name} \
 		-p 8080:8080 \
-		${name}
+		${tag}
 
 # stop the running container
 stop:

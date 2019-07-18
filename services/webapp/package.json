@@ -1,7 +1,7 @@
 {
   "name": "forrest-starter-universal",
   "description": "Complete SSR boilerplate: cra, ssr, redux, router, multilanguage, graphql",
-  "version": "0.1.0",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "----- // CRA DEFAULT SCRIPTS // -----": "",
@@ -11,6 +11,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "----- // START SCRIPTS // -----": "",
+    "start:api:quick": "cross-env NODE_ENV=production node index",
     "start:api": "yarn build:node && cross-env NODE_ENV=production node index",
     "start:app": "react-scripts start",
     "start:dev": "yarn && concurrently \"yarn start:dev:api\" \"yarn start:app\"",
@@ -65,7 +66,7 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@forrestjs/package-universal": "^3.0.5",
+    "@forrestjs/package-universal": "^3.0.7",
     "es6-promise": "^4.2.6",
     "express-request-id": "^1.4.1",
     "fs-extra": "^8.0.1",

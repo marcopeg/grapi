@@ -14,6 +14,7 @@ export default createHookApp({
             password: getEnv('PG_PASSWORD'),
             maxAttempts: Number(getEnv('PG_MAX_CONN_ATTEMPTS', 25)),
             attemptDelay: Number(getEnv('PG_CONN_ATTEMPTS_DELAY', 5000)),
+            pool: { max: 2, min: 0, acquire: 30000, idle: 10000 },
             models: [],
             // onConnection: async (conn) => {
             //     // await conn.handler.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
@@ -42,6 +43,12 @@ export default createHookApp({
         })
 
         setConfig('express.session.duration', '30d')
+
+        setConfig('expressSSR.enabled', 'no')
+
+        console.log('>>> build', process.env.REACT_SSR_BUILD)
+        console.log('>>> src', process.env.REACT_SSR_BUILD_SRC)
+        // setConfig('expressSSR.enabled', 'no')
 
         // setConfig('hash', {
         //     rounds: Number(getEnv('BCRYPT_ROUNDS')),
@@ -75,7 +82,7 @@ export default createHookApp({
         require('./services/service-express-session'),
         require('@forrestjs/service-express-graphql-test'),
         // require('./services/service-express-graphql-extension'),
-        // require('@forrestjs/service-express-ssr'),
+        require('@forrestjs/service-express-ssr'),
         require('@forrestjs/feature-locale'),
     ],
     features: [
