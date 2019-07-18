@@ -4,9 +4,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
+import { Switch, Route } from 'react-router-dom'
 
-import { Login } from 'features/login'
-import { JournalWriteRouter } from 'features/journal-write'
+import { HomePage } from 'features/pages'
+import { LoginAPP } from 'features/login'
+import { JournalAPP } from 'features/journal'
 
 const messages = defineMessages({
     welcome: {
@@ -28,9 +30,11 @@ const App = ({ intl, name, locale }) => (
         </Helmet>
         {intl.formatMessage(messages.welcome)}
         <hr />
-        
-        <JournalWriteRouter />
-        <Login />
+        <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route path="/journal" component={JournalAPP} />
+            <Route path="/login" component={LoginAPP} />
+        </Switch>
     </div>
 )
 

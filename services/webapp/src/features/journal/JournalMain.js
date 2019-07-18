@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from 'react'
 import { connect } from 'react-redux'
-import { withAuth } from 'features/login'
+import { withAuth, Login } from 'features/login'
 import { fetchJournal, saveJournal, checkPin, savePin } from './journal.service'
 
 import AskPin from './AskPin'
@@ -31,4 +31,4 @@ class JournalMain extends React.Component {
     }
 }
 
-export default connect(mapState, mapDispatch)(withAuth()(JournalMain))
+export default connect(mapState, mapDispatch)(withAuth({ fallback: Login })(JournalMain))

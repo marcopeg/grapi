@@ -7,4 +7,5 @@ export const reducers = {
 }
 
 export { default as Login } from './Login'
+export { default as LoginAPP } from './LoginAPP'
 export { default as withAuth } from './with-auth'

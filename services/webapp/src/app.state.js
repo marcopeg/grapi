@@ -11,7 +11,8 @@ const features = [
     require('@forrestjs/feature-locale/client'),
     require('features/locale'),
     require('features/login'),
-    require('features/journal-write'),
+    require('features/pages'),
+    require('features/journal'),
 ]
 
 export const createState = createSSRState(reducers, features)

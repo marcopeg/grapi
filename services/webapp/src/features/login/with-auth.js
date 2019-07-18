@@ -3,10 +3,15 @@ import { connect } from 'react-redux'
 
 const mapState = ({ auth }) => ({ auth })
 
-const createFallback = fallback =>
-    fallback && typeof fallback === 'function'
-        ? React.createElement(fallback)
-        : fallback
+const createFallback = fallback => {
+    switch (typeof fallback) {
+        case 'function':
+        case 'object':
+            return React.createElement(fallback)
+        default:
+            return fallback
+    }
+}
 
 export default ({
     fallback = null,
