@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Editor from 'components/Editor'
+import ScrollToBottom from 'components/ScrollToBottom'
 
 class JournalWrite extends React.Component {
     constructor (props) {
@@ -84,7 +85,7 @@ class JournalWrite extends React.Component {
                 </div>
                 <hr />
                 <small><b>{this.state.words} words</b> :: last saved: {lastSaved.toISOString()}</small><br />
-
+                <ScrollToBottom />
             </div>
         )
     }

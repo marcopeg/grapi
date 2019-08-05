@@ -1,7 +1,7 @@
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
 import { getModel } from '@forrestjs/service-postgres'
 import * as hooks from './hooks'
-import * as journalEntryModel from './journal-entry.model'
+import * as journalEntryModel from './journal-entry.safe.model'
 import { journalEntryQuery } from './graphql/queries/session/auth/journal-entry.query'
 import { journalEntryMutation } from './graphql/mutations/session/auth/journal-entry.mutation'
 import { journalUpdateKeyMutation } from './graphql/mutations/session/auth/journal-update-key.mutation'
