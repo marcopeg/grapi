@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom'
 
 const HomePage = () => (
     <div>
-        <Link to="/journal">Journal APP</Link>
+        <Link to="/journal">Journal APP</Link><br />
+        <Link to="/ui">Ui Tests</Link><br />
     </div>
 )
 

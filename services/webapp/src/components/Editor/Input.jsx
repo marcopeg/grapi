@@ -76,7 +76,7 @@ class Input extends React.Component {
                 inputRef={this.ref}
                 value={text}
                 onKeyDown={this.onKeyDown}
-                onChange={evt => onChange(evt.target.value)}
+                onChange={evt => onChange(evt.target.value, this.ref)}
                 className={className}
                 style={style}
             />

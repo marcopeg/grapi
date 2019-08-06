@@ -44,11 +44,11 @@ class Editor extends React.Component {
         this.__focusTimer = setTimeout(() => this.state.refs[id].current.focus(position))
     }
 
-    triggerOnChange = () => {
-        this.props.onChange(this.getContent())
+    triggerOnChange = (ref) => {
+        this.props.onChange(this.getContent(), ref)
     }
 
-    onInputChange = (id) => (text) => {
+    onInputChange = (id) => (text, ref) => {
         this.setState({ map: {
             ...this.state.map,
             [id]: {
@@ -58,7 +58,7 @@ class Editor extends React.Component {
             },
         } })
 
-        this.triggerOnChange()
+        this.triggerOnChange(ref)
     }
 
     onRequestFocusPrev = (id) => () => {
