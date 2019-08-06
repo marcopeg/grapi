@@ -64,7 +64,7 @@ class JournalWrite extends React.Component {
 
         return (
             <div style={{
-                margin: '50px auto',
+                margin: '50px auto 20px auto',
                 maxWidth: '800px',
             }}>
                 <h2>What makes you feel good?</h2>

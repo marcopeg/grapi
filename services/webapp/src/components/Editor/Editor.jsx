@@ -3,6 +3,14 @@ import PropTypes from 'prop-types'
 import { data2list, data2map, newPart } from './utils'
 import Input from './Input'
 
+const isIOS = () => {
+    const ua = navigator.userAgent
+    const isIphone = ua.indexOf('iPhone') !== -1
+    const isIpod = ua.indexOf('iPod') !== -1
+    const isIpad = ua.indexOf('iPad') !== -1
+    return isIphone || isIpod || isIpad
+}
+
 class Editor extends React.Component {
     constructor (props) {
         super(props)
@@ -21,7 +29,9 @@ class Editor extends React.Component {
     }
 
     componentDidMount () {
-        this.focus(this.state.list[this.state.list.length - 1], -1)
+        if (!isIOS()) {
+            this.focus(this.state.list[this.state.list.length - 1], -1)
+        }
     }
 
     getContent = () =>

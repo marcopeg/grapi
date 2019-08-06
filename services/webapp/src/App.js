@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import { Switch, Route } from 'react-router-dom'
+import KeyboardPadding from 'components/KeyboardPadding'
 
 import { HomePage } from 'features/pages'
 import { LoginAPP } from 'features/login'
@@ -28,6 +29,7 @@ const App = ({ intl, name, locale }) => (
             <html lang={locale} />
             <title>{name}</title>
         </Helmet>
+        <KeyboardPadding />
         {intl.formatMessage(messages.welcome)}
         <hr />
         <Switch>
