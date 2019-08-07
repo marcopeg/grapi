@@ -1,10 +1,11 @@
 import { createHookApp } from '@forrestjs/hooks'
+import path from 'path'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
 export default createHookApp({
-    trace: true,
+    // trace: true,
     settings: ({ setConfig, getEnv }) => {
         setConfig('postgres.connections', [{
             host: getEnv('PG_HOST'),
@@ -46,8 +47,10 @@ export default createHookApp({
 
         setConfig('expressSSR.enabled', 'no')
 
-        console.log('>>> build', process.env.REACT_SSR_BUILD)
-        console.log('>>> src', process.env.REACT_SSR_BUILD_SRC)
+        setConfig('graphqlExtension.sourcePath', path.join(process.cwd(), 'extensions'))
+
+        // console.log('>>> build', process.env.REACT_SSR_BUILD)
+        // console.log('>>> src', process.env.REACT_SSR_BUILD_SRC)
         // setConfig('expressSSR.enabled', 'no')
 
         // setConfig('hash', {
@@ -81,7 +84,7 @@ export default createHookApp({
         require('./services/service-express-device'),
         require('./services/service-express-session'),
         require('@forrestjs/service-express-graphql-test'),
-        // require('./services/service-express-graphql-extension'),
+        require('./services/service-express-graphql-extension'),
         require('@forrestjs/service-express-ssr'),
         require('@forrestjs/feature-locale'),
     ],

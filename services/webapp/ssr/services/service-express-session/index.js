@@ -54,9 +54,10 @@ export default ({ registerAction, registerHook, ...ctx }) => {
             const {
                 useGraphQL,
                 wrapperName,
-                queries,
-                mutations,
                 ...config } = buildConfig(ctx)
+
+            const queries = { ...config.queries }
+            const mutations = { ...config.mutation }
 
             // Disable the GraphQL wrapper
             if (!useGraphQL) {

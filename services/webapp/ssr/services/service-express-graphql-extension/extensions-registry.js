@@ -36,7 +36,7 @@ export const getEtag = () => data.etag
 
 export const init = async (settings) => {
     // source extensions from a configuration
-    const sourcePath = settings.sourcePath || process.env.GRAPHQL_EXTENSION_SRC
+    const sourcePath = settings.sourcePath || process.env.GRAPHQL_EXTENSIONS_SRC
     if (sourcePath) {
         try {
             await loadFromDisk(sourcePath)

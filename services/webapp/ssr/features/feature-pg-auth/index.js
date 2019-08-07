@@ -87,7 +87,9 @@ export default ({ registerHook, registerAction }) => {
         name: hooks.FEATURE_NAME,
         trace: __filename,
         handler: async ({ registerQuery, registerMutation }, ctx) => {
-            const { queries, mutations, ...config } = buildConfig(ctx)
+            const config = buildConfig(ctx)
+            const queries = { ...config.queries }
+            const mutations = { ...config.mutation }
 
             // make the Auth wrapper extensible
             await ctx.createHook.serie(hooks.PG_AUTH_GRAPHQL, {
