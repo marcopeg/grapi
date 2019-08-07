@@ -9,7 +9,9 @@ import * as extensionsRegistry from './extensions-registry'
 // eg. this is used to sync different servers via pub/sub
 export const registerExtension = extensionsRegistry.register
 
-export const register = ({ registerAction, createHook }) => {
+export const register = ({ registerHook, registerAction, createHook }) => {
+    registerHook(hooks)
+
     // Preload cached extensions
     registerAction({
         hook: '$INIT_SERVICES',
