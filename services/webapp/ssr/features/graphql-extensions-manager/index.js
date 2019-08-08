@@ -33,8 +33,30 @@ export const register = ({ registerHook, registerAction }) => {
     // request by request
     registerAction({
         hook: 'GRAPHQL_EXTENSION_RESOLVE',
-        handler: (a) => {
-            console.log(a)
+        handler: async ({ extension, method, type, source, graphql }) => {
+            // Decorate the resolver variables with meta informations regarding the current request
+            const meta = {
+                extension,
+                method,
+                type,
+            }
+
+            // Origin - validates an Authorization Bearer JWT that identifies the extension by name
+            try {
+                const token = graphql.context.req.headers.authorization.split('Bearer').pop().trim()
+                await graphqlToken.validate({ token, extension: { name: extension } })
+                meta.origin = extension
+            } catch (err) {
+                meta.origin = false
+            }
+
+            // Drop a connection if the API is set as "private" and could not verify the origin of the request
+            if (source.private && meta.origin === false) {
+                throw new Error(`Could not verify the origin of the request`)
+            }
+
+            // Decorate the resolver's arguments so that those info can be used by the extension's definition
+            graphql.args.__meta = meta
         },
     })
 

@@ -183,5 +183,15 @@ export default createHookApp({
         //         },
         //     })
         // },
+
+        [
+            '$EXPRESS_ROUTE',
+            ({ registerRoute }) => registerRoute.get('/foo', (req, res) => {
+                res.json({
+                    basic: 'hoho',
+                    ...req.headers,
+                })
+            }),
+        ],
     ],
 })

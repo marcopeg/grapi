@@ -1353,10 +1353,10 @@
     react-scripts-rewired "3.0.1--latest1"
     react-styleguidist "^9.0.9"
 
-"@forrestjs/package-universal@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@forrestjs/package-universal/-/package-universal-3.1.0.tgz#6c2a508a11a8125640438c90a6401e868783c585"
-  integrity sha512-GACYkO5Bf+94rzApBmvMIJ6sv5e7sT6LeaLMj6kWqq8542Rguzji3F1jaNhCPVaQBfjAxLLTf1oN3SQXG/mlYQ==
+"@forrestjs/package-universal@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@forrestjs/package-universal/-/package-universal-3.1.1.tgz#86a4967149cf3a516d01474adbec35d4f723bd77"
+  integrity sha512-D+fYpzV7ICx3RFBIuZXef/gjFbAI8bvT1MaRUW8Hof6BzDw1eyjGn3PVPoFXM1jMp7sMoCiFl8syg9cuUu7rlg==
   dependencies:
     "@babel/polyfill" "^7.4.4"
     "@forrestjs/core" "^3.0.6"
@@ -1368,7 +1368,7 @@
     "@forrestjs/service-express-cookies" "^3.0.5"
     "@forrestjs/service-express-graphql" "^3.0.10"
     "@forrestjs/service-express-graphql-test" "^3.0.5"
-    "@forrestjs/service-express-ssr" "^3.0.6"
+    "@forrestjs/service-express-ssr" "^3.1.1"
     "@forrestjs/service-hash" "^3.0.5"
     "@forrestjs/service-jwt" "^3.1.0"
     "@forrestjs/service-logger" "^3.0.5"
@@ -1423,10 +1423,10 @@
     express-graphql "^0.8.0"
     graphql "^14.3.0"
 
-"@forrestjs/service-express-ssr@^3.0.6":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-express-ssr/-/service-express-ssr-3.0.6.tgz#217c1054c4ded1bd59cbac08f065e1e74b2e9179"
-  integrity sha512-5mqlIZJ3O9CaxFkCEGqFB5ajiajf4AbdrdsvL4v+MPouj2BI+skkLvl+W5c4YGzwY59RNneZpTJrYh0JGhrqfA==
+"@forrestjs/service-express-ssr@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-express-ssr/-/service-express-ssr-3.1.1.tgz#d9cd33f5b177c3692bb93f44b6259234f9596b4f"
+  integrity sha512-buwBbwkVSaI7SVEZrolAqWrj7A/tWUNJPAmP9W/TCE97HL9nxJcDCUD9QT697A6q1Xu9TELaadzbsPsqcLp0yw==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@forrestjs/core" "^3.0.6"
@@ -5548,10 +5548,10 @@ fecha@^2.3.3:
   resolved "https://registry.yarnpkg.com/fecha/-/fecha-2.3.3.tgz#948e74157df1a32fd1b12c3a3c3cdcb6ec9d96cd"
   integrity sha512-lUGBnIamTAwk4znq5BcqsDaxSmZ9nDVJaij6NvRt/Tg4R69gERA+otPKbS86ROw9nxVMw2/mp1fnaiWqbs6Sdg==
 
-fetch-resolver@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/fetch-resolver/-/fetch-resolver-0.2.0.tgz#5bb478131c719771ed17b23269d406cd837fce65"
-  integrity sha512-e40USrqNqBzLw/d8tKbD6niRX9fz1Axbcs+Xt60DBQX4VYZtBT6Y9kqHjU7iwHpWT8y5RR+lYvGjWrnxhWlB7w==
+fetch-resolver@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/fetch-resolver/-/fetch-resolver-0.2.3.tgz#17233ad402366c6f2cb86789e6eb4314c41ef16f"
+  integrity sha512-5gFP0lOdGobI1sw0tIZUvBO1V+zPgkZqpHCSFxZGGmBV/YXIeeLgKwyHdx/5yBq6Znt7LIpWu0nTYk88KQ7/0w==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@marcopeg/dotted" "^0.2.0"
@@ -6290,15 +6290,15 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
 
-graphql-extension@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/graphql-extension/-/graphql-extension-0.2.2.tgz#085be926a47f84ab44c13a395b6a7da30983a328"
-  integrity sha512-uvqaE7xdpN8lmx5HYMiXjbCyLOTTS0PvQXJsIwqJ1wFJFKZK5BaT2geDpgQLAx08NiMFvBXEXrc/p8TIzycAZw==
+graphql-extension@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/graphql-extension/-/graphql-extension-0.2.4.tgz#c7a9d5fad23ad3698b4f8b05ded29340e95a378a"
+  integrity sha512-vj2/zcetifocYEU51crLQlTK5ZY2BjWmAeHqx42GBy93sLT2WvKs2z9kYBtIFPjbxxXt6uaHW2d8sxN4INcGIQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@marcopeg/dotted" "^0.2.0"
     "@marcopeg/template" "^0.2.0"
-    fetch-resolver "^0.2.0"
+    fetch-resolver "^0.2.3"
     flat "^4.1.0"
     graphql-type-json "^0.3.0"
 
