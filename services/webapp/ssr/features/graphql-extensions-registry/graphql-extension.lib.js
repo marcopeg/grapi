@@ -3,12 +3,12 @@ import { getModel } from '@forrestjs/service-postgres'
 
 export const register = async () => {
     await reflowExtensions()
-    const extensions = await getModel('GraphqlExtension').findAll({ raw: true })
+    const extensions = await getModel('GraphqlExtensionRegistry').findAll({ raw: true })
     extensions.forEach(extension => registerExtension(extension.definition))
 }
 
 export const upsert = extension =>
-    getModel('GraphqlExtension').upsert({
+    getModel('GraphqlExtensionRegistry').upsert({
         namespace: extension.name,
         definition: extension,
     })

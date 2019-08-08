@@ -1,10 +1,10 @@
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
 import { publish } from '@forrestjs/service-postgres-pubsub'
 import * as hooks from './hooks'
-import graphqlTokenMutation from './graphql-token.mutation'
+// import graphqlTokenMutation from './graphql-token.mutation'
 
 // Libraries
-import * as graphqlToken from './graphql-token.lib'
+// import * as graphqlToken from './graphql-token.lib'
 import * as graphqlExtension from './graphql-extension.lib'
 
 // Sequelize Models
@@ -13,7 +13,7 @@ import * as graphqlExtensionModel from './graphql-extension.model'
 
 const REGISTER_EXTENSION_MSG = 'registerExtension'
 
-export const issueExtensionToken = graphqlToken.issue
+// export const issueExtensionToken = graphqlToken.issue
 
 export const register = ({ registerHook, registerAction }) => {
     registerHook(hooks)
@@ -35,17 +35,6 @@ export const register = ({ registerHook, registerAction }) => {
         handler: graphqlExtension.register,
     })
 
-    // validates a request to upsert an extension using a JWT as
-    // provided in "Authorization: Bearer xxx" header
-    // registerAction({
-    //     hook: '$GRAPHQL_EXTENSION_VALIDATE',
-    //     name: hooks.FEATURE_NAME,
-    //     handler: async ({ extension, req }) => {
-    //         const token = req.headers['authorization'].split('Bearer').pop().trim()
-    //         req.graphqlToken = await graphqlToken.validate({ token, extension })
-    //     },
-    // })
-
     // persist an exension in the database and emit a signal so that
     // other service instances can reflow the models
     registerAction({
@@ -53,7 +42,6 @@ export const register = ({ registerHook, registerAction }) => {
         name: hooks.FEATURE_NAME,
         handler: async ({ extension, req }) => {
             await graphqlExtension.upsert(extension)
-            // await graphqlToken.bump(req.graphqlToken.payload.id)
             publish(REGISTER_EXTENSION_MSG, extension.name)
         },
     })
@@ -66,13 +54,5 @@ export const register = ({ registerHook, registerAction }) => {
         name: hooks.FEATURE_NAME,
         handler: ({ addChannel }) =>
             addChannel(REGISTER_EXTENSION_MSG, graphqlExtension.register),
-    })
-
-    registerAction({
-        hook: '$EXPRESS_GRAPHQL_TEST',
-        name: hooks.FEATURE_NAME,
-        handler: async ({ registerMutation }) => {
-            registerMutation('createGraphqlExtensionToken', graphqlTokenMutation)
-        },
     })
 }

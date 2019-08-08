@@ -1,6 +1,7 @@
 import Sequelize from 'sequelize'
+import * as hooks from './hooks'
 
-export const name = 'GraphqlExtension'
+export const name = 'GraphqlExtensionRegistry'
 
 const fields = {
     id: {
@@ -20,14 +21,17 @@ const fields = {
 }
 
 const options = {
-    tableName: 'graphql_extensions',
+    tableName: 'graphql_extensions_registry',
     freezeTableName: true,
     underscored: true,
 }
 
 
-export const init = (conn) => {
+export const init = async (conn, { createHook }) => {
+    await createHook.serie(hooks.GRAPHQL_EXTENSIONS_REGISTRY_INIT_MODEL, { name, fields, options, conn })
     const Model = conn.define(name, fields, options)
+    await createHook.serie(hooks.GRAPHQL_EXTENSIONS_REGISTRY_DECORATE_MODEL, { name, fields, options, Model, conn })
+
     return Model.sync()
 }
 

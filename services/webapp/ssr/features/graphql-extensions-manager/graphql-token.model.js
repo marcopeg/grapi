@@ -1,19 +1,17 @@
 import Sequelize from 'sequelize'
 
-export const name = 'GraphqlToken'
+export const name = 'GraphqlExtensionToken'
 
 const fields = {
     id: {
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         primaryKey: true,
+        defaultValue: Sequelize.DataTypes.UUIDV4,
     },
-    hits: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
-    },
-    namespaces: {
-        type: Sequelize.ARRAY(Sequelize.STRING), // eslint-disable-line
+    extension: {
+        type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
     },
     isActive: {
         type: Sequelize.BOOLEAN,
@@ -26,7 +24,7 @@ const fields = {
 }
 
 const options = {
-    tableName: 'graphql_tokens',
+    tableName: 'graphql_extensions_tokens',
     freezeTableName: true,
     underscored: true,
 }

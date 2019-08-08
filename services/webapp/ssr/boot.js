@@ -17,11 +17,13 @@ export default createHookApp({
             attemptDelay: Number(getEnv('PG_CONN_ATTEMPTS_DELAY', 5000)),
             pool: { max: 2, min: 0, acquire: 30000, idle: 10000 },
             models: [],
-            // onConnection: async (conn) => {
-            //     // await conn.handler.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
-            //     // await conn.handler.query('drop schema public cascade;')
-            //     // await conn.handler.query('create schema public;')
-            // },
+            onConnection: async (conn) => {
+                // await conn.handler.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
+                // await conn.handler.query('drop schema public cascade;')
+                // await conn.handler.query('create schema public;')
+                // await conn.handler.query('drop table if exists graphql_extensions_registry;')
+                // await conn.handler.query('drop table if exists graphql_extensions_tokens;')
+            },
         }])
 
         setConfig('postgresPubSub', [{
@@ -99,6 +101,7 @@ export default createHookApp({
         // require('./services/feature-auth'),
         // require('./services/feature-auth'),
         require('./features/graphql-extensions-registry'),
+        require('./features/graphql-extensions-manager'),
         // require('./features/graphql-namespace-manager'),
         // [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
         //     registerRoute.get('/', async (req, res) => {
