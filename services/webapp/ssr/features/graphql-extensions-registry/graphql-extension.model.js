@@ -5,9 +5,9 @@ export const name = 'GraphqlExtensionRegistry'
 
 const fields = {
     id: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.UUID,
         primaryKey: true,
-        autoIncrement: true,
+        defaultValue: Sequelize.DataTypes.UUIDV4,
     },
     namespace: {
         type: Sequelize.STRING,

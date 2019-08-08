@@ -1353,10 +1353,10 @@
     react-scripts-rewired "3.0.1--latest1"
     react-styleguidist "^9.0.9"
 
-"@forrestjs/package-universal@^3.0.10":
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/@forrestjs/package-universal/-/package-universal-3.0.10.tgz#0b88c44c7e58e91be935afbb446186af17d60e6d"
-  integrity sha512-A1+UQjD9lnC4zC1YStgOj2EjPClVNxsw1uOb/hODNpsE87cXKZ09GRcQGGW++xDwwVru90J8VH4/YC3ozqB7TQ==
+"@forrestjs/package-universal@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@forrestjs/package-universal/-/package-universal-3.1.0.tgz#6c2a508a11a8125640438c90a6401e868783c585"
+  integrity sha512-GACYkO5Bf+94rzApBmvMIJ6sv5e7sT6LeaLMj6kWqq8542Rguzji3F1jaNhCPVaQBfjAxLLTf1oN3SQXG/mlYQ==
   dependencies:
     "@babel/polyfill" "^7.4.4"
     "@forrestjs/core" "^3.0.6"
@@ -1370,7 +1370,7 @@
     "@forrestjs/service-express-graphql-test" "^3.0.5"
     "@forrestjs/service-express-ssr" "^3.0.6"
     "@forrestjs/service-hash" "^3.0.5"
-    "@forrestjs/service-jwt" "^3.0.5"
+    "@forrestjs/service-jwt" "^3.1.0"
     "@forrestjs/service-logger" "^3.0.5"
     "@forrestjs/service-postgres" "^3.0.7"
     "@forrestjs/service-postgres-pubsub" "^3.0.5"
@@ -1449,10 +1449,10 @@
     "@forrestjs/hooks" "^3.0.5"
     bcrypt-nodejs "^0.0.3"
 
-"@forrestjs/service-jwt@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-jwt/-/service-jwt-3.0.5.tgz#0bfa1c7ccc98d40a7b766575d29012413793c556"
-  integrity sha512-zTRQ7B6/V7qU/HxOaA/4Ai17kXP0CuJCdixPVjFJn7txqAMR2uD0LsaM63lNFqTqsgXQm3ZFfpvSZbqX/vjgUg==
+"@forrestjs/service-jwt@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-jwt/-/service-jwt-3.1.0.tgz#92217f4b7299f7eeace721ee299abcf804210efc"
+  integrity sha512-BsGfZ10ul4vyRhxKdRgG35/8p5OsVBk1MPQxFgUsmtf1WabbdKgv3DtrR+12ZqwmvtJvhlJ20aLMOpVuEVQL9w==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@forrestjs/hooks" "^3.0.5"
@@ -6290,10 +6290,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
 
-graphql-extension@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/graphql-extension/-/graphql-extension-0.2.1.tgz#6234733b0d42a7f4397af6234c8f18c573c5fc33"
-  integrity sha512-jCnTCPkp2Sgn1UCMmQGfdd68XBc+QjfiHLW16Dkv5ct28taT3ogwItBIXufEVa8YByBJ37rkqXayYuqEihIDbg==
+graphql-extension@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/graphql-extension/-/graphql-extension-0.2.2.tgz#085be926a47f84ab44c13a395b6a7da30983a328"
+  integrity sha512-uvqaE7xdpN8lmx5HYMiXjbCyLOTTS0PvQXJsIwqJ1wFJFKZK5BaT2geDpgQLAx08NiMFvBXEXrc/p8TIzycAZw==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@marcopeg/dotted" "^0.2.0"

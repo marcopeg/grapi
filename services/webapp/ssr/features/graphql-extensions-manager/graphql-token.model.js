@@ -3,15 +3,13 @@ import Sequelize from 'sequelize'
 export const name = 'GraphqlExtensionToken'
 
 const fields = {
-    id: {
-        type: Sequelize.UUID,
-        primaryKey: true,
-        defaultValue: Sequelize.DataTypes.UUIDV4,
-    },
     extension: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
+        primaryKey: true,
+    },
+    secret: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.DataTypes.UUIDV4,
     },
     isActive: {
         type: Sequelize.BOOLEAN,
