@@ -48,7 +48,7 @@ export const register = ({ registerHook, registerAction, createHook }) => {
         hook: '$EXPRESS_GRAPHQL',
         name: hooks.SERVICE_NAME,
         trace: __filename,
-        handler: ({ registerQuery, registerMutation }) => {
+        handler: ({ registerQuery, registerMutation }, ctx) => {
             // Add Grapi API
             registerMutation('registerExtension', registerExtensionMutation)
             registerMutation('registerExtensionJSON', registerExtensionJsonMutation)
@@ -56,7 +56,7 @@ export const register = ({ registerHook, registerAction, createHook }) => {
             // Add Extensions
             const extensions = extensionsRegistry.getList()
             for (const definition of extensions) {
-                const extension = parseExtension(definition)
+                const extension = parseExtension(definition, { hooks: ctx })
                 Object.keys(extension.queries).forEach(key => registerQuery(key, extension.queries[key]))
                 Object.keys(extension.mutations).forEach(key => registerMutation(key, extension.mutations[key]))
             }

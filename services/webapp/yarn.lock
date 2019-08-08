@@ -1660,13 +1660,6 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
-"@marcopeg/dotted@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@marcopeg/dotted/-/dotted-0.1.3.tgz#eb60750e062acd49dc407261f46b7ff63bc085c4"
-  integrity sha512-n9BFNrnvNM8FPFH+pM2XgAHGVofwrH2RAQE9FWHzyirZD49ubOy6o4tQXTXTHEb10bpiu2smN2GRiVFga5kowA==
-  dependencies:
-    "@babel/runtime" "^7.4.4"
-
 "@marcopeg/dotted@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@marcopeg/dotted/-/dotted-0.2.0.tgz#5906279091aef06cf7031fc018fd4dc699f71790"
@@ -1674,13 +1667,13 @@
   dependencies:
     "@babel/runtime" "^7.4.4"
 
-"@marcopeg/template@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@marcopeg/template/-/template-0.1.3.tgz#8b616f67c0b32fcd66efeda39dfb619ac34b38c1"
-  integrity sha512-wC/Z281NkMlgDN7gdXL9dG3hgyMu0wZG/uj/YA8gEvbq4nkmajgPO+RJyD3hVmkJcSFF50N76hGfC/CMv4jAfA==
+"@marcopeg/template@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@marcopeg/template/-/template-0.2.0.tgz#f1f90265a2755b4dd28392d6b1b3a716f84f04aa"
+  integrity sha512-AW5MxJvNwYvgDKnkuy3nBAmC61Qmrb3c3mrwAnYKcgt7q+Y3naG0lc/Lq2Ppg6oH+mCjQ2beOVeDTm9nvC9OwQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@marcopeg/dotted" "^0.1.3"
+    "@marcopeg/dotted" "^0.2.0"
 
 "@marcopeg/utils@^2.0.1":
   version "2.0.1"
@@ -5555,14 +5548,14 @@ fecha@^2.3.3:
   resolved "https://registry.yarnpkg.com/fecha/-/fecha-2.3.3.tgz#948e74157df1a32fd1b12c3a3c3cdcb6ec9d96cd"
   integrity sha512-lUGBnIamTAwk4znq5BcqsDaxSmZ9nDVJaij6NvRt/Tg4R69gERA+otPKbS86ROw9nxVMw2/mp1fnaiWqbs6Sdg==
 
-fetch-resolver@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/fetch-resolver/-/fetch-resolver-0.1.3.tgz#77418ccd31a5f11dfe8fc0f9e6daf6ed0ef3960a"
-  integrity sha512-EFzq/SDpzJgTVIvAmBbZAniOA6xkCprvGakhqgwhoE4ujMvul4wtH0PV70StWKuscUYe+bhz7eHNDZgy0qsljA==
+fetch-resolver@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/fetch-resolver/-/fetch-resolver-0.2.0.tgz#5bb478131c719771ed17b23269d406cd837fce65"
+  integrity sha512-e40USrqNqBzLw/d8tKbD6niRX9fz1Axbcs+Xt60DBQX4VYZtBT6Y9kqHjU7iwHpWT8y5RR+lYvGjWrnxhWlB7w==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@marcopeg/dotted" "^0.1.3"
-    "@marcopeg/template" "^0.1.3"
+    "@marcopeg/dotted" "^0.2.0"
+    "@marcopeg/template" "^0.2.0"
     clone-deep "^4.0.1"
     isomorphic-fetch "^2.2.1"
 
@@ -6297,15 +6290,15 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
 
-graphql-extension@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/graphql-extension/-/graphql-extension-0.1.4.tgz#eb039f4ef01e99379e75706b1857a017fee5af88"
-  integrity sha512-J2ZWVNRIFZoBkNJDerjaRUaQj9JdWwHivtODUYQxmp8uvkW1WFkCwQenR4QrPGS//DSSKB24B4dRrAnNO0s8sg==
+graphql-extension@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/graphql-extension/-/graphql-extension-0.2.1.tgz#6234733b0d42a7f4397af6234c8f18c573c5fc33"
+  integrity sha512-jCnTCPkp2Sgn1UCMmQGfdd68XBc+QjfiHLW16Dkv5ct28taT3ogwItBIXufEVa8YByBJ37rkqXayYuqEihIDbg==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@marcopeg/dotted" "^0.1.3"
-    "@marcopeg/template" "^0.1.3"
-    fetch-resolver "^0.1.3"
+    "@marcopeg/dotted" "^0.2.0"
+    "@marcopeg/template" "^0.2.0"
+    fetch-resolver "^0.2.0"
     flat "^4.1.0"
     graphql-type-json "^0.3.0"
 

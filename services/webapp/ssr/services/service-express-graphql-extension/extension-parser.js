@@ -63,7 +63,7 @@ const reduceQueries = queries =>
  * In that case there is the need to translate that format into the
  * normal JSON object based that is used by `graphql-extension`.
  */
-export const parseExtension = definition =>
+export const parseExtension = (definition, options) =>
     definition.__type === 'gql'
         ? buildExtensionSchema({
             name: definition.name,
@@ -73,5 +73,5 @@ export const parseExtension = definition =>
             ...(definition.inputTypes ? { inputTypes: reduceTypes(definition.inputTypes) } : {}),
             ...(definition.queries ? { queries: reduceQueries(definition.queries) } : {}),
             ...(definition.mutations ? { mutations: reduceQueries(definition.mutations) } : {}),
-        })
-        : buildExtensionSchema(definition)
+        }, options)
+        : buildExtensionSchema(definition, options)

@@ -29,6 +29,15 @@ export const register = ({ registerHook, registerAction }) => {
         },
     })
 
+    // this is supposed to regulate access to a single extension's method
+    // request by request
+    registerAction({
+        hook: 'GRAPHQL_EXTENSION_RESOLVE',
+        handler: (a) => {
+            console.log(a)
+        },
+    })
+
     registerAction({
         hook: '$EXPRESS_GRAPHQL_TEST',
         name: hooks.FEATURE_NAME,

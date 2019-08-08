@@ -27,7 +27,6 @@ export const loadFromDisk = async sourcePath => {
 }
 
 export const register = extension => {
-    // @TODO: formal validation
     commitToMemory(extension)
     return true
 }
@@ -42,7 +41,7 @@ export const reflow = async () => {
         try {
             await loadFromDisk(data.sourcePath)
         } catch (err) {
-            throw new Error(`[service-express-graphql-extension] could not source extensions from "${sourcePath}"`)
+            throw new Error(`[service-express-graphql-extension] could not source extensions from "${data.sourcePath}"`)
         }
     }
 }
@@ -51,14 +50,6 @@ export const getList = () => data.list
 export const getEtag = () => data.etag
 
 export const init = async (settings) => {
-    // source extensions from a configuration
     data.sourcePath = settings.sourcePath || process.env.GRAPHQL_EXTENSIONS_SRC
     return reflow()
-    // if (data.sourcePath) {
-    //     try {
-    //         await loadFromDisk(data.sourcePath)
-    //     } catch (err) {
-    //         throw new Error(`[service-express-graphql-extension] could not source extensions from "${sourcePath}"`)
-    //     }
-    // }
 }
