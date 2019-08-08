@@ -1,7 +1,8 @@
-import { registerExtension } from '../../services/service-express-graphql-extension'
+import { registerExtension, reflowExtensions } from '../../services/service-express-graphql-extension'
 import { getModel } from '@forrestjs/service-postgres'
 
 export const register = async () => {
+    await reflowExtensions()
     const extensions = await getModel('GraphqlExtension').findAll({ raw: true })
     extensions.forEach(extension => registerExtension(extension.definition))
 }

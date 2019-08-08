@@ -8,13 +8,14 @@ import * as extensionsRegistry from './extensions-registry'
 // allows to directly register features in the in-memory registry
 // eg. this is used to sync different servers via pub/sub
 export const registerExtension = extensionsRegistry.register
+export const reflowExtensions = extensionsRegistry.reflow
 
 export const register = ({ registerHook, registerAction, createHook }) => {
     registerHook(hooks)
 
     // Preload cached extensions
     registerAction({
-        hook: '$INIT_SERVICES',
+        hook: '$START_SERVICE',
         name: hooks.SERVICE_NAME,
         trace: __filename,
         handler: async ({ getConfig }) => {

@@ -6,6 +6,7 @@ import path from 'path'
 import fs from 'fs-extra'
 
 const data = {
+    sourcePath: null,
     etag: 0,
     map: {},
     list: [],
@@ -31,17 +32,33 @@ export const register = extension => {
     return true
 }
 
+export const reflow = async () => {
+    // reset the extensions database
+    data.map = {}
+    data.list = []
+
+    // load file system extensions
+    if (data.sourcePath) {
+        try {
+            await loadFromDisk(data.sourcePath)
+        } catch (err) {
+            throw new Error(`[service-express-graphql-extension] could not source extensions from "${sourcePath}"`)
+        }
+    }
+}
+
 export const getList = () => data.list
 export const getEtag = () => data.etag
 
 export const init = async (settings) => {
     // source extensions from a configuration
-    const sourcePath = settings.sourcePath || process.env.GRAPHQL_EXTENSIONS_SRC
-    if (sourcePath) {
-        try {
-            await loadFromDisk(sourcePath)
-        } catch (err) {
-            throw new Error(`[service-express-graphql-extension] could not source extensions from "${sourcePath}"`)
-        }
-    }
+    data.sourcePath = settings.sourcePath || process.env.GRAPHQL_EXTENSIONS_SRC
+    return reflow()
+    // if (data.sourcePath) {
+    //     try {
+    //         await loadFromDisk(data.sourcePath)
+    //     } catch (err) {
+    //         throw new Error(`[service-express-graphql-extension] could not source extensions from "${sourcePath}"`)
+    //     }
+    // }
 }

@@ -1301,13 +1301,13 @@
   dependencies:
     eslint-config-react "^1.1.7"
 
-"@forrestjs/feature-locale@^3.0.9":
-  version "3.0.9"
-  resolved "https://registry.yarnpkg.com/@forrestjs/feature-locale/-/feature-locale-3.0.9.tgz#844910df34124f4651a4ebd1ce65f72902231839"
-  integrity sha512-jw2S0ZtIcfvOqlLNRtn+u8IM5KtoIVfZ1E+BzXLt/Tu7zrE8fF2Z5q+5P3zUQGkpi//8KuO7vXn6c5RpGjxwNA==
+"@forrestjs/feature-locale@^3.0.10":
+  version "3.0.10"
+  resolved "https://registry.yarnpkg.com/@forrestjs/feature-locale/-/feature-locale-3.0.10.tgz#ffb1930aa6a0b115f904b734a2b7b52540234ffa"
+  integrity sha512-oP1hSqk6o0JkQfqoeg/LFYOsJpR2uR/8qm140PcAKCaMwmS0LHmdnctRTGPTgXmwRO5sFSTc+jKZlqipN7x+2A==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/service-express-graphql" "^3.0.9"
+    "@forrestjs/service-express-graphql" "^3.0.10"
     express-locale "^1.2.0"
     graphql "^14.3.0"
     graphql-type-json "^0.3.0"
@@ -1353,20 +1353,20 @@
     react-scripts-rewired "3.0.1--latest1"
     react-styleguidist "^9.0.9"
 
-"@forrestjs/package-universal@^3.0.9":
-  version "3.0.9"
-  resolved "https://registry.yarnpkg.com/@forrestjs/package-universal/-/package-universal-3.0.9.tgz#b5dc726ed124ba21ab0f4632f02533c09bc44627"
-  integrity sha512-Agegx7AfMsP6d3bbdLi6R41p/xvHX5f0uAMumG9CeGJSmYQiMXVkqolVz4WaICi/9FixvwELufZ5d7POQODHtA==
+"@forrestjs/package-universal@^3.0.10":
+  version "3.0.10"
+  resolved "https://registry.yarnpkg.com/@forrestjs/package-universal/-/package-universal-3.0.10.tgz#0b88c44c7e58e91be935afbb446186af17d60e6d"
+  integrity sha512-A1+UQjD9lnC4zC1YStgOj2EjPClVNxsw1uOb/hODNpsE87cXKZ09GRcQGGW++xDwwVru90J8VH4/YC3ozqB7TQ==
   dependencies:
     "@babel/polyfill" "^7.4.4"
     "@forrestjs/core" "^3.0.6"
-    "@forrestjs/feature-locale" "^3.0.9"
+    "@forrestjs/feature-locale" "^3.0.10"
     "@forrestjs/feature-network" "^3.0.0"
     "@forrestjs/feature-storage" "^3.0.0"
     "@forrestjs/service-env" "^3.0.5"
     "@forrestjs/service-express" "^3.0.5"
     "@forrestjs/service-express-cookies" "^3.0.5"
-    "@forrestjs/service-express-graphql" "^3.0.9"
+    "@forrestjs/service-express-graphql" "^3.0.10"
     "@forrestjs/service-express-graphql-test" "^3.0.5"
     "@forrestjs/service-express-ssr" "^3.0.6"
     "@forrestjs/service-hash" "^3.0.5"
@@ -1411,10 +1411,10 @@
     express-graphql "^0.8.0"
     graphql "^14.3.0"
 
-"@forrestjs/service-express-graphql@^3.0.9":
-  version "3.0.9"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-express-graphql/-/service-express-graphql-3.0.9.tgz#0b22f85f561e49df753ea60fc58a94036d399101"
-  integrity sha512-52/qGzRggU+HY0YvKEc2k7+wGpyLUq0ZeVxLZw8eFmx4u/2LQUkxHT05jxd8AJ39g/dRDSxYTlx0mdYItixbOw==
+"@forrestjs/service-express-graphql@^3.0.10":
+  version "3.0.10"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-express-graphql/-/service-express-graphql-3.0.10.tgz#7fb5338ea34f8ee9c36441e09be4307cc750ac50"
+  integrity sha512-xFrWBpDVjHM4VrnGlPIIDiKu3VURnkVikV4B0bEYKLYa1DQHC+iUGeUlaL/jcfxO+8vKVrU8+CQj3fpUsdQvEA==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@forrestjs/hooks" "^3.0.5"
