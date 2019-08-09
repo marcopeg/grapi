@@ -51,26 +51,35 @@ export default createHookApp({
                                 type: 'JSON',
                                 resolve: {
                                     type: 'rest',
-                                    url: `${getConfig('reverseUrl')}/users`
-                                }
+                                    url: `${getConfig('reverseUrl')}/users`,
+                                },
                             },
                             user: {
                                 type: 'JSON',
                                 args: { id: 'String!' },
                                 resolve: {
                                     type: 'rest',
-                                    url: `${getConfig('reverseUrl')}/users/{{id}}`
-                                }
-                            }
+                                    url: `${getConfig('reverseUrl')}/users/{{id}}`,
+                                },
+                            },
+                            name: {
+                                type: 'String!',
+                                args: { id: 'String!' },
+                                resolve: {
+                                    type: 'rest',
+                                    url: `${getConfig('reverseUrl')}/users/{{id}}`,
+                                    grab: 'name',
+                                },
+                            },
                         },
                     },
                     rules: [
                         { name: 'originNotNull' },
                     ],
                 })
-                .then(() => console.log('Extension successfully registered'))
-                .catch(err => console.log(`Failed to register the extension - ${err.message}`))
-            }
-        ]
+                    .then(() => console.log('Extension successfully registered'))
+                    .catch(err => console.log(`Failed to register the extension - ${err.message}`))
+            },
+        ],
     ],
 })
