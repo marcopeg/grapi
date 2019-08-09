@@ -1,16 +1,16 @@
 import { register } from './extensions-registry'
 import * as hooks from './hooks'
 
-export const registerExtensionResolver = async (extension, { req, res }) => {
+export const registerExtensionResolver = async (args, { req, res }) => {
     const { createHook } = req.hooks
 
     // allows to block a register action based on request informations
-    await createHook.serie(hooks.GRAPHQL_EXTENSION_VALIDATE, { extension, req, res })
+    await createHook.serie(hooks.GRAPHQL_EXTENSION_VALIDATE, { ...args, req, res })
 
-    await register(extension)
+    await register(args.definition, args.rules)
 
     // allows to persist an extension after it gets registered
-    await createHook.serie(hooks.GRAPHQL_EXTENSION_REGISTER, { extension, req, res })
+    await createHook.serie(hooks.GRAPHQL_EXTENSION_REGISTER, { ...args, req, res })
 
     return true
 }

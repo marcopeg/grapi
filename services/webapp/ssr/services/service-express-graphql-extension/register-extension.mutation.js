@@ -172,17 +172,31 @@ const GraphQLExtension = new GraphQLInputObjectType({
     },
 })
 
-export default {
+export default () => ({
     description: 'Register or updates an GraphQL Extension using a typed validated definition',
     args: {
         definition: {
             type: new GraphQLNonNull(GraphQLExtension),
         },
+        // @TODO: Define hard types here!
+        rules: {
+            type: GraphQLJSON,
+            defaultValue: {},
+        },
+        token: {
+            type: GraphQLString,
+            defaultValue: null,
+        },
     },
     type: GraphQLJSON,
-    resolve: (_, args, req) =>
+    resolve: (_, args, req) => {
+        const { definition, ...otherArgs } = args
         registerExtensionResolver({
-            ...args.definition,
-            __type: 'gql',
-        }, req),
-}
+            ...otherArgs,
+            definition: {
+                ...definition,
+                __type: 'gql',
+            },
+        }, req)
+    },
+})

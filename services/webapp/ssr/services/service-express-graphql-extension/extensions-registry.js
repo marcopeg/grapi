@@ -12,8 +12,8 @@ const data = {
     list: [],
 }
 
-const commitToMemory = extension => {
-    data.map[extension.name] = extension
+const commitToMemory = (definition, rules) => {
+    data.map[definition.name] = { definition, rules }
     data.list = Object.values(data.map)
     data.etag += 1
 }
@@ -26,8 +26,8 @@ export const loadFromDisk = async sourcePath => {
     }))
 }
 
-export const register = extension => {
-    commitToMemory(extension)
+export const register = (definition, rules) => {
+    commitToMemory(definition, rules)
     return true
 }
 
@@ -48,6 +48,7 @@ export const reflow = async () => {
 
 export const getList = () => data.list
 export const getEtag = () => data.etag
+export const getRules = extension => data.map[extension].rules
 
 export const init = async (settings) => {
     data.sourcePath = settings.sourcePath || process.env.GRAPHQL_EXTENSIONS_SRC

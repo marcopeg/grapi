@@ -18,7 +18,7 @@ export const issue = async ({ extension, duration }) => {
 export const validate = async ({ token, extension }) => {
     const record = await getModel('GraphqlExtensionToken').findOne({
         where: {
-            extension: { [Sequelize.Op.like]: extension.name },
+            extension: { [Sequelize.Op.like]: extension },
             isActive: true,
             validUntil: { [Sequelize.Op.gte]: Sequelize.literal('NOW()') },
         },

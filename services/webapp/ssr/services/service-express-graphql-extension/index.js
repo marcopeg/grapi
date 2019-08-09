@@ -9,6 +9,7 @@ import * as extensionsRegistry from './extensions-registry'
 // eg. this is used to sync different servers via pub/sub
 export const registerExtension = extensionsRegistry.register
 export const reflowExtensions = extensionsRegistry.reflow
+export const getRules = extensionsRegistry.getRules
 
 export const register = ({ registerHook, registerAction, createHook }) => {
     registerHook(hooks)
@@ -48,18 +49,17 @@ export const register = ({ registerHook, registerAction, createHook }) => {
         hook: '$EXPRESS_GRAPHQL',
         name: hooks.SERVICE_NAME,
         trace: __filename,
-        handler: ({ registerQuery, registerMutation }, ctx) => {
+        handler: async ({ registerQuery, registerMutation }, ctx) => {
             // Add Grapi API
-            registerMutation('registerExtension', registerExtensionMutation)
-            registerMutation('registerExtensionJSON', registerExtensionJsonMutation)
+            registerMutation('registerExtension', await registerExtensionMutation())
+            registerMutation('registerExtensionJSON', await registerExtensionJsonMutation())
 
             // Add Extensions
-            const extensions = extensionsRegistry.getList()
-            for (const definition of extensions) {
+            extensionsRegistry.getList().forEach(({ definition }) => {
                 const extension = parseExtension(definition, { hooks: ctx })
                 Object.keys(extension.queries).forEach(key => registerQuery(key, extension.queries[key]))
                 Object.keys(extension.mutations).forEach(key => registerMutation(key, extension.mutations[key]))
-            }
+            })
         },
     })
 }

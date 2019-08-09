@@ -40,9 +40,9 @@ export const register = ({ registerHook, registerAction }) => {
     registerAction({
         hook: '$GRAPHQL_EXTENSION_REGISTER',
         name: hooks.FEATURE_NAME,
-        handler: async ({ extension, req }) => {
-            await graphqlExtension.upsert(extension)
-            publish(REGISTER_EXTENSION_MSG, extension.name)
+        handler: async ({ definition, rules }) => {
+            await graphqlExtension.upsert(definition, rules)
+            publish(REGISTER_EXTENSION_MSG, definition.name)
         },
     })
 

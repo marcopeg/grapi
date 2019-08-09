@@ -102,6 +102,7 @@ export default createHookApp({
         // require('./services/feature-auth'),
         require('./features/graphql-extensions-registry'),
         require('./features/graphql-extensions-manager'),
+        require('./features/graphql-extensions-rules'),
         // require('./features/graphql-namespace-manager'),
         // [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
         //     registerRoute.get('/', async (req, res) => {
