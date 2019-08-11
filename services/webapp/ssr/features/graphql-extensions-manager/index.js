@@ -8,6 +8,7 @@ import * as graphqlTokenModel from './graphql-token.model'
 
 // Export APIs
 export const validateGraphqlToken = graphqlToken.validate
+export const getGraphqlToken = graphqlToken.get
 
 export const register = ({ registerHook, registerAction }) => {
     registerHook(hooks)

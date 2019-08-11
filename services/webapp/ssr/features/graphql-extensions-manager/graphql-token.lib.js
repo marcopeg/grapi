@@ -1,6 +1,11 @@
 import Sequelize from 'sequelize'
 import { getModel } from '@forrestjs/service-postgres'
-import { sign, verify } from '@forrestjs/service-jwt'
+import * as jwt from '@forrestjs/service-jwt'
+
+const sign = (extension, secret) =>
+    jwt.sign(extension, {
+        expiresIn: '999y',
+    }, secret)
 
 export const issue = async ({ extension, duration }) => {
     // issue the new token for the specific extension name
@@ -10,9 +15,7 @@ export const issue = async ({ extension, duration }) => {
     }, { returning: true })
 
     // create the JWT
-    return sign(token[0].extension, {
-        expiresIn: '999y',
-    }, token[0].secret)
+    return sign(token[0].extension, token[0].secret)
 }
 
 export const validate = async ({ token, extension }) => {
@@ -31,10 +34,28 @@ export const validate = async ({ token, extension }) => {
     }
 
     try {
-        await verify(token, record.secret)
+        await jwt.verify(token, record.secret)
     } catch (err) {
         throw new Error(`[graphql-extensions-manager] Invalid token`)
     }
 
     return extension
+}
+
+export const get = async (extension) => {
+    const record = await getModel('GraphqlExtensionToken').findOne({
+        where: {
+            extension: { [Sequelize.Op.like]: extension },
+            isActive: true,
+            validUntil: { [Sequelize.Op.gte]: Sequelize.literal('NOW()') },
+        },
+        raw: true,
+        attributes: ['secret'],
+    })
+
+    if (!record) {
+        throw new Error(`[graphql-extensions-manager] Invalid or expired token`)
+    }
+
+    return sign(extension, record.secret)
 }

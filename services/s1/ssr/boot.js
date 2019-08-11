@@ -1,5 +1,5 @@
 import { createHookApp } from '@forrestjs/hooks'
-import { registerExtensionJSON } from './lib/register-extension'
+import { registerExtensionJSON } from './lib/register-extension'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -13,53 +13,83 @@ export default createHookApp({
     // trace: true,
     settings: ({ setConfig }) => {
         setConfig('express.port', 6060)
+        // setConfig('service.url', 'https://grapis1.ngrok.io')
+        setConfig('service.url', 'http://localhost:6060')
+        setConfig('service.name', 'Service1')
+
         setConfig('api.endpoint', 'http://localhost:8080/api')
-        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiU2VydmljZTEiLCJpYXQiOjE1NjUyNjc4NzQsImV4cCI6NTMwOTEzMTAyNzR9.CgfOlV4X6Xy0shoPiepW6cU3JwxQe1_sfDgRXVFFc_I')
-        setConfig('reverseUrl', 'http://localhost:6060')
+        setConfig('jwt.secret', 'wedewkldsacndaslkfdnsal')
+        setConfig('jwt.duration', '100y')
+
+        setConfig('staticCheck', '123')
     },
     services: [
         require('@forrestjs/service-env'),
+        require('@forrestjs/service-jwt'),
         require('@forrestjs/service-express'),
     ],
     features: [
         // User's Routes
         [
             '$EXPRESS_ROUTE',
-            ({ registerRoute }) => {
-                registerRoute.get('/users/:id', async (req, res) => {
-                    res.json(users.find(u => u.id === req.params.id))
-                })
+            ({ registerRoute }, { getConfig, jwt }) => {
+                const checkStaticHeader = (req, res, next) => {
+                    if (req.headers['x-static'] === getConfig('staticCheck')) {
+                        next()
+                        return
+                    }
 
-                registerRoute.get('/users', async (req, res) => {
-                    res.json(users)
-                })
+                    res.statusMessage = 'Static check failed'
+                    res.status(400).end()
+                }
+
+                const checkDynamicHeader = (req, res, next) => {
+                    require('jsonwebtoken').verify(req.headers['x-dynamic'], getConfig('jwt.secret'), (err, rrr) => {
+                        if (err) {
+                            res.statusMessage = 'Dynamic check failed'
+                            res.status(400).end()
+                        } else {
+                            next()
+                        }
+                    })
+                }
+
+                registerRoute.get('/users/:id', [
+                    checkStaticHeader,
+                    checkDynamicHeader,
+                    async (req, res) => {
+                        res.json(users.find(u => u.id === req.params.id))
+                    },
+                ])
+
+                registerRoute.get('/users', [
+                    checkStaticHeader,
+                    checkDynamicHeader,
+                    (req, res) => res.json(users),
+                ])
             },
         ],
 
-        // Register the extension
+        // Register the extension at boot time
         [
             '$START_SERVICE',
-            ({ getConfig }) => {
+            async ({ getConfig }, { jwt }) => {
                 registerExtensionJSON({
                     target: getConfig('api.endpoint'),
-                    token: getConfig('api.token'),
+                    token: await jwt.sign(getConfig('service.name')),
                     definition: {
-                        name: 'Service1',
+                        name: getConfig('service.name'),
                         shouldRunQueries: true,
                         queries: {
                             users: {
                                 type: 'JSON',
                                 resolve: {
                                     type: 'rest',
-                                    url: `${getConfig('reverseUrl')}/users`,
-                                },
-                            },
-                            user: {
-                                type: 'JSON',
-                                args: { id: 'String!' },
-                                resolve: {
-                                    type: 'rest',
-                                    url: `${getConfig('reverseUrl')}/users/{{id}}`,
+                                    url: `${getConfig('service.url')}/users`,
+                                    headers: {
+                                        'x-static': getConfig('staticCheck'),
+                                        'x-dynamic': '{{ __meta.token }}',
+                                    },
                                 },
                             },
                             name: {
@@ -67,7 +97,11 @@ export default createHookApp({
                                 args: { id: 'String!' },
                                 resolve: {
                                     type: 'rest',
-                                    url: `${getConfig('reverseUrl')}/users/{{id}}`,
+                                    url: `${getConfig('service.url')}/users/{{id}}`,
+                                    headers: {
+                                        'x-static': getConfig('staticCheck'),
+                                        'x-dynamic': '{{ __meta.token }}',
+                                    },
                                     grab: 'name',
                                 },
                             },
