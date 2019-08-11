@@ -183,6 +183,10 @@ export default () => ({
             type: GraphQLJSON,
             defaultValue: {},
         },
+        secret: {
+            type: GraphQLString,
+            defaultValue: null,
+        },
         token: {
             type: GraphQLString,
             defaultValue: null,

@@ -28,10 +28,10 @@ export const register = ({ registerHook, registerAction }) => {
     registerAction({
         hook: '$GRAPHQL_EXTENSION_VALIDATE',
         name: hooks.FEATURE_NAME,
-        handler: async ({ definition, token, req }) => {
+        handler: async ({ extension, token, req }) => {
             req.graphqlToken = await graphqlToken.validate({
                 token: token || req.headers['authorization'].split('Bearer').pop().trim(),
-                extension: definition.name,
+                extension,
             })
         },
     })

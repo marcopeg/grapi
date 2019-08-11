@@ -22,6 +22,10 @@ const fields = {
         type: Sequelize.JSONB,
         defaultValue: null,
     },
+    secret: {
+        type: Sequelize.STRING,
+        defaultValue: null,
+    },
 }
 
 const options = {

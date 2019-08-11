@@ -1,7 +1,6 @@
 import { POSTGRES_BEFORE_START } from '@forrestjs/service-postgres/lib/hooks'
 import { publish } from '@forrestjs/service-postgres-pubsub'
 import * as hooks from './hooks'
-// import graphqlTokenMutation from './graphql-token.mutation'
 
 // Libraries
 // import * as graphqlToken from './graphql-token.lib'
@@ -40,8 +39,8 @@ export const register = ({ registerHook, registerAction }) => {
     registerAction({
         hook: '$GRAPHQL_EXTENSION_REGISTER',
         name: hooks.FEATURE_NAME,
-        handler: async ({ definition, rules }) => {
-            await graphqlExtension.upsert(definition, rules)
+        handler: async ({ definition, rules, secret }) => {
+            await graphqlExtension.upsert(definition, rules, secret)
             publish(REGISTER_EXTENSION_MSG, definition.name)
         },
     })

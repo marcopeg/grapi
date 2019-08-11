@@ -1,5 +1,5 @@
 import { createHookApp } from '@forrestjs/hooks'
-import { registerExtensionJSON } from './lib/register-extension'
+import { registerExtensionJSON, validateExtensionHeader } from './register-extension'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -8,26 +8,6 @@ const users = [
     { id: 'dv', age: 74 },
     { id: 'ls', age: 55 },
 ]
-
-// const verifyJWT = (token, customSecret) =>
-//     new Promise((resolve, reject) => {
-//         resolve({ ok: true })
-//         // require('jsonwebtoken').verify(token, customSecret, (err, data) => {
-//         //     if (err) {
-//         //         reject(err)
-//         //     } else {
-//         //         resolve(data)
-//         //     }
-//         // })
-//     })
-
-// const verifyJWT = (token, secret) => {
-//     return new Promise((resolve) => {
-//         console.log('resolve', token, secret)
-//         // resolve('ok')
-//         setTimeout(() => resolve('ok'))
-//     })
-// }
 
 export default createHookApp({
     // trace: true,
@@ -39,55 +19,19 @@ export default createHookApp({
         setConfig('service.name', 'Service2')
 
         setConfig('api.endpoint', 'http://localhost:8080/api')
-        setConfig('jwt.secret', 'dwedewdew')
-        setConfig('jwt.duration', '100y')
+        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiU2VydmljZTIiLCJpYXQiOjE1NjUzNTM3ODMsImV4cCI6MzMwOTEzOTYxODN9.0zEJOZd4b6Xn2lrUgbFmDcMhR0NkRdg4gYDR8tg1ioo') // eslint-disable-line
     },
     services: [
         require('@forrestjs/service-env'),
-        require('@forrestjs/service-jwt'),
         require('@forrestjs/service-express'),
     ],
     features: [
         // User's Routes
         [
             '$EXPRESS_ROUTE',
-            ({ registerRoute }, { getConfig, jwt }) => {
-                const checkDynamicHeader = (req, res, next) => {
-                    const token = req.headers['x-dynamic']
-                    const secret = getConfig('jwt.secret')
-                    require('jsonwebtoken').verify(token, secret, (err, data) => {
-                        if (err) {
-                            res.statusMessage = 'Dynamic check failed'
-                            res.status(400).end()
-                        } else {
-                            next()
-                        }
-                    })
-                    // verifyJWT(req.headers['x-dynamic'])
-                    //     .then(() => next())
-                    //     .catch(() => {
-                    //         res.statusMessage = 'Dynamic check failed'
-                    //         res.status(400).end()
-                    //     })
-
-                    // const foo = new Promise((resolve) => {
-                    //     resolve()
-                    // })
-
-                    // foo.then(() => {
-                    //     console.log('then!', next)
-                    //     // next()
-                    // })
-
-                    // next()
-
-                    // foo.catch(err => console.log(err))
-                    // console.log(foo)
-                    // next()
-                }
-
+            ({ registerRoute }) => {
                 registerRoute.get('/users/:id', [
-                    checkDynamicHeader,
+                    validateExtensionHeader(),
                     (req, res) => {
                         res.json(users.find(u => u.id === req.params.id))
                     },
@@ -100,8 +44,8 @@ export default createHookApp({
             '$START_SERVICE',
             async ({ getConfig }, { jwt }) => {
                 registerExtensionJSON({
-                    target: getConfig('api.endpoint'),
-                    token: await jwt.sign(getConfig('service.name')),
+                    endpoint: getConfig('api.endpoint'),
+                    token: getConfig('api.token'),
                     definition: {
                         name: 'Service2',
                         shouldRunQueries: true,
@@ -114,7 +58,7 @@ export default createHookApp({
                                     url: `${getConfig('service.url')}/users/{{id}}`,
                                     grab: 'age',
                                     headers: {
-                                        'x-dynamic': '{{ __meta.token }}',
+                                        'x-grapi-signature': '{{ __meta.signature }}',
                                         'x-origin': 's2[origin] - {{ __meta.origin }}',
                                     },
                                 },

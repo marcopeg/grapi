@@ -10,6 +10,7 @@ import * as extensionsRegistry from './extensions-registry'
 export const registerExtension = extensionsRegistry.register
 export const reflowExtensions = extensionsRegistry.reflow
 export const getRules = extensionsRegistry.getRules
+export const getSecret = extensionsRegistry.getSecret
 
 export const register = ({ registerHook, registerAction, createHook }) => {
     registerHook(hooks)

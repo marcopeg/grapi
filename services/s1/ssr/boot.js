@@ -1,5 +1,6 @@
 import { createHookApp } from '@forrestjs/hooks'
-import { registerExtensionJSON } from './lib/register-extension'
+import { registerExtensionJSON, validateExtensionHeader } from './register-extension'
+import { validateStaticHeader } from './static-header'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -18,14 +19,12 @@ export default createHookApp({
         setConfig('service.name', 'Service1')
 
         setConfig('api.endpoint', 'http://localhost:8080/api')
-        setConfig('jwt.secret', 'wedewkldsacndaslkfdnsal')
-        setConfig('jwt.duration', '100y')
+        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiU2VydmljZTEiLCJpYXQiOjE1NjUzNTM3ODMsImV4cCI6MzMwOTEzOTYxODN9.aUA37x-CgyEjV1m06N3O1G0UZz_4fhH6wIORViua3pY') // eslint-disable-line
 
-        setConfig('staticCheck', '123')
+        setConfig('staticSignature', '123')
     },
     services: [
         require('@forrestjs/service-env'),
-        require('@forrestjs/service-jwt'),
         require('@forrestjs/service-express'),
     ],
     features: [
@@ -33,38 +32,17 @@ export default createHookApp({
         [
             '$EXPRESS_ROUTE',
             ({ registerRoute }, { getConfig, jwt }) => {
-                const checkStaticHeader = (req, res, next) => {
-                    if (req.headers['x-static'] === getConfig('staticCheck')) {
-                        next()
-                        return
-                    }
-
-                    res.statusMessage = 'Static check failed'
-                    res.status(400).end()
-                }
-
-                const checkDynamicHeader = (req, res, next) => {
-                    require('jsonwebtoken').verify(req.headers['x-dynamic'], getConfig('jwt.secret'), (err, rrr) => {
-                        if (err) {
-                            res.statusMessage = 'Dynamic check failed'
-                            res.status(400).end()
-                        } else {
-                            next()
-                        }
-                    })
-                }
-
                 registerRoute.get('/users/:id', [
-                    checkStaticHeader,
-                    checkDynamicHeader,
+                    validateStaticHeader(getConfig('staticSignature')),
+                    validateExtensionHeader(),
                     async (req, res) => {
                         res.json(users.find(u => u.id === req.params.id))
                     },
                 ])
 
                 registerRoute.get('/users', [
-                    checkStaticHeader,
-                    checkDynamicHeader,
+                    validateStaticHeader(getConfig('staticSignature')),
+                    validateExtensionHeader(),
                     (req, res) => res.json(users),
                 ])
             },
@@ -75,8 +53,8 @@ export default createHookApp({
             '$START_SERVICE',
             async ({ getConfig }, { jwt }) => {
                 registerExtensionJSON({
-                    target: getConfig('api.endpoint'),
-                    token: await jwt.sign(getConfig('service.name')),
+                    endpoint: getConfig('api.endpoint'),
+                    token: getConfig('api.token'),
                     definition: {
                         name: getConfig('service.name'),
                         shouldRunQueries: true,
@@ -87,8 +65,8 @@ export default createHookApp({
                                     type: 'rest',
                                     url: `${getConfig('service.url')}/users`,
                                     headers: {
-                                        'x-static': getConfig('staticCheck'),
-                                        'x-dynamic': '{{ __meta.token }}',
+                                        'x-static-signature': getConfig('staticSignature'),
+                                        'x-grapi-signature': '{{ __meta.signature }}',
                                     },
                                 },
                             },
@@ -99,8 +77,8 @@ export default createHookApp({
                                     type: 'rest',
                                     url: `${getConfig('service.url')}/users/{{id}}`,
                                     headers: {
-                                        'x-static': getConfig('staticCheck'),
-                                        'x-dynamic': '{{ __meta.token }}',
+                                        'x-static-signature': getConfig('staticSignature'),
+                                        'x-grapi-signature': '{{ __meta.signature }}',
                                     },
                                     grab: 'name',
                                 },

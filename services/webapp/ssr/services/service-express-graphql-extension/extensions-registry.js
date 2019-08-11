@@ -12,8 +12,8 @@ const data = {
     list: [],
 }
 
-const commitToMemory = (definition, rules) => {
-    data.map[definition.name] = { definition, rules }
+const commitToMemory = (definition, rules, secret) => {
+    data.map[definition.name] = { definition, rules, secret }
     data.list = Object.values(data.map)
     data.etag += 1
 }
@@ -21,13 +21,13 @@ const commitToMemory = (definition, rules) => {
 export const loadFromDisk = async sourcePath => {
     const extensions = await fs.readdir(sourcePath)
     await Promise.all(extensions.map(async src => {
-        const ext = await fs.readJSON(path.join(sourcePath, src))
-        commitToMemory(ext)
+        const { rules, secret, ...definition } = await fs.readJSON(path.join(sourcePath, src))
+        commitToMemory(definition, rules, secret)
     }))
 }
 
-export const register = (definition, rules) => {
-    commitToMemory(definition, rules)
+export const register = (definition, rules, secret) => {
+    commitToMemory(definition, rules, secret)
     return true
 }
 
@@ -49,6 +49,7 @@ export const reflow = async () => {
 export const getList = () => data.list
 export const getEtag = () => data.etag
 export const getRules = extension => data.map[extension].rules
+export const getSecret = extension => data.map[extension].secret
 
 export const init = async (settings) => {
     data.sourcePath = settings.sourcePath || process.env.GRAPHQL_EXTENSIONS_SRC

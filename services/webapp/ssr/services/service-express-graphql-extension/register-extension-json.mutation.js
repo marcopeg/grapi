@@ -15,9 +15,14 @@ export default () => ({
         definition: {
             type: new GraphQLNonNull(GraphQLJSON),
         },
+        // @TODO: Define hard types here!
         rules: {
             type: GraphQLJSON,
             defaultValue: {},
+        },
+        secret: {
+            type: GraphQLString,
+            defaultValue: null,
         },
         token: {
             type: GraphQLString,
