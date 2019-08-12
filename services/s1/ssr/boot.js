@@ -16,6 +16,8 @@ export default createHookApp({
         setConfig('express.port', 6060)
         // setConfig('service.url', 'https://grapis1.ngrok.io')
         setConfig('service.url', 'http://localhost:6060')
+        // setConfig('service.url', 'http://127.0.0.1:6060')
+        // setConfig('service.url', 'http://172.16.135.150:6060')
         setConfig('service.name', 'Service1')
 
         setConfig('api.endpoint', 'http://localhost:8080/api')
@@ -24,7 +26,7 @@ export default createHookApp({
         setConfig('staticSignature', '123')
     },
     services: [
-        require('@forrestjs/service-env'),
+        // require('@forrestjs/service-env'),
         require('@forrestjs/service-express'),
     ],
     features: [
@@ -43,7 +45,10 @@ export default createHookApp({
                 registerRoute.get('/users', [
                     validateStaticHeader(getConfig('staticSignature')),
                     validateExtensionHeader(),
-                    (req, res) => res.json(users),
+                    (req, res) => {
+                        console.log('NOW RUN')
+                        res.json(users)
+                    },
                 ])
             },
         ],

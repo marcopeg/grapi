@@ -6,7 +6,7 @@ require('isomorphic-fetch')
 
 export default createHookApp({
     // trace: true,
-    settings: ({ setConfig, getEnv }) => {
+    settings: async ({ setConfig, getEnv }) => {
         setConfig('postgres.connections', [{
             host: getEnv('PG_HOST'),
             port: getEnv('PG_PORT'),
