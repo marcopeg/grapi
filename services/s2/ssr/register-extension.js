@@ -55,7 +55,7 @@ export const registerExtension = async ({ endpoint, token, definition, secret })
     }
 }
 
-export const validateSecret = secret =>
+export const validateSecret = (secret) =>
     new Promise((resolve, reject) => {
         jwt.verify(secret, data.secret, (err) => {
             if (err) {
@@ -66,8 +66,16 @@ export const validateSecret = secret =>
         })
     })
 
-export const validateRequest = (req, header = 'x-grapi-signature') =>
-    validateSecret(req.headers[header])
+export const validateRequest = async (req, {
+    header = 'x-grapi-signature',
+    message = 'Invalid GRAPI Signature',
+} = {}) => {
+    try {
+        await validateSecret(req.headers[header])
+    } catch (err) {
+        throw new Error(message)
+    }
+}
 
 export const createRequestValidator = ({
     header = 'x-grapi-signature',
@@ -75,7 +83,7 @@ export const createRequestValidator = ({
     statusMessage = 'Invalid GRAPI Signature',
 } = {}) =>
     (req, res, next) =>
-        validateRequest(req, header)
+        validateRequest(req, { header })
             .then(() => next())
             .catch(() => {
                 res.statusMessage = statusMessage
