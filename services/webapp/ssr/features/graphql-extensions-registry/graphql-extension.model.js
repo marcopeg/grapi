@@ -9,7 +9,7 @@ const fields = {
         primaryKey: true,
         defaultValue: Sequelize.DataTypes.UUIDV4,
     },
-    namespace: {
+    extension: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
@@ -17,14 +17,6 @@ const fields = {
     definition: {
         type: Sequelize.JSONB,
         allowNull: false,
-    },
-    rules: {
-        type: Sequelize.JSONB,
-        defaultValue: null,
-    },
-    secret: {
-        type: Sequelize.STRING,
-        defaultValue: null,
     },
 }
 

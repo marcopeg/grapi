@@ -7,6 +7,10 @@ const rulesFn = {
 }
 
 export default async (rules, meta, graphql) => {
+    if (!rules) {
+        return
+    }
+
     for (const rule of rules) {
         if (!rulesFn[rule.name]) {
             throw new Error(`Unknown rule "${rule.name}"`)

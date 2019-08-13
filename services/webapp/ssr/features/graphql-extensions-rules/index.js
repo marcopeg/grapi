@@ -1,6 +1,5 @@
 import * as hooks from './hooks'
-// import { validateGraphqlToken } from '../graphql-extensions-manager'
-import { getRules } from '../../services/service-express-graphql-extension'
+import { getExtension } from '../../services/service-express-graphql-extension'
 
 import decorateMeta from './meta'
 import applyRules from './rules'
@@ -21,7 +20,7 @@ export const register = ({ registerHook, registerAction }) => {
 
             // Collect meta informations and apply the validation rules
             await decorateMeta(meta, graphql)
-            await applyRules(getRules(extension), meta, graphql)
+            await applyRules(getExtension(extension).rules, meta, graphql)
 
             // Decorate the resolver's arguments so that those info can be used by the extension's definition
             graphql.args.__meta = meta

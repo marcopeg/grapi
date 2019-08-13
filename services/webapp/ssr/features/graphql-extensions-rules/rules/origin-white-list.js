@@ -2,13 +2,13 @@
  * White lists origins in order to accept a request
  *
  * {
- *   "rule": "originWhiteList",
- *    "accept": [ "value", "value", ... ]
+ *   "name": "originWhiteList",
+ *   "options": { "accept": [ "value", "value", ... ] }
  * }
  */
 
 export default (rule, meta, graphql) => {
-    if (!rule.accept.includes(meta.origin)) {
+    if (!rule.options.accept.includes(meta.origin)) {
         throw new Error(`Origin "${meta.origin}" not allowed`)
     }
 }

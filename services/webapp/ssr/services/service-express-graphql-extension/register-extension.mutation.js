@@ -10,7 +10,7 @@ import GraphQLJSON from 'graphql-type-json'
 import { registerExtensionResolver } from './register-extension.resolver'
 
 const GraphQLExtensionRestMethods = new GraphQLEnumType({
-    name: 'GraphQLExtension__RestMethods',
+    name: 'GraphQLExtensionRestMethods',
     values: {
         GET: { value: 'GET' },
         PUT: { value: 'PUT' },
@@ -19,7 +19,7 @@ const GraphQLExtensionRestMethods = new GraphQLEnumType({
 })
 
 const GraphQLExtensionResolveTypes = new GraphQLEnumType({
-    name: 'GraphQLExtension__ResolveTypes',
+    name: 'GraphQLExtensionResolveTypes',
     values: {
         rest: { value: 'rest' },
         graphql: { value: 'graphql' },
@@ -27,7 +27,7 @@ const GraphQLExtensionResolveTypes = new GraphQLEnumType({
 })
 
 const GraphQLExtensionField = new GraphQLInputObjectType({
-    name: 'GraphQLExtension__Field',
+    name: 'GraphQLExtensionField',
     description: 'GraphQL Extension Field definition',
     fields: {
         name: {
@@ -40,7 +40,7 @@ const GraphQLExtensionField = new GraphQLInputObjectType({
 })
 
 const GraphQLExtensionHeader = new GraphQLInputObjectType({
-    name: 'GraphQLExtension__Header',
+    name: 'GraphQLExtensionHeader',
     description: 'GraphQL Extension Header field definition',
     fields: {
         name: {
@@ -53,7 +53,7 @@ const GraphQLExtensionHeader = new GraphQLInputObjectType({
 })
 
 const GraphQLExtensionBody = new GraphQLInputObjectType({
-    name: 'GraphQLExtension__Body',
+    name: 'GraphQLExtensionBody',
     description: 'GraphQL Extension Body field definition',
     fields: {
         name: {
@@ -66,7 +66,7 @@ const GraphQLExtensionBody = new GraphQLInputObjectType({
 })
 
 const GraphQLExtensionType = new GraphQLInputObjectType({
-    name: 'GraphQLExtension__Type',
+    name: 'GraphQLExtensionType',
     description: 'GraphQL Extension Type definition',
     fields: {
         name: {
@@ -78,8 +78,22 @@ const GraphQLExtensionType = new GraphQLInputObjectType({
     },
 })
 
+const GraphQLExtensionRule = new GraphQLInputObjectType({
+    name: 'GraphQLExtensionRule',
+    description: 'GraphQL Extension Rule definition',
+    fields: {
+        name: {
+            type: new GraphQLNonNull(GraphQLString),
+        },
+        options: {
+            type: GraphQLJSON,
+            defaultValue: {},
+        },
+    },
+})
+
 const GraphQLExtensionResolver = new GraphQLInputObjectType({
-    name: 'GraphQLExtension__Resolver',
+    name: 'GraphQLExtensionResolver',
     description: 'GraphQL Extension Resolver definition',
     fields: {
         type: {
@@ -107,7 +121,7 @@ const GraphQLExtensionResolver = new GraphQLInputObjectType({
 })
 
 const GraphQLExtensionQuery = new GraphQLInputObjectType({
-    name: 'GraphQLExtension__Query',
+    name: 'GraphQLExtensionQuery',
     description: 'GraphQL Extension Query definition',
     fields: {
         name: {
@@ -126,7 +140,7 @@ const GraphQLExtensionQuery = new GraphQLInputObjectType({
 })
 
 const GraphQLExtensionMutation = new GraphQLInputObjectType({
-    name: 'GraphQLExtension__Mutation',
+    name: 'GraphQLExtensionMutation',
     description: 'GraphQL Extension Mutation definition',
     fields: {
         name: {
@@ -163,11 +177,20 @@ const GraphQLExtension = new GraphQLInputObjectType({
         mutations: {
             type: new GraphQLList(GraphQLExtensionMutation),
         },
+        rules: {
+            type: new GraphQLList(GraphQLExtensionRule),
+        },
+        secret: {
+            type: GraphQLString,
+            defaultValue: null,
+        },
         shouldRunQueries: {
             type: new GraphQLNonNull(GraphQLBoolean),
+            defaultValue: true,
         },
         shouldRunMutations: {
             type: new GraphQLNonNull(GraphQLBoolean),
+            defaultValue: true,
         },
     },
 })
@@ -175,32 +198,21 @@ const GraphQLExtension = new GraphQLInputObjectType({
 export default () => ({
     description: 'Register or updates an GraphQL Extension using a typed validated definition',
     args: {
-        definition: {
-            type: new GraphQLNonNull(GraphQLExtension),
-        },
-        // @TODO: Define hard types here!
-        rules: {
-            type: GraphQLJSON,
-            defaultValue: {},
-        },
-        secret: {
-            type: GraphQLString,
-            defaultValue: null,
-        },
         token: {
             type: GraphQLString,
             defaultValue: null,
         },
+        definition: {
+            type: new GraphQLNonNull(GraphQLExtension),
+        },
     },
     type: GraphQLJSON,
-    resolve: (_, args, req) => {
-        const { definition, ...otherArgs } = args
+    resolve: (_, args, ctx) =>
         registerExtensionResolver({
-            ...otherArgs,
+            ...args,
             definition: {
-                ...definition,
+                ...args.definition,
                 __type: 'gql',
             },
-        }, req)
-    },
+        }, ctx),
 })

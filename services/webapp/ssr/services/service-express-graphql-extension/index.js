@@ -2,15 +2,14 @@ import { parseExtension } from './extension-parser'
 
 import * as hooks from './hooks'
 import registerExtensionMutation from './register-extension.mutation'
-import registerExtensionJsonMutation from './register-extension-json.mutation'
+import registerExtensionJSONMutation from './register-extension-json.mutation'
 import * as extensionsRegistry from './extensions-registry'
 
 // allows to directly register features in the in-memory registry
 // eg. this is used to sync different servers via pub/sub
 export const registerExtension = extensionsRegistry.register
 export const reflowExtensions = extensionsRegistry.reflow
-export const getRules = extensionsRegistry.getRules
-export const getSecret = extensionsRegistry.getSecret
+export const getExtension = extensionsRegistry.getExtension
 
 export const register = ({ registerHook, registerAction, createHook }) => {
     registerHook(hooks)
@@ -53,14 +52,23 @@ export const register = ({ registerHook, registerAction, createHook }) => {
         handler: async ({ registerQuery, registerMutation }, ctx) => {
             // Add Grapi API
             registerMutation('registerExtension', await registerExtensionMutation())
-            registerMutation('registerExtensionJSON', await registerExtensionJsonMutation())
 
-            // Add Extensions
-            extensionsRegistry.getList().forEach(({ definition }) => {
+            // Add Extensions From the Registry
+            extensionsRegistry.getList().forEach((definition) => {
                 const extension = parseExtension(definition, { hooks: ctx })
                 Object.keys(extension.queries).forEach(key => registerQuery(key, extension.queries[key]))
                 Object.keys(extension.mutations).forEach(key => registerMutation(key, extension.mutations[key]))
             })
+        },
+    })
+
+    // Extend GraphQL Test Schema
+    registerAction({
+        hook: '$EXPRESS_GRAPHQL_TEST',
+        name: hooks.SERVICE_NAME,
+        trace: __filename,
+        handler: async ({ registerMutation }) => {
+            registerMutation('registerExtension', await registerExtensionJSONMutation())
         },
     })
 }

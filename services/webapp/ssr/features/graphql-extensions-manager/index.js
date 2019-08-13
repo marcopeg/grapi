@@ -10,6 +10,14 @@ import * as graphqlTokenModel from './graphql-token.model'
 export const validateGraphqlToken = graphqlToken.validate
 export const getGraphqlToken = graphqlToken.get
 
+const getToken = req => {
+    try {
+        return req.headers['authorization'].split('Bearer').pop().trim()
+    } catch (err) {
+        throw new Error(`Authorization bearer not found!`)
+    }
+}
+
 export const register = ({ registerHook, registerAction }) => {
     registerHook(hooks)
 
@@ -30,7 +38,7 @@ export const register = ({ registerHook, registerAction }) => {
         name: hooks.FEATURE_NAME,
         handler: async ({ extension, token, req }) => {
             req.graphqlToken = await graphqlToken.validate({
-                token: token || req.headers['authorization'].split('Bearer').pop().trim(),
+                token: token || getToken(req),
                 extension,
             })
         },
@@ -40,7 +48,7 @@ export const register = ({ registerHook, registerAction }) => {
         hook: '$EXPRESS_GRAPHQL_TEST',
         name: hooks.FEATURE_NAME,
         handler: async ({ registerMutation }) => {
-            registerMutation('createGraphqlExtensionToken', graphqlTokenMutation)
+            registerMutation('createExtensionToken', graphqlTokenMutation)
         },
     })
 }

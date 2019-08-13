@@ -1,8 +1,5 @@
 /**
- * Reverse wrapper that allows to define a simple JSON document
- * as extension.
- *
- * This should be used mostly for development or demonstrational pourpose.
+ * Register an extension to the API using a JSON document as definition
  */
 
 import { GraphQLNonNull, GraphQLString } from 'graphql'
@@ -14,15 +11,6 @@ export default () => ({
     args: {
         definition: {
             type: new GraphQLNonNull(GraphQLJSON),
-        },
-        // @TODO: Define hard types here!
-        rules: {
-            type: GraphQLJSON,
-            defaultValue: {},
-        },
-        secret: {
-            type: GraphQLString,
-            defaultValue: null,
         },
         token: {
             type: GraphQLString,

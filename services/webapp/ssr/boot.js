@@ -75,22 +75,23 @@ export default createHookApp({
         require('@forrestjs/service-postgres'),
         require('@forrestjs/service-postgres-pubsub'),
         require('@forrestjs/service-express'),
+        require('@forrestjs/service-express-graphql'),
+        require('@forrestjs/service-express-graphql-test'),
+        require('./services/service-express-graphql-extension'),
         // In order to catch the graphql query
         // [ '$EXPRESS_MIDDLEWARE', ({ registerMiddleware }) => {
         //     registerMiddleware(require('body-parser').json())
         //     registerMiddleware(require('body-parser').urlencoded({ extended: true }))
         // } ],
         // require('@forrestjs/service-express-cookies'),
-        require('@forrestjs/service-express-graphql'),
         // require('./services/service-express-request'),
         // require('./services/service-express-device'),
         // require('./services/service-express-session'),
-        require('@forrestjs/service-express-graphql-test'),
-        require('./services/service-express-graphql-extension'),
         // require('@forrestjs/service-express-ssr'),
         // require('@forrestjs/feature-locale'),
     ],
     features: [
+        require('./features/graphql-version'),
         // require('./features/feature-pg-session'),
         // require('./features/feature-pg-session-info'),
         // require('./features/feature-pg-session-history'),
@@ -103,7 +104,17 @@ export default createHookApp({
         require('./features/graphql-extensions-registry'),
         require('./features/graphql-extensions-manager'),
         require('./features/graphql-extensions-rules'),
-        // require('./features/graphql-namespace-manager'),
+
+        // [
+        //     '$EXPRESS_GRAPHQL',
+        //     ({ registerQuery }) => registerQuery('version', {
+        //         type: require('graphql').GraphQLString,
+        //         resolve: () => require('../package.json').version,
+        //     }),
+        //     { optional: true },
+        // ],
+
+
         // [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
         //     registerRoute.get('/', async (req, res) => {
         //         try {
@@ -152,13 +163,6 @@ export default createHookApp({
         //         resolve: $ => $.uname,
         //     })
         // } ],
-
-        [ '$EXPRESS_GRAPHQL', ({ registerQuery }) => {
-            registerQuery('version', {
-                type: require('graphql').GraphQLString,
-                resolve: () => '0.0.1',
-            })
-        } ],
 
         // [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
         //     // registerRoute.get('/', async (req, res) => {

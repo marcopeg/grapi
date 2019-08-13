@@ -3,7 +3,7 @@ import { getModel } from '@forrestjs/service-postgres'
 import * as jwt from '@forrestjs/service-jwt'
 
 const sign = (extension, secret) =>
-    jwt.sign(extension, {
+    jwt.sign({ extension }, {
         expiresIn: '999y',
     }, secret)
 

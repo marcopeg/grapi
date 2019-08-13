@@ -55,6 +55,18 @@ const reduceQueries = queries =>
         {}
     )
 
+export const toJSON = definition => ({
+    name: definition.name,
+    secret: definition.secret,
+    shouldRunQueries: definition.shouldRunQueries,
+    shouldRunMutations: definition.shouldRunMutations,
+    ...(definition.types ? { types: reduceTypes(definition.types) } : {}),
+    ...(definition.inputTypes ? { inputTypes: reduceTypes(definition.inputTypes) } : {}),
+    ...(definition.queries ? { queries: reduceQueries(definition.queries) } : {}),
+    ...(definition.mutations ? { mutations: reduceQueries(definition.mutations) } : {}),
+    rules: definition.rules,
+})
+
 /**
  * definition.__type === 'gql'
  * means that the file format uses the long array list, the structure
@@ -65,13 +77,5 @@ const reduceQueries = queries =>
  */
 export const parseExtension = (definition, options) =>
     definition.__type === 'gql'
-        ? buildExtensionSchema({
-            name: definition.name,
-            shouldRunQueries: definition.shouldRunQueries,
-            shouldRunMutations: definition.shouldRunMutations,
-            ...(definition.types ? { types: reduceTypes(definition.types) } : {}),
-            ...(definition.inputTypes ? { inputTypes: reduceTypes(definition.inputTypes) } : {}),
-            ...(definition.queries ? { queries: reduceQueries(definition.queries) } : {}),
-            ...(definition.mutations ? { mutations: reduceQueries(definition.mutations) } : {}),
-        }, options)
+        ? buildExtensionSchema(toJSON(definition), options)
         : buildExtensionSchema(definition, options)
