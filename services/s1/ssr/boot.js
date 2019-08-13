@@ -15,15 +15,14 @@ export default createHookApp({
     settings: ({ setConfig }) => {
         setConfig('express.port', 6060)
         setConfig('service.url', 'http://localhost:6060')
-        setConfig('service.name', 'Service1')
+        setConfig('service.name', 'S1')
 
         setConfig('api.endpoint', 'http://localhost:8080/api')
-        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiU2VydmljZTEiLCJpYXQiOjE1NjU2MTIyMDQsImV4cCI6MzMwOTE2NTQ2MDR9.MpwI6c9WaK4Hu1XZPXoaKKx-24aRMnkG3lomiim_cxQ') // eslint-disable-line
+        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlMxIn0sImlhdCI6MTU2NTcwMzAyNiwiZXhwIjozMzA5MTc0NTQyNn0.MIJEI5tgKgyXthBUmRrRTHT8FWRygqGMTVYRy7AeiP4') // eslint-disable-line
 
         setConfig('staticSignature', '123')
     },
     services: [
-        // require('@forrestjs/service-env'),
         require('@forrestjs/service-express'),
     ],
     features: [
@@ -32,7 +31,7 @@ export default createHookApp({
             '$EXPRESS_ROUTE',
             ({ registerRoute }, { getConfig, jwt }) => {
                 registerRoute.get('/users/:id', [
-                    // validateStaticHeader(getConfig('staticSignature')),
+                    validateStaticHeader(getConfig('staticSignature')),
                     validateRequest(),
                     (req, res) => res.json(users.find(u => u.id === req.params.id)),
                 ])
@@ -40,10 +39,11 @@ export default createHookApp({
                 registerRoute.get('/users', [
                     validateStaticHeader(getConfig('staticSignature')),
                     validateRequest(),
-                    (req, res, next) => {
-                        console.log(req.headers['x-grapi-origin'])
-                        next()
-                    },
+                    // (req, res, next) => {
+                    //     console.log(req.headers['x-grapi-origin'])
+                    //     console.log(req.headers['x-grapi-signature'])
+                    //     next()
+                    // },
                     (req, res) => res.json(users),
                 ])
             },
@@ -52,50 +52,52 @@ export default createHookApp({
         // Register the extension at boot time
         [
             '$START_SERVICE',
-            async ({ getConfig }, { jwt }) => {
+            async ({ getConfig }) => {
                 registerExtension({
                     endpoint: getConfig('api.endpoint'),
                     token: getConfig('api.token'),
                     definition: {
                         name: getConfig('service.name'),
-                        shouldRunQueries: true,
-                        queries: {
-                            users: {
+                        queries: [
+                            {
+                                name: 'users',
                                 type: 'JSON',
-                                // args: {
-                                //     xGrapiOrigin: 'String',
-                                // },
+                                args: [
+                                    { name: 'xGrapiOrigin', type: 'String' },
+                                ],
                                 resolve: {
                                     type: 'rest',
                                     url: `${getConfig('service.url')}/users`,
-                                    headers: {
-                                        'x-static-signature': getConfig('staticSignature'),
-                                        'x-grapi-signature': '{{ __meta.signature }}',
-                                        'x-grapi-origin': '{{ __meta.origin }}',
-                                    },
+                                    headers: [
+                                        { name: 'x-grapi-origin', value: '{{ __meta.origin }}' },
+                                        { name: 'x-grapi-signature', value: '{{ __meta.signature }}' },
+                                        { name: 'x-static-signature', value: getConfig('staticSignature') },
+                                    ],
                                 },
                             },
-                            name: {
-                                type: 'String!',
-                                args: { id: 'String!' },
+                            {
+                                name: 'name',
+                                type: 'JSON',
+                                args: [
+                                    { name: 'xGrapiOrigin', type: 'String' },
+                                    { name: 'id', type: 'String!' },
+                                ],
                                 resolve: {
                                     type: 'rest',
-                                    url: `${getConfig('service.url')}/users/{{id}}`,
-                                    headers: {
-                                        'x-static-signature': getConfig('staticSignature'),
-                                        'x-grapi-signature': '{{ __meta.signature }}',
-                                    },
+                                    url: `${getConfig('service.url')}/users/{{ id }}`,
+                                    headers: [
+                                        { name: 'x-grapi-origin', value: '{{ __meta.origin }}' },
+                                        { name: 'x-grapi-signature', value: '{{ __meta.signature }}' },
+                                        { name: 'x-static-signature', value: getConfig('staticSignature') },
+                                    ],
                                     grab: 'name',
                                 },
                             },
-                        },
+                        ],
+                        rules: [
+                            { name: 'originNotNull' },
+                        ],
                     },
-                    // GRAPI Routing rules
-                    // this doesn't really protect the service
-                    rules: [
-                        { name: 'originNotNull' },
-                        { name: 'originWhiteList', accept: [ 'Service2', 'Service3' ] },
-                    ],
                 })
                     .then(() => console.log('Extension successfully registered'))
                     .catch(err => console.log(`Failed to register the extension - ${err.message}`))

@@ -3,11 +3,12 @@
  */
 
 import { sign } from '@forrestjs/service-jwt'
-import { getSecret } from '../../../services/service-express-graphql-extension'
+import { getExtension } from '../../../services/service-express-graphql-extension'
 
 export default async (meta, graphql) => {
     try {
-        meta.signature = await sign(meta.extension, {}, getSecret(meta.extension))
+        const { extension } = meta
+        meta.signature = await sign({ extension }, {}, getExtension(extension).secret)
     } catch (err) {
         meta.signature = false
     }
