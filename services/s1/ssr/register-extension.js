@@ -22,6 +22,7 @@ export const registerExtension = async ({ endpoint, token, definition, secret })
 
     // Run the GraphQL Request
     let res = null
+    let doc = null
     try {
         res = await fetch(endpoint, {
             method: 'POST',
@@ -40,9 +41,17 @@ export const registerExtension = async ({ endpoint, token, definition, secret })
     }
 
     try {
-        return (await res.json()).data.registerExtensionJSON
+        doc = await res.json()
     } catch (err) {
         throw new Error(`unexpected response format - ${err.message}`)
+    }
+
+    if (doc.errors) {
+        throw new Error(doc.errors.shift().message)
+    }
+
+    if (!doc.data.registerExtension) {
+        throw new Error('Oooops, something weird happened :-|')
     }
 }
 

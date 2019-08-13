@@ -80,7 +80,7 @@ export default createHookApp({
                                 type: 'JSON',
                                 args: [
                                     { name: 'xGrapiOrigin', type: 'String' },
-                                    { name: 'id', type: 'String!' },
+                                    { name: 'id', type: 'ID!' },
                                 ],
                                 resolve: {
                                     type: 'rest',

@@ -1,5 +1,6 @@
 import { createHookApp } from '@forrestjs/hooks'
-import { registerExtensionJSON, validateExtensionHeader } from './register-extension'
+import { registerExtension, validateRequest } from './register-extension'
+import { GraphQLInt, GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -14,26 +15,38 @@ export default createHookApp({
     settings: ({ setConfig }) => {
         setConfig('express.port', 7070)
 
-        // setConfig('service.url', 'https://grapis2.ngrok.io')
         setConfig('service.url', 'http://localhost:7070')
-        setConfig('service.name', 'Service2')
+        setConfig('service.name', 'S2')
 
         setConfig('api.endpoint', 'http://localhost:8080/api')
-        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiU2VydmljZTIiLCJpYXQiOjE1NjU2MTIyMDQsImV4cCI6MzMwOTE2NTQ2MDR9.p6K8_pS3UygrUgcjOBuMx0glyFysx4miTGfLd7y-wS4') // eslint-disable-line
+        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlMyIn0sImlhdCI6MTU2NTcwNTI0MiwiZXhwIjozMzA5MTc0NzY0Mn0.J6FGYgL5jAkBUPTnN62f0l9KZkgvpjJKcQL-Qb8cGXI') // eslint-disable-line
     },
     services: [
         require('@forrestjs/service-env'),
         require('@forrestjs/service-express'),
+        require('@forrestjs/service-express-graphql'),
     ],
     features: [
-        // User's Routes
+        // Service's APIs
         [
-            '$EXPRESS_ROUTE',
-            ({ registerRoute }) => {
-                registerRoute.get('/users/:id', [
-                    // validateExtensionHeader(),
-                    (req, res) => res.json(users.find(u => u.id === req.params.id)),
-                ])
+            '$EXPRESS_GRAPHQL',
+            ({ registerQuery }) => {
+                registerQuery('user', {
+                    args: {
+                        id: { type: new GraphQLNonNull(GraphQLID) },
+                    },
+                    type: new GraphQLObjectType({
+                        name: 'User',
+                        fields: {
+                            id: { type: new GraphQLNonNull(GraphQLID) },
+                            age: { type: new GraphQLNonNull(GraphQLInt) },
+                        },
+                    }),
+                    resolve: (_, args, { req }) => {
+                        console.log(req.headers)
+                        return users.find(u => u.id === args.id)
+                    },
+                })
             },
         ],
 
@@ -41,31 +54,35 @@ export default createHookApp({
         [
             '$START_SERVICE',
             async ({ getConfig }, { jwt }) => {
-                registerExtensionJSON({
+                registerExtension({
                     endpoint: getConfig('api.endpoint'),
                     token: getConfig('api.token'),
                     definition: {
-                        name: 'Service2',
-                        shouldRunQueries: true,
-                        queries: {
-                            age: {
-                                type: 'Int',
-                                args: { id: 'String!' },
+                        name: getConfig('service.name'),
+                        queries: [
+                            {
+                                name: 'age',
+                                type: 'Int!',
+                                args: [
+                                    { name: 'xGrapiOrigin', type: 'String' },
+                                    { name: 'id', type: 'ID!' },
+                                ],
                                 resolve: {
-                                    type: 'rest',
-                                    url: `${getConfig('service.url')}/users/{{id}}`,
-                                    grab: 'age',
-                                    headers: {
-                                        'x-grapi-signature': '{{ __meta.signature }}',
-                                        'x-origin': 's2[origin] - {{ __meta.origin }}',
-                                    },
+                                    type: 'graphql',
+                                    url: `${getConfig('service.url')}/api`,
+                                    query: 'query foo ($id: ID!) { user (id: $id) { age }}',
+                                    headers: [
+                                        { name: 'x-grapi-origin', value: '{{ __meta.origin }}' },
+                                        { name: 'x-grapi-signature', value: '{{ __meta.signature }}' },
+                                    ],
+                                    grab: 'data.user.age',
                                 },
                             },
-                        },
+                        ],
+                        rules: [
+                            { name: 'originNotNull' },
+                        ],
                     },
-                    rules: [
-                        { name: 'originNotNull' },
-                    ],
                 })
                     .then(() => console.log('Extension successfully registered'))
                     .catch(err => console.log(`Failed to register the extension - ${err.message}`))

@@ -2,14 +2,12 @@ import jwt from 'jsonwebtoken'
 
 const query = `
     mutation reg (
-        $d: JSON!
-        $r: JSON!
-        $s: String
+        $token: String
+        $definition: GraphQLExtension!
     ) {
-        registerExtensionJSON (
-            definition: $d
-            rules: $r
-            secret: $s
+        registerExtension (
+            token: $token
+            definition: $definition
         ) 
     }`
 
@@ -17,27 +15,21 @@ const data = {
     secret: null,
 }
 
-export const registerExtensionJSON = async ({ endpoint, definition, rules, secret, token }) => {
+export const registerExtension = async ({ endpoint, token, definition, secret }) => {
     // Generate a new random secret
     data.secret = secret || `${definition.name}-${Date.now()}`
+    definition.secret = data.secret
 
     // Run the GraphQL Request
     let res = null
+    let doc = null
     try {
         res = await fetch(endpoint, {
             method: 'POST',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 query,
-                variables: {
-                    d: definition,
-                    r: rules || [],
-                    s: data.secret,
-                },
+                variables: { token, definition },
             }),
         })
     } catch (err) {
@@ -49,13 +41,21 @@ export const registerExtensionJSON = async ({ endpoint, definition, rules, secre
     }
 
     try {
-        return (await res.json()).data.registerExtensionJSON
+        doc = await res.json()
     } catch (err) {
         throw new Error(`unexpected response format - ${err.message}`)
     }
+
+    if (doc.errors) {
+        throw new Error(doc.errors.shift().message)
+    }
+
+    if (!doc.data.registerExtension) {
+        throw new Error('Oooops, something weird happened :-|')
+    }
 }
 
-export const validateExtensionHeader = ({
+export const validateRequest = ({
     header = 'x-grapi-signature',
     statusCode = 400,
     statusMessage = 'Invalid GRAPI Signature',
