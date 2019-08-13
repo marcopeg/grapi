@@ -1,5 +1,5 @@
 import { createHookApp } from '@forrestjs/hooks'
-import { registerExtensionJSON, validateExtensionHeader } from './register-extension'
+import { registerExtension, validateRequest } from './register-extension'
 import { validateStaticHeader } from './static-header'
 
 require('es6-promise').polyfill()
@@ -14,14 +14,11 @@ export default createHookApp({
     // trace: true,
     settings: ({ setConfig }) => {
         setConfig('express.port', 6060)
-        // setConfig('service.url', 'https://grapis1.ngrok.io')
         setConfig('service.url', 'http://localhost:6060')
-        // setConfig('service.url', 'http://127.0.0.1:6060')
-        // setConfig('service.url', 'http://172.16.135.150:6060')
         setConfig('service.name', 'Service1')
 
         setConfig('api.endpoint', 'http://localhost:8080/api')
-        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiU2VydmljZTEiLCJpYXQiOjE1NjUzNTM3ODMsImV4cCI6MzMwOTEzOTYxODN9.aUA37x-CgyEjV1m06N3O1G0UZz_4fhH6wIORViua3pY') // eslint-disable-line
+        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiU2VydmljZTEiLCJpYXQiOjE1NjU2MTIyMDQsImV4cCI6MzMwOTE2NTQ2MDR9.MpwI6c9WaK4Hu1XZPXoaKKx-24aRMnkG3lomiim_cxQ') // eslint-disable-line
 
         setConfig('staticSignature', '123')
     },
@@ -35,20 +32,19 @@ export default createHookApp({
             '$EXPRESS_ROUTE',
             ({ registerRoute }, { getConfig, jwt }) => {
                 registerRoute.get('/users/:id', [
-                    validateStaticHeader(getConfig('staticSignature')),
-                    validateExtensionHeader(),
-                    async (req, res) => {
-                        res.json(users.find(u => u.id === req.params.id))
-                    },
+                    // validateStaticHeader(getConfig('staticSignature')),
+                    validateRequest(),
+                    (req, res) => res.json(users.find(u => u.id === req.params.id)),
                 ])
 
                 registerRoute.get('/users', [
                     validateStaticHeader(getConfig('staticSignature')),
-                    validateExtensionHeader(),
-                    (req, res) => {
-                        console.log('NOW RUN')
-                        res.json(users)
+                    validateRequest(),
+                    (req, res, next) => {
+                        console.log(req.headers['x-grapi-origin'])
+                        next()
                     },
+                    (req, res) => res.json(users),
                 ])
             },
         ],
@@ -57,7 +53,7 @@ export default createHookApp({
         [
             '$START_SERVICE',
             async ({ getConfig }, { jwt }) => {
-                registerExtensionJSON({
+                registerExtension({
                     endpoint: getConfig('api.endpoint'),
                     token: getConfig('api.token'),
                     definition: {
@@ -66,12 +62,16 @@ export default createHookApp({
                         queries: {
                             users: {
                                 type: 'JSON',
+                                // args: {
+                                //     xGrapiOrigin: 'String',
+                                // },
                                 resolve: {
                                     type: 'rest',
                                     url: `${getConfig('service.url')}/users`,
                                     headers: {
                                         'x-static-signature': getConfig('staticSignature'),
                                         'x-grapi-signature': '{{ __meta.signature }}',
+                                        'x-grapi-origin': '{{ __meta.origin }}',
                                     },
                                 },
                             },
@@ -90,8 +90,11 @@ export default createHookApp({
                             },
                         },
                     },
+                    // GRAPI Routing rules
+                    // this doesn't really protect the service
                     rules: [
                         { name: 'originNotNull' },
+                        { name: 'originWhiteList', accept: [ 'Service2', 'Service3' ] },
                     ],
                 })
                     .then(() => console.log('Extension successfully registered'))

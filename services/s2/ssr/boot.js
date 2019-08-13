@@ -19,7 +19,7 @@ export default createHookApp({
         setConfig('service.name', 'Service2')
 
         setConfig('api.endpoint', 'http://localhost:8080/api')
-        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiU2VydmljZTIiLCJpYXQiOjE1NjUzNTM3ODMsImV4cCI6MzMwOTEzOTYxODN9.0zEJOZd4b6Xn2lrUgbFmDcMhR0NkRdg4gYDR8tg1ioo') // eslint-disable-line
+        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiU2VydmljZTIiLCJpYXQiOjE1NjU2MTIyMDQsImV4cCI6MzMwOTE2NTQ2MDR9.p6K8_pS3UygrUgcjOBuMx0glyFysx4miTGfLd7y-wS4') // eslint-disable-line
     },
     services: [
         require('@forrestjs/service-env'),
@@ -31,10 +31,8 @@ export default createHookApp({
             '$EXPRESS_ROUTE',
             ({ registerRoute }) => {
                 registerRoute.get('/users/:id', [
-                    validateExtensionHeader(),
-                    (req, res) => {
-                        res.json(users.find(u => u.id === req.params.id))
-                    },
+                    // validateExtensionHeader(),
+                    (req, res) => res.json(users.find(u => u.id === req.params.id)),
                 ])
             },
         ],
