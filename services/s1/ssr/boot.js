@@ -1,5 +1,5 @@
 import { createHookApp } from '@forrestjs/hooks'
-import { registerExtension, validateRequest } from './register-extension'
+import { registerExtension, createRequestValidator } from './register-extension'
 import { validateStaticHeader } from './static-header'
 
 require('es6-promise').polyfill()
@@ -32,13 +32,13 @@ export default createHookApp({
             ({ registerRoute }, { getConfig, jwt }) => {
                 registerRoute.get('/users/:id', [
                     validateStaticHeader(getConfig('staticSignature')),
-                    validateRequest(),
+                    createRequestValidator(),
                     (req, res) => res.json(users.find(u => u.id === req.params.id)),
                 ])
 
                 registerRoute.get('/users', [
                     validateStaticHeader(getConfig('staticSignature')),
-                    validateRequest(),
+                    createRequestValidator(),
                     // (req, res, next) => {
                     //     console.log(req.headers['x-grapi-origin'])
                     //     console.log(req.headers['x-grapi-signature'])

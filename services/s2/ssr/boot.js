@@ -42,8 +42,8 @@ export default createHookApp({
                             age: { type: new GraphQLNonNull(GraphQLInt) },
                         },
                     }),
-                    resolve: (_, args, { req }) => {
-                        console.log(req.headers)
+                    resolve: async (_, args, { req }) => {
+                        await validateRequest(req)
                         return users.find(u => u.id === args.id)
                     },
                 })
