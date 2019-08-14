@@ -33,17 +33,24 @@ export default createHookApp({
                 registerRoute.get('/users/:id', [
                     validateStaticHeader(getConfig('staticSignature')),
                     createRequestValidator(),
+                    (req, res, next) => {
+                        // console.log(req.headers['x-grapi-origin'])
+                        // console.log(req.headers['x-grapi-signature'])
+                        // console.log(req.headers)
+                        next()
+                    },
                     (req, res) => res.json(users.find(u => u.id === req.params.id)),
                 ])
 
                 registerRoute.get('/users', [
                     validateStaticHeader(getConfig('staticSignature')),
                     createRequestValidator(),
-                    // (req, res, next) => {
-                    //     console.log(req.headers['x-grapi-origin'])
-                    //     console.log(req.headers['x-grapi-signature'])
-                    //     next()
-                    // },
+                    (req, res, next) => {
+                        // console.log(req.headers['x-grapi-origin'])
+                        // console.log(req.headers['x-grapi-signature'])
+                        // console.log(req.headers)
+                        next()
+                    },
                     (req, res) => res.json(users),
                 ])
             },
@@ -60,7 +67,7 @@ export default createHookApp({
                         name: getConfig('service.name'),
                         queries: [
                             {
-                                name: 'users',
+                                name: '__wrapper__',
                                 type: 'JSON',
                                 args: [
                                     { name: 'xGrapiOrigin', type: 'String' },
@@ -68,9 +75,17 @@ export default createHookApp({
                                 resolve: {
                                     type: 'rest',
                                     url: `${getConfig('service.url')}/users`,
+                                },
+                            },
+                            {
+                                name: 'users',
+                                type: 'JSON',
+                                resolve: {
+                                    type: 'rest',
+                                    url: `${getConfig('service.url')}/users`,
                                     headers: [
-                                        { name: 'x-grapi-origin', value: '{{ __meta.origin }}' },
-                                        { name: 'x-grapi-signature', value: '{{ __meta.signature }}' },
+                                        { name: 'x-grapi-origin', value: '{{ meta.origin }}' },
+                                        { name: 'x-grapi-signature', value: '{{ meta.signature }}' },
                                         { name: 'x-static-signature', value: getConfig('staticSignature') },
                                     ],
                                 },
@@ -79,15 +94,14 @@ export default createHookApp({
                                 name: 'name',
                                 type: 'JSON',
                                 args: [
-                                    { name: 'xGrapiOrigin', type: 'String' },
                                     { name: 'id', type: 'ID!' },
                                 ],
                                 resolve: {
                                     type: 'rest',
-                                    url: `${getConfig('service.url')}/users/{{ id }}`,
+                                    url: `${getConfig('service.url')}/users/{{ args.id }}`,
                                     headers: [
-                                        { name: 'x-grapi-origin', value: '{{ __meta.origin }}' },
-                                        { name: 'x-grapi-signature', value: '{{ __meta.signature }}' },
+                                        { name: 'x-grapi-origin', value: '{{ meta.origin }}' },
+                                        { name: 'x-grapi-signature', value: '{{ meta.signature }}' },
                                         { name: 'x-static-signature', value: getConfig('staticSignature') },
                                     ],
                                     grab: 'name',

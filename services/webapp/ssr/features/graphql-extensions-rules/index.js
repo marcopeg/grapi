@@ -10,7 +10,7 @@ export const register = ({ registerHook, registerAction }) => {
     // this is supposed to regulate access to a single extension's method request by request
     registerAction({
         hook: 'GRAPHQL_EXTENSION_RESOLVE',
-        handler: async ({ extension, method, type, source, graphql }) => {
+        handler: async ({ extension, method, type, source, graphql, variables }) => {
             // Decorate the resolver variables with meta informations regarding the current request
             const meta = {
                 extension,
@@ -23,7 +23,7 @@ export const register = ({ registerHook, registerAction }) => {
             await applyRules(getExtension(extension).rules, meta, graphql)
 
             // Decorate the resolver's arguments so that those info can be used by the extension's definition
-            graphql.args.__meta = meta
+            variables.meta = meta
         },
     })
 }

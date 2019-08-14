@@ -71,9 +71,12 @@ export default createHookApp({
                                     type: 'graphql',
                                     url: `${getConfig('service.url')}/api`,
                                     query: 'query foo ($id: ID!) { user (id: $id) { age }}',
+                                    variables: {
+                                        id: '{{ ags.id }}',
+                                    },
                                     headers: [
-                                        { name: 'x-grapi-origin', value: '{{ __meta.origin }}' },
-                                        { name: 'x-grapi-signature', value: '{{ __meta.signature }}' },
+                                        { name: 'x-grapi-origin', value: '{{ meta.origin }}' },
+                                        { name: 'x-grapi-signature', value: '{{ meta.signature }}' },
                                     ],
                                     grab: 'data.user.age',
                                 },
