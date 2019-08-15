@@ -1,6 +1,7 @@
 import { createHookApp } from '@forrestjs/hooks'
-import { registerExtension, createRequestValidator } from './register-extension'
+// import { registerExtension, createRequestValidator } from './register-extension'
 import { validateStaticHeader } from './static-header'
+import createExtension from './create-extension'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -12,7 +13,7 @@ const users = [
 
 export default createHookApp({
     // trace: true,
-    settings: ({ setConfig }) => {
+    settings: ({ setConfig, getConfig }) => {
         setConfig('express.port', 6060)
         setConfig('service.url', 'http://localhost:6060')
         setConfig('service.name', 'S1')
@@ -21,6 +22,16 @@ export default createHookApp({
         setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlMxIn0sImlhdCI6MTU2NTcwMzAyNiwiZXhwIjozMzA5MTc0NTQyNn0.MIJEI5tgKgyXthBUmRrRTHT8FWRygqGMTVYRy7AeiP4') // eslint-disable-line
 
         setConfig('staticSignature', '123')
+
+        setConfig('extension', createExtension({
+            name: getConfig('service.name'),
+            endpoint: getConfig('api.endpoint'),
+            token: getConfig('api.token'),
+            variables: {
+                serviceUrl: getConfig('service.url'),
+                staticSignature: getConfig('staticSignature'),
+            },
+        }))
     },
     services: [
         require('@forrestjs/service-express'),
@@ -32,7 +43,7 @@ export default createHookApp({
             ({ registerRoute }, { getConfig, jwt }) => {
                 registerRoute.get('/users/:id', [
                     validateStaticHeader(getConfig('staticSignature')),
-                    createRequestValidator(),
+                    getConfig('extension').createMiddleware(),
                     (req, res, next) => {
                         // console.log(req.headers['x-grapi-origin'])
                         // console.log(req.headers['x-grapi-signature'])
@@ -44,7 +55,7 @@ export default createHookApp({
 
                 registerRoute.get('/users', [
                     validateStaticHeader(getConfig('staticSignature')),
-                    createRequestValidator(),
+                    getConfig('extension').createMiddleware(),
                     (req, res, next) => {
                         // console.log(req.headers['x-grapi-origin'])
                         // console.log(req.headers['x-grapi-signature'])
@@ -60,60 +71,11 @@ export default createHookApp({
         [
             '$START_SERVICE',
             async ({ getConfig }) => {
-                registerExtension({
-                    endpoint: getConfig('api.endpoint'),
-                    token: getConfig('api.token'),
-                    definition: {
-                        name: getConfig('service.name'),
-                        queries: [
-                            {
-                                name: '__wrapper__',
-                                type: 'JSON',
-                                args: [
-                                    { name: 'xGrapiOrigin', type: 'String' },
-                                ],
-                                resolve: {
-                                    type: 'rest',
-                                    url: `${getConfig('service.url')}/users`,
-                                },
-                            },
-                            {
-                                name: 'users',
-                                type: 'JSON',
-                                resolve: {
-                                    type: 'rest',
-                                    url: `${getConfig('service.url')}/users`,
-                                    headers: [
-                                        { name: 'x-grapi-origin', value: '{{ meta.origin }}' },
-                                        { name: 'x-grapi-signature', value: '{{ meta.signature }}' },
-                                        { name: 'x-static-signature', value: getConfig('staticSignature') },
-                                    ],
-                                },
-                            },
-                            {
-                                name: 'name',
-                                type: 'JSON',
-                                args: [
-                                    { name: 'id', type: 'ID!' },
-                                ],
-                                resolve: {
-                                    type: 'rest',
-                                    url: `${getConfig('service.url')}/users/{{ args.id }}`,
-                                    headers: [
-                                        { name: 'x-grapi-origin', value: '{{ meta.origin }}' },
-                                        { name: 'x-grapi-signature', value: '{{ meta.signature }}' },
-                                        { name: 'x-static-signature', value: getConfig('staticSignature') },
-                                    ],
-                                    grab: 'name',
-                                },
-                            },
-                        ],
-                        rules: [
-                            { name: 'originNotNull' },
-                        ],
-                    },
-                })
-                    .then(() => console.log('Extension successfully registered'))
+                getConfig('extension').register()
+                    .then(() => {
+                        console.log('Extension successfully registered')
+                        // setInterval(() => getConfig('extension').rotateSecret(), 2500)
+                    })
                     .catch(err => console.log(`Failed to register the extension - ${err.message}`))
             },
         ],

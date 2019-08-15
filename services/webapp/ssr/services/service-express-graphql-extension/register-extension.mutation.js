@@ -65,6 +65,19 @@ const GraphQLExtensionBody = new GraphQLInputObjectType({
     },
 })
 
+const GraphQLExtensionFetchRule = new GraphQLInputObjectType({
+    name: 'GraphQLExtensionFetchRule',
+    description: 'GraphQL Extension REST rule field definition',
+    fields: {
+        match: {
+            type: new GraphQLNonNull(GraphQLJSON),
+        },
+        apply: {
+            type: new GraphQLNonNull(GraphQLJSON),
+        },
+    },
+})
+
 const GraphQLExtensionType = new GraphQLInputObjectType({
     name: 'GraphQLExtensionType',
     description: 'GraphQL Extension Type definition',
@@ -92,6 +105,19 @@ const GraphQLExtensionRule = new GraphQLInputObjectType({
     },
 })
 
+const GraphQLExtensionVariable = new GraphQLInputObjectType({
+    name: 'GraphQLExtensionVariable',
+    description: 'GraphQL Extension Variable definition',
+    fields: {
+        name: {
+            type: new GraphQLNonNull(GraphQLString),
+        },
+        value: {
+            type: new GraphQLNonNull(GraphQLJSON),
+        },
+    },
+})
+
 const GraphQLExtensionResolver = new GraphQLInputObjectType({
     name: 'GraphQLExtensionResolver',
     description: 'GraphQL Extension Resolver definition',
@@ -114,6 +140,9 @@ const GraphQLExtensionResolver = new GraphQLInputObjectType({
         body: {
             type: new GraphQLList(GraphQLExtensionBody),
         },
+        rules: {
+            type: new GraphQLList(GraphQLExtensionFetchRule),
+        },
         grab: {
             type: GraphQLString,
         },
@@ -135,6 +164,16 @@ const GraphQLExtensionQuery = new GraphQLInputObjectType({
         },
         resolve: {
             type: new GraphQLNonNull(GraphQLExtensionResolver),
+        },
+    },
+})
+
+const GraphQLExtensionQueryWrapper = new GraphQLInputObjectType({
+    name: 'GraphQLExtensionQueryWrapper',
+    description: 'GraphQL Extension Query Wrapper definition',
+    fields: {
+        args: {
+            type: new GraphQLList(GraphQLExtensionField),
         },
     },
 })
@@ -165,6 +204,9 @@ const GraphQLExtension = new GraphQLInputObjectType({
         name: {
             type: new GraphQLNonNull(GraphQLString),
         },
+        variables: {
+            type: new GraphQLList(GraphQLExtensionVariable),
+        },
         types: {
             type: new GraphQLList(GraphQLExtensionType),
         },
@@ -176,6 +218,12 @@ const GraphQLExtension = new GraphQLInputObjectType({
         },
         mutations: {
             type: new GraphQLList(GraphQLExtensionMutation),
+        },
+        queryWrapper: {
+            type: GraphQLExtensionQueryWrapper,
+        },
+        mutationWrapper: {
+            type: GraphQLExtensionQueryWrapper,
         },
         rules: {
             type: new GraphQLList(GraphQLExtensionRule),

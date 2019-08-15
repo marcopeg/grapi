@@ -32,6 +32,15 @@ const reduceHeaders = fields =>
         {}
     )
 
+const reduceVariables = fields =>
+    fields.reduce(
+        (acc, curr) => ({
+            ...acc,
+            [curr.name]: curr.value,
+        }),
+        {}
+    )
+
 const reduceResolver = resolver => ({
     type: resolver.type,
     url: resolver.url,
@@ -55,17 +64,38 @@ const reduceQueries = queries =>
         {}
     )
 
-export const toJSON = definition => ({
-    name: definition.name,
-    secret: definition.secret,
-    shouldRunQueries: definition.shouldRunQueries,
-    shouldRunMutations: definition.shouldRunMutations,
-    ...(definition.types ? { types: reduceTypes(definition.types) } : {}),
-    ...(definition.inputTypes ? { inputTypes: reduceTypes(definition.inputTypes) } : {}),
-    ...(definition.queries ? { queries: reduceQueries(definition.queries) } : {}),
-    ...(definition.mutations ? { mutations: reduceQueries(definition.mutations) } : {}),
-    rules: definition.rules,
-})
+// Transform a GraphQL compatible definition into a JSON document as used
+// in the `buildExtensionSchema()` API
+export const toJSON = definition => {
+    const doc = {
+        name: definition.name,
+        secret: definition.secret,
+        shouldRunQueries: definition.shouldRunQueries,
+        shouldRunMutations: definition.shouldRunMutations,
+        ...(definition.variables ? { variables: reduceVariables(definition.variables) } : {}),
+        ...(definition.types ? { types: reduceTypes(definition.types) } : {}),
+        ...(definition.inputTypes ? { inputTypes: reduceTypes(definition.inputTypes) } : {}),
+        ...(definition.queries ? { queries: reduceQueries(definition.queries) } : {}),
+        ...(definition.mutations ? { mutations: reduceQueries(definition.mutations) } : {}),
+        rules: definition.rules,
+    }
+
+    if (definition.queryWrapper) {
+        const { args } = definition.queryWrapper
+        doc.queries['__wrapper__'] = {
+            ...(args ? { args: reduceFields(args) } : {}),
+        }
+    }
+
+    if (definition.mutationWrapper) {
+        const { args } = definition.mutationWrapper
+        doc.queries['__wrapper__'] = {
+            ...(args ? { args: reduceFields(args) } : {}),
+        }
+    }
+
+    return doc
+}
 
 /**
  * definition.__type === 'gql'

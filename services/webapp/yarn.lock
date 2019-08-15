@@ -5548,10 +5548,10 @@ fecha@^2.3.3:
   resolved "https://registry.yarnpkg.com/fecha/-/fecha-2.3.3.tgz#948e74157df1a32fd1b12c3a3c3cdcb6ec9d96cd"
   integrity sha512-lUGBnIamTAwk4znq5BcqsDaxSmZ9nDVJaij6NvRt/Tg4R69gERA+otPKbS86ROw9nxVMw2/mp1fnaiWqbs6Sdg==
 
-fetch-resolver@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/fetch-resolver/-/fetch-resolver-0.2.6.tgz#bd3550bfe986a972b58028e9b5ea49c9847e1e28"
-  integrity sha512-Vr89NCy4kTdPPUZVJJwnFPMIPhY1yftRMMx1jee6OPIBDHFYCaA1nyJzHNVHWD7WHSnGIN3STrduVBHqt3QWxA==
+fetch-resolver@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/fetch-resolver/-/fetch-resolver-0.2.7.tgz#d7a9bfb29e8ac0932c76bad710093297e2553df8"
+  integrity sha512-ljF0pjhp0T3Qx7F33Kx8wwqGSHaZzy++eQkHHfbmfX7EksYy56OCy0fBrZXjWzcqikqkgO2MFKq4c7vnp2VWlQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@marcopeg/dotted" "^0.2.0"
@@ -6290,15 +6290,15 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
 
-graphql-extension@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/graphql-extension/-/graphql-extension-0.2.6.tgz#442ef94b136c7b010577cc149dfd0e4b9e422e39"
-  integrity sha512-tyxGhArXpU/tl5W3DdHdSnjMmgvTO2Fhlp/pyHLSbp6p0nCTDStGAryukHhexBaNAn/EoFMPJbAN7TMJq4ZE0g==
+graphql-extension@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/graphql-extension/-/graphql-extension-0.2.7.tgz#a114a17d51e243de351d1e9a904eaf1bc7b008ac"
+  integrity sha512-2ZehTWuILnkxI85AFDGrqwMNwTX4Npg5nzNNt5I/oFi9dFMoDW/BnClPyhmsIiQ9DsTz2/9s2nzO/wjgieejuQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@marcopeg/dotted" "^0.2.0"
     "@marcopeg/template" "^0.2.0"
-    fetch-resolver "^0.2.6"
+    fetch-resolver "^0.2.7"
     flat "^4.1.0"
     graphql-type-json "^0.3.0"
 
