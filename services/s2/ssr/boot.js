@@ -52,7 +52,7 @@ export default createHookApp({
                         },
                     }),
                     resolve: async (_, args, { req }) => {
-                        // getConfig('extension').validateRequest(req)
+                        await getConfig('extension').validateRequest(req)
                         return users.find(u => u.id === args.id)
                     },
                 })
@@ -63,39 +63,6 @@ export default createHookApp({
         [
             '$START_SERVICE',
             async ({ getConfig }, { jwt }) => {
-                // registerExtension({
-                //     endpoint: getConfig('api.endpoint'),
-                //     token: getConfig('api.token'),
-                //     definition: {
-                //         name: getConfig('service.name'),
-                //         queries: [
-                //             {
-                //                 name: 'age',
-                //                 type: 'Int!',
-                //                 args: [
-                //                     { name: 'xGrapiOrigin', type: 'String' },
-                //                     { name: 'id', type: 'ID!' },
-                //                 ],
-                //                 resolve: {
-                //                     type: 'graphql',
-                //                     url: `${getConfig('service.url')}/api`,
-                //                     query: 'query foo ($id: ID!) { user (id: $id) { age }}',
-                //                     variables: {
-                //                         id: '{{ ags.id }}',
-                //                     },
-                //                     headers: [
-                //                         { name: 'x-grapi-origin', value: '{{ meta.origin }}' },
-                //                         { name: 'x-grapi-signature', value: '{{ meta.signature }}' },
-                //                     ],
-                //                     grab: 'data.user.age',
-                //                 },
-                //             },
-                //         ],
-                //         rules: [
-                //             { name: 'originNotNull' },
-                //         ],
-                //     },
-                // })
                 getConfig('extension').register()
                     .then(() => console.log('Extension successfully registered'))
                     .catch(err => console.log(`Failed to register the extension - ${err.message}`))

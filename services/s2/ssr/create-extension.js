@@ -11,7 +11,7 @@ export default params => createExtension({
         queries: [
             {
                 name: 'age',
-                type: 'JSON',
+                type: 'Int!',
                 args: [
                     { name: 'id', type: 'ID!' },
                 ],
@@ -20,47 +20,19 @@ export default params => createExtension({
                     url: '{{ serviceUrl }}/api',
                     query: 'query foo ($id: ID!) { user (id: $id) { age }}',
                     variables: [
-                        { name: 'id', value: '{{ args.id }}' },
+                        { name: 'id', value: 'args.id' },
                     ],
                     headers: [
-                        { name: 'x-grapi-origin', value: '{{ meta.origin }}' },
-                        { name: 'x-grapi-signature', value: '{{ meta.signature }}' },
+                        // { name: 'x-grapi-origin', value: '{{ meta.origin }}' },
+                        { name: 'x-grapi-signature', value: 'meta.signature' },
                     ],
-                    // grab: 'data.user.age',
+                    grab: 'data.user.age',
                 },
             },
-            // {
-            //     name: 'users',
-            //     type: 'JSON',
-            //     resolve: {
-            //         type: 'rest',
-            //         url: '{{ serviceUrl }}/users',
-            //         headers: [
-            //             { name: 'x-grapi-signature', value: 'meta.signature' },
-            //             { name: 'x-static-signature', value: 'staticSignature' },
-            //         ],
-            //     },
-            // },
-            // {
-            //     name: 'name',
-            //     type: 'JSON',
-            //     args: [
-            //         { name: 'id', type: 'ID!' },
-            //     ],
-            //     resolve: {
-            //         type: 'rest',
-            //         url: '{{ serviceUrl }}/users/{{ args.id }}',
-            //         headers: [
-            //             { name: 'x-grapi-signature', value: 'meta.signature' },
-            //             { name: 'x-static-signature', value: 'staticSignature' },
-            //         ],
-            //         grab: 'name',
-            //     },
-            // },
         ],
-        // rules: [
-        //     { name: 'originNotNull' },
-        //     { name: 'originWhiteList', options: { accept: ['Trevorblades'] } },
-        // ],
+        rules: [
+            { name: 'originNotNull' },
+            { name: 'originWhiteList', options: { accept: ['Trevorblades'] } },
+        ],
     },
 })

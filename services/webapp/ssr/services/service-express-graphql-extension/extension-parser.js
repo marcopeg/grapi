@@ -56,6 +56,7 @@ const reduceResolver = resolver => ({
     url: resolver.url,
     ...(resolver.method ? { method: resolver.method } : {}),
     ...(resolver.query ? { query: resolver.query } : {}),
+    ...(resolver.variables ? { variables: reduceVariables(resolver.variables) } : {}),
     ...(resolver.grab ? { grab: resolver.grab } : {}),
     ...(resolver.headers ? { headers: reduceHeaders(resolver.headers) } : {}),
     ...(resolver.body ? { body: reduceHeaders(resolver.body) } : {}),
