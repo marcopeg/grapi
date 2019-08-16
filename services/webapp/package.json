@@ -71,7 +71,7 @@
     "express-request-id": "^1.4.1",
     "fs-extra": "^8.0.1",
     "generate-password": "^1.4.2",
-    "graphql-extension": "^0.2.7",
+    "graphql-extension": "^0.2.8",
     "graphql-iso-date": "^3.6.1",
     "graphql-moment": "^0.0.2",
     "isomorphic-fetch": "^2.2.1",

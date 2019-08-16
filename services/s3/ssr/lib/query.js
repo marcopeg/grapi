@@ -16,7 +16,15 @@ export const runQuery = async ({ query, variables, headers, target }) => {
     }
 
     if (res.status !== 200) {
-        throw new Error(`request failed - ${res.status} ${res.statusText}`)
+        let message = `${res.status} ${res.statusText}`
+        try {
+            const data = await res.json()
+            data.errors && (message = data.errors.map(err => err.message).join(' -- '))
+        } catch (err) {} // eslint-disable-line
+
+        const err = new Error(message)
+        err.res = res
+        throw err
     }
 
     try {
@@ -28,7 +36,9 @@ export const runQuery = async ({ query, variables, headers, target }) => {
         }
 
         return data
-    } catch (err) {
+    } catch (_) {
+        const err = new Error(_.message)
+        err.res = res
         throw err
     }
 }
