@@ -5,7 +5,7 @@ require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
 export default createHookApp({
-    // trace: true,
+    trace: true,
     settings: async ({ setConfig, getEnv }) => {
         setConfig('postgres.connections', [{
             host: getEnv('PG_HOST'),
@@ -77,12 +77,13 @@ export default createHookApp({
         require('@forrestjs/service-express'),
         require('@forrestjs/service-express-graphql'),
         require('@forrestjs/service-express-graphql-test'),
-        require('./services/crossroad-schema'),
+
         // In order to catch the graphql query
         // [ '$EXPRESS_MIDDLEWARE', ({ registerMiddleware }) => {
         //     registerMiddleware(require('body-parser').json())
         //     registerMiddleware(require('body-parser').urlencoded({ extended: true }))
         // } ],
+
         require('@forrestjs/service-express-cookies'),
         require('@forrestjs/service-express-request'),
         require('@forrestjs/service-express-device'),
@@ -102,103 +103,9 @@ export default createHookApp({
         require('./features/feature-journal'),
 
         // Crossroad
-        require('./features/graphql-extensions-registry'),
-        require('./features/graphql-extensions-manager'),
-        require('./features/graphql-extensions-rules'),
-
-        // [
-        //     '$EXPRESS_GRAPHQL',
-        //     ({ registerQuery }) => registerQuery('version', {
-        //         type: require('graphql').GraphQLString,
-        //         resolve: () => require('../package.json').version,
-        //     }),
-        //     { optional: true },
-        // ],
-
-
-        // [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
-        //     registerRoute.get('/', async (req, res) => {
-        //         try {
-        //             // console.log(req.session)
-        //             // !req.session.id && await res.session.start()
-        //             // console.log(Object.keys(req.hooks))
-        //             await req.session.validate()
-        //             await req.session.set({ a: 1, b: 'ma' })
-        //             // await req.session.set({ foo: 23, a: 'Marco' })
-        //             // console.log('SESSION', await req.session.get())
-        //             res.send(`Hello ${req.id} / ${req.session.id}`)
-        //         } catch (err) {
-        //             res.send(err.message)
-        //         }
-        //     })
-        // } ],
-
-        // Inject some session stuff
-        // [ '$EXPRESS_SESSION_GRAPHQL', ({ registerQuery, registerMutation }) => {
-        //     registerQuery('foo', {
-        //         description: 'Add Foo',
-        //         type: require('graphql').GraphQLString,
-        //         resolve: () => 'Fooo',
-        //     })
-        //     registerMutation('data', {
-        //         type: require('graphql-type-json').default,
-        //         resolve: (params) => params.data,
-        //     })
-        // } ],
-
-        // [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
-        //     registerQuery('origin', {
-        //         type: require('graphql').GraphQLString,
-        //         resolve: $ => $.payload.origin,
-        //     })
-        // } ],
-        // [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
-        //     registerQuery('etag', {
-        //         type: require('graphql').GraphQLInt,
-        //         resolve: $ => $.etag,
-        //     })
-        // } ],
-        // [ '$PG_AUTH_GRAPHQL', ({ registerQuery }) => {
-        //     registerQuery('uname', {
-        //         type: require('graphql').GraphQLString,
-        //         resolve: $ => $.uname,
-        //     })
-        // } ],
-
-        // [ '$EXPRESS_ROUTE', ({ registerRoute }) => {
-        //     // registerRoute.get('/', async (req, res) => {
-        //     //     await req.session.validate()
-        //     //     const count = await req.session.read('count') || 0
-        //     //     await req.session.write('count', parseInt(count, 10) + 1)
-        //     //     res.send(`hello ${count}`)
-        //     // })
-        //     registerRoute.get('/hggh', (req, res) => {
-        //         res.send('hellod ddewdewdew' + req.foooo)
-        //     })
-        // } ],
-
-
-        // ({ registerAction }) => {
-        //     registerAction({
-        //         hook: '$EXPRESS_MIDDLEWARE',
-        //         optional: true,
-        //         handler: ({ registerMiddleware }) => {
-        //             registerMiddleware((req, res, next) => {
-        //                 req.foooo = 12345
-        //                 next()
-        //             })
-        //         },
-        //     })
-        // },
-
-        // [
-        //     '$EXPRESS_ROUTE',
-        //     ({ registerRoute }) => registerRoute.get('/foo', (req, res) => {
-        //         res.json({
-        //             basic: 'hoho',
-        //             ...req.headers,
-        //         })
-        //     }),
-        // ],
+        require('./services/crossroad-schema'),
+        require('./features/crossroad-registry'),
+        require('./features/crossroad-manager'),
+        require('./features/crossroad-rules'),
     ],
 })

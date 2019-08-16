@@ -6,7 +6,7 @@
  */
 
 import { decode } from '@forrestjs/service-jwt'
-import { validateGraphqlToken } from '../../graphql-extensions-manager'
+import { validateGraphqlToken } from '../../crossroad-manager'
 
 export default async (meta, graphql) => {
     const { root, args, context } = graphql

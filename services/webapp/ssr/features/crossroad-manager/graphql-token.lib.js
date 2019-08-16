@@ -9,7 +9,7 @@ const sign = (extension, secret) =>
 
 export const issue = async ({ extension, duration }) => {
     // issue the new token for the specific extension name
-    const token = await getModel('GraphqlExtensionToken').upsert({
+    const token = await getModel('CrossroadToken').upsert({
         extension,
         validUntil: Sequelize.literal(`NOW() + INTERVAL '${duration}'`),
     }, { returning: true })
@@ -19,7 +19,7 @@ export const issue = async ({ extension, duration }) => {
 }
 
 export const validate = async ({ token, extension }) => {
-    const record = await getModel('GraphqlExtensionToken').findOne({
+    const record = await getModel('CrossroadToken').findOne({
         where: {
             extension: { [Sequelize.Op.like]: extension },
             isActive: true,
@@ -43,7 +43,7 @@ export const validate = async ({ token, extension }) => {
 }
 
 export const get = async (extension) => {
-    const record = await getModel('GraphqlExtensionToken').findOne({
+    const record = await getModel('CrossroadToken').findOne({
         where: {
             extension: { [Sequelize.Op.like]: extension },
             isActive: true,

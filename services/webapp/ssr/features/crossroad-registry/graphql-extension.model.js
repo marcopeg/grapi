@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize'
 import * as hooks from './hooks'
 
-export const name = 'GraphqlExtensionRegistry'
+export const name = 'CrossroadRegistry'
 
 const fields = {
     id: {
@@ -21,20 +21,21 @@ const fields = {
 }
 
 const options = {
-    tableName: 'graphql_extensions_registry',
+    tableName: 'crossroad_registry',
     freezeTableName: true,
     underscored: true,
 }
 
 
-export const init = async (conn, { createHook }) => {
-    await createHook.serie(hooks.GRAPHQL_EXTENSIONS_REGISTRY_INIT_MODEL, { name, fields, options, conn })
+// export const init = async (conn, { createHook }) => {
+export const init = (conn) => {
+    // await createHook.serie(hooks.GRAPHQL_EXTENSIONS_REGISTRY_INIT_MODEL, { name, fields, options, conn })
     const Model = conn.define(name, fields, options)
-    await createHook.serie(hooks.GRAPHQL_EXTENSIONS_REGISTRY_DECORATE_MODEL, { name, fields, options, Model, conn })
+    // await createHook.serie(hooks.GRAPHQL_EXTENSIONS_REGISTRY_DECORATE_MODEL, { name, fields, options, Model, conn })
 
     return Model.sync()
 }
 
-export const reset = async (conn, Model) => {
-    await conn.handler.query(`TRUNCATE ${options.tableName} RESTART IDENTITY CASCADE;`)
-}
+// export const reset = async (conn, Model) => {
+//     await conn.handler.query(`TRUNCATE ${options.tableName} RESTART IDENTITY CASCADE;`)
+// }

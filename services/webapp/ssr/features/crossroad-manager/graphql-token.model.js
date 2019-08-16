@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 
-export const name = 'GraphqlExtensionToken'
+export const name = 'CrossroadToken'
 
 const fields = {
     extension: {
@@ -22,7 +22,7 @@ const fields = {
 }
 
 const options = {
-    tableName: 'graphql_extensions_tokens',
+    tableName: 'crossroad_tokens',
     freezeTableName: true,
     underscored: true,
 }
