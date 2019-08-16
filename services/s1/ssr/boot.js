@@ -1,5 +1,4 @@
 import { createHookApp } from '@forrestjs/hooks'
-import { validateStaticHeader } from './static-header'
 import createExtension from './create-extension'
 import { HttpError } from '@crossroad/client'
 
@@ -11,21 +10,26 @@ const users = [
     { id: 'ls', name: 'Luke Skywalker' },
 ]
 
+export const validateStaticHeader = (value, {
+    header = 'x-static-signature',
+    statusCode = 400,
+    statusMessage = 'Invalid Static Signature',
+} = {}) =>
+    (req, res, next) => {
+        if (req.headers[header] === value) {
+            next()
+        } else {
+            res.statusMessage = statusMessage
+            res.status(statusCode).end()
+        }
+    }
+
 export default createHookApp({
     // trace: true,
     settings: ({ setConfig, getConfig, setContext }) => {
         setConfig('express.port', 6060)
         setConfig('staticSignature', '123')
-
-        setContext('extension', createExtension({
-            name: 'S1',
-            endpoint: 'http://localhost:8080/api',
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlMxIn0sImlhdCI6MTU2NTcwMzAyNiwiZXhwIjozMzA5MTc0NTQyNn0.MIJEI5tgKgyXthBUmRrRTHT8FWRygqGMTVYRy7AeiP4', // eslint-disable-line
-            variables: [
-                { name: 'serviceUrl', value: 'http://localhost:6060' },
-                { name: 'staticSignature', value: getConfig('staticSignature') },
-            ],
-        }))
+        setContext('extension', createExtension(getConfig('staticSignature')))
     },
     services: [
         require('@forrestjs/service-express'),
@@ -34,17 +38,17 @@ export default createHookApp({
         // User's Routes
         [
             '$EXPRESS_ROUTE',
-            ({ registerRoute }, { getConfig, getContext }) => {
+            ({ registerRoute }, { getConfig, extension }) => {
                 registerRoute.get('/users/:id', [
                     validateStaticHeader(getConfig('staticSignature')),
-                    getContext('extension').createMiddleware(),
+                    extension.createMiddleware(),
                     // () => HttpError.throw('Example Error', 418),
                     (req, res) => res.json(users.find(u => u.id === req.params.id)),
                 ])
 
                 registerRoute.get('/users', [
                     validateStaticHeader(getConfig('staticSignature')),
-                    getContext('extension').createMiddleware(),
+                    extension.createMiddleware(),
                     // () => HttpError.throw('Example Error', 418),
                     (req, res) => res.json(users),
                 ])

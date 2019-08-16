@@ -13,11 +13,10 @@ export default createHookApp({
 
         // Setup @crossroad client
         setEndpoint('http://localhost:8080/api')
-        setHeader('x-grapi-origin', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlRyZXZvcmJsYWRlcyJ9LCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.n7C0HplzzKC7ZE4gyv6hQDiJj-7Ew3M5pGyQqQR0Mig') // eslint-disable-line
+        setHeader('x-crossroad-origin', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlRyZXZvcmJsYWRlcyJ9LCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.n7C0HplzzKC7ZE4gyv6hQDiJj-7Ew3M5pGyQqQR0Mig') // eslint-disable-line
         setErrorMessage('Oh, not this again!')
     },
     services: [
-        require('@forrestjs/service-env'),
         require('@forrestjs/service-express'),
     ],
     features: [
@@ -52,7 +51,7 @@ export default createHookApp({
                 // List users
                 registerRoute.get('/', async (_, res) => {
                     try {
-                        const query = await runQuery('query foo { S1 { users }}')
+                        const query = await runQuery('{ S1 { users }}')
                         query.throwHtmlError()
 
                         const html = query.data.S1.users

@@ -19,8 +19,11 @@ export default createHookApp({
             endpoint: 'http://localhost:8080/api',
             token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlMyIn0sIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.XlcAlTdLGfT6DhDyhY1fVY6br3oXt_0iaid3S6WuZE0', // eslint-disable-line
             variables: { serviceUrl: 'http://localhost:7070' },
+            headers: [
+                { name: 'x-crossroad-signature', value: 'meta.signature' },
+            ],
             definition: {
-                queryWrapper: { args: [{ name: 'xGrapiOrigin', type: 'String' }] },
+                queryWrapper: { args: [{ name: 'xCrossroadOrigin', type: 'String' }] },
                 queries: [
                     {
                         name: 'age',
@@ -31,7 +34,6 @@ export default createHookApp({
                             url: '{{ serviceUrl }}/api',
                             query: 'query foo ($id: ID!) { user (id: $id) { age }}',
                             variables: [{ name: 'id', value: 'args.id' }],
-                            headers: [{ name: 'x-grapi-signature', value: 'meta.signature' }],
                             grab: 'data.user.age',
                         },
                     },
@@ -44,7 +46,6 @@ export default createHookApp({
         }))
     },
     services: [
-        require('@forrestjs/service-env'),
         require('@forrestjs/service-express'),
         require('@forrestjs/service-express-graphql'),
     ],
