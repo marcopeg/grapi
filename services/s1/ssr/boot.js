@@ -12,7 +12,7 @@ const users = [
 
 export default createHookApp({
     // trace: true,
-    settings: ({ setConfig, getConfig }) => {
+    settings: ({ setConfig, getConfig, setContext }) => {
         setConfig('express.port', 6060)
         setConfig('service.url', 'http://localhost:6060')
         setConfig('service.name', 'S1')
@@ -22,7 +22,7 @@ export default createHookApp({
 
         setConfig('staticSignature', '123')
 
-        setConfig('extension', createExtension({
+        setContext('extension', createExtension({
             name: getConfig('service.name'),
             endpoint: getConfig('api.endpoint'),
             token: getConfig('api.token'),
@@ -39,28 +39,16 @@ export default createHookApp({
         // User's Routes
         [
             '$EXPRESS_ROUTE',
-            ({ registerRoute }, { getConfig, jwt }) => {
+            ({ registerRoute }, { getConfig, getContext }) => {
                 registerRoute.get('/users/:id', [
                     validateStaticHeader(getConfig('staticSignature')),
-                    getConfig('extension').createMiddleware(),
-                    (req, res, next) => {
-                        // console.log(req.headers['x-grapi-origin'])
-                        // console.log(req.headers['x-grapi-signature'])
-                        // console.log(req.headers)
-                        next()
-                    },
+                    getContext('extension').createMiddleware(),
                     (req, res) => res.json(users.find(u => u.id === req.params.id)),
                 ])
 
                 registerRoute.get('/users', [
                     validateStaticHeader(getConfig('staticSignature')),
-                    getConfig('extension').createMiddleware(),
-                    (req, res, next) => {
-                        // console.log(req.headers['x-grapi-origin'])
-                        // console.log(req.headers['x-grapi-signature'])
-                        // console.log(req.headers)
-                        next()
-                    },
+                    getContext('extension').createMiddleware(),
                     (req, res) => res.json(users),
                 ])
             },
@@ -69,8 +57,8 @@ export default createHookApp({
         // Register the extension at boot time
         [
             '$START_SERVICE',
-            async ({ getConfig }) => {
-                getConfig('extension').register()
+            async ({ getContext }) => {
+                getContext('extension').register()
                     .then(() => {
                         console.log('Extension successfully registered')
                         // setInterval(() => getConfig('extension').rotateSecret(), 2500)

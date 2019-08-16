@@ -1,4 +1,4 @@
-import { createExtension } from './register-extension'
+import { createExtension } from '@crossroad/client'
 
 export default params => createExtension({
     ...params,

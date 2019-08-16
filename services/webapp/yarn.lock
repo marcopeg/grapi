@@ -1301,13 +1301,13 @@
   dependencies:
     eslint-config-react "^1.1.7"
 
-"@forrestjs/feature-locale@^3.0.10":
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/@forrestjs/feature-locale/-/feature-locale-3.0.10.tgz#ffb1930aa6a0b115f904b734a2b7b52540234ffa"
-  integrity sha512-oP1hSqk6o0JkQfqoeg/LFYOsJpR2uR/8qm140PcAKCaMwmS0LHmdnctRTGPTgXmwRO5sFSTc+jKZlqipN7x+2A==
+"@forrestjs/feature-locale@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/feature-locale/-/feature-locale-3.1.3.tgz#0726d37f30f957b3578ef1d9259e5610a60994d6"
+  integrity sha512-Hk00PxL8+5fpkgw76V270HiNjlvEdzzr9BvG/3OJ3GnHP5cHa7r056dPCtzWKKTvhKq/vmaGNh1VpVgYeMOKAg==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/service-express-graphql" "^3.0.10"
+    "@forrestjs/service-express-graphql" "^3.1.3"
     express-locale "^1.2.0"
     graphql "^14.3.0"
     graphql-type-json "^0.3.0"
@@ -1329,10 +1329,10 @@
     "@babel/runtime" "^7.4.4"
     js-cookie "^2.2.0"
 
-"@forrestjs/hooks@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@forrestjs/hooks/-/hooks-3.0.5.tgz#dd9db8ddb9111db0da32ce460ed2336cb8939024"
-  integrity sha512-qWoFeag8wQ5wMi/4lReykPS/E5sy0RILBc4FrBdnejB/NAfnMe+sBEoRrzhb+37/Ogz+5yI94yVJFsm7k0jnAg==
+"@forrestjs/hooks@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/hooks/-/hooks-3.1.3.tgz#74141a323ee5e378bdc8f1d94a2f7c9203856eff"
+  integrity sha512-lp0vaV+tPIwMXjiMQLaajfFeH3HVE85CDX0nxHZCuYQkbxLbK+H1cuyklBcKJwA306+iKtKC8UWY7WkW89BIVg==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@marcopeg/dotted" "^0.2.0"
@@ -1353,72 +1353,72 @@
     react-scripts-rewired "3.0.1--latest1"
     react-styleguidist "^9.0.9"
 
-"@forrestjs/package-universal@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@forrestjs/package-universal/-/package-universal-3.1.2.tgz#07b30ec97ec69c8b355b2fc9e06a190cc2f9407f"
-  integrity sha512-/VU/D3cDTCCuzWGr6EZxJ8qGAXMwMFcF3joAB5nZaORvWEMkiHM9Xm6SEaRJXtz1xC9YERFlCV5wzc2SK0nvnw==
+"@forrestjs/package-universal@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/package-universal/-/package-universal-3.1.3.tgz#704434477fb00b0cdc44a15441c5818019819a22"
+  integrity sha512-UHIPHDHxTp/nk1pq44XDjdiRs4QjN2K8swfVDOzzfkxeAPnMgo+fDUA+347rLI3PCMRhuH/KJ+GWJo9ORGfl4g==
   dependencies:
     "@babel/polyfill" "^7.4.4"
     "@forrestjs/core" "^3.0.6"
-    "@forrestjs/feature-locale" "^3.0.10"
+    "@forrestjs/feature-locale" "^3.1.3"
     "@forrestjs/feature-network" "^3.0.0"
     "@forrestjs/feature-storage" "^3.0.0"
-    "@forrestjs/service-env" "^3.0.5"
-    "@forrestjs/service-express" "^3.0.5"
-    "@forrestjs/service-express-cookies" "^3.0.5"
-    "@forrestjs/service-express-graphql" "^3.0.10"
-    "@forrestjs/service-express-graphql-test" "^3.0.5"
+    "@forrestjs/service-env" "^3.1.3"
+    "@forrestjs/service-express" "^3.1.3"
+    "@forrestjs/service-express-cookies" "^3.1.3"
+    "@forrestjs/service-express-graphql" "^3.1.3"
+    "@forrestjs/service-express-graphql-test" "^3.1.3"
     "@forrestjs/service-express-ssr" "^3.1.1"
-    "@forrestjs/service-hash" "^3.0.5"
-    "@forrestjs/service-jwt" "^3.1.2"
-    "@forrestjs/service-logger" "^3.0.5"
-    "@forrestjs/service-postgres" "^3.0.7"
-    "@forrestjs/service-postgres-pubsub" "^3.0.5"
+    "@forrestjs/service-hash" "^3.1.3"
+    "@forrestjs/service-jwt" "^3.1.3"
+    "@forrestjs/service-logger" "^3.1.3"
+    "@forrestjs/service-postgres" "^3.1.3"
+    "@forrestjs/service-postgres-pubsub" "^3.1.3"
     isomorphic-fetch "^2.2.1"
     react-router "^5.0.0"
     react-router-dom "^5.0.0"
     styled-components "^4.2.0"
 
-"@forrestjs/service-env@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-env/-/service-env-3.0.5.tgz#e542b428d71bd86c03e0deb0cc87f52e5685c7aa"
-  integrity sha512-1we4B3TZKgUvh/5V3BlhhVZ8YrVn4DDlqLbJDTBvYo320+F5NG2TuiWWrSrkAJPijRzu3y7VF4pJdzp4kp/yXw==
+"@forrestjs/service-env@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-env/-/service-env-3.1.3.tgz#2c876426d0804db3d75d918103cf4e040a7f1746"
+  integrity sha512-Zz6vEo4lKTFgUJwdh2ns1eJ+R3YNS9rccCFnzAzuYrAtWxxBIzywR71WWEc8Ebt6N38mrbypERf11u8peH+zFQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/hooks" "^3.0.5"
+    "@forrestjs/hooks" "^3.1.3"
     node-env-file "^0.1.8"
 
-"@forrestjs/service-express-cookies@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-express-cookies/-/service-express-cookies-3.0.5.tgz#af78b983c2535afe57afaba77b013d88273fed67"
-  integrity sha512-XFEKwvd8Qaeo+ngYN82oMI/KCxSJ+2sO4wlZtLOheokQSC54ntrBy/G3Qqih5QJu3lI2qZautBnYUT/KZlRm6w==
+"@forrestjs/service-express-cookies@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-express-cookies/-/service-express-cookies-3.1.3.tgz#8f3f490becdcadcfbc2d08ad0f9ab63ab05f388f"
+  integrity sha512-BYf1tyyrz3NPQNYQhLHnKVYALn+mnibubRDZmbfHyYd/j8kr3EclFp6Z083UPEF9kyzj3pvXonWQEcFAZzS9Zg==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/hooks" "^3.0.5"
-    "@forrestjs/service-express" "^3.0.5"
+    "@forrestjs/hooks" "^3.1.3"
+    "@forrestjs/service-express" "^3.1.3"
     cookie-parser "^1.4.4"
     millisecond "^0.1.2"
 
-"@forrestjs/service-express-graphql-test@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-express-graphql-test/-/service-express-graphql-test-3.0.5.tgz#b68c6487e6b9b176385921c3c1638e23aae171ba"
-  integrity sha512-zi/zEPR7e2E+lj3za2NtXKVfXZfFtQCXDt/kCOIvYj7eawIfqDzDvO7wsbrd7nSng9O5ceJ31iZoMJUCwNMrQg==
+"@forrestjs/service-express-graphql-test@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-express-graphql-test/-/service-express-graphql-test-3.1.3.tgz#4d1603322d713afa92103a4738f0a60895d49282"
+  integrity sha512-bGWZnz6EMEliXvAlhdCPF+V+sgphECWUSPi5+LvMIfowlXuqwQS3F7YBqc/Kux2q9u4BpGw6KcNufvnAZNH16w==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/hooks" "^3.0.5"
-    "@forrestjs/service-express" "^3.0.5"
+    "@forrestjs/hooks" "^3.1.3"
+    "@forrestjs/service-express" "^3.1.3"
     body-parser "^1.19.0"
     express-graphql "^0.8.0"
     graphql "^14.3.0"
 
-"@forrestjs/service-express-graphql@^3.0.10":
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-express-graphql/-/service-express-graphql-3.0.10.tgz#7fb5338ea34f8ee9c36441e09be4307cc750ac50"
-  integrity sha512-xFrWBpDVjHM4VrnGlPIIDiKu3VURnkVikV4B0bEYKLYa1DQHC+iUGeUlaL/jcfxO+8vKVrU8+CQj3fpUsdQvEA==
+"@forrestjs/service-express-graphql@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-express-graphql/-/service-express-graphql-3.1.3.tgz#4473fa4f09dd81dab9256cdb01adad24ccaab271"
+  integrity sha512-AIMeU2v3BDqXnmutVTyDnLLU9KbvR8qDJqccsC898XhwlcnRGLtg22f8FuxaAwgO4ybtPD8jgCTy/k4ygKGXPw==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/hooks" "^3.0.5"
-    "@forrestjs/service-express" "^3.0.5"
+    "@forrestjs/hooks" "^3.1.3"
+    "@forrestjs/service-express" "^3.1.3"
     body-parser "^1.19.0"
     express-graphql "^0.8.0"
     graphql "^14.3.0"
@@ -1431,59 +1431,59 @@
     "@babel/runtime" "^7.4.4"
     "@forrestjs/core" "^3.0.6"
 
-"@forrestjs/service-express@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-express/-/service-express-3.0.5.tgz#0bbf5ef66b3af7aef54b661558bb5ee91ea86856"
-  integrity sha512-KqVCbH6fd4YYJCRKQdOcB4iYhrPkFklk9mBoyANFyHPberNranU1JuScA3mmOn5os7xF6MQ8/AfDeVe8FhQJnw==
+"@forrestjs/service-express@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-express/-/service-express-3.1.3.tgz#fb3612664dba2c9c2b23f9596b3bca5417ecbfc3"
+  integrity sha512-VKhqlW3d5oOdMVEdFiSgUsOh5QPg/Jpui7pFfdrtC4norftwT8yKnEOgExxIkXF/uut2xf6iOQzwEQPT+d33vQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/hooks" "^3.0.5"
+    "@forrestjs/hooks" "^3.1.3"
     express "^4.17.1"
 
-"@forrestjs/service-hash@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-hash/-/service-hash-3.0.5.tgz#71ec13d18dc43567eac0a361dd583ca28c84601b"
-  integrity sha512-b5kY0Q9PKXDlkF3u5onLrwjRZOii8VsVpsAEF+NSss8yDUKXjTQY2at+3AlxMdvoEPEXJX0lm2wFwnsDxm+BdA==
+"@forrestjs/service-hash@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-hash/-/service-hash-3.1.3.tgz#732dc620eebfe2b9f620e9dda40735f664d4e199"
+  integrity sha512-sxwVv1gjCQexcetT7Q416F9glkuSna6UHVTT7F466QJ/6TYwNWbE6NzYnsvdhbI/Y1b7njDxpwZvqUyd45A2mg==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/hooks" "^3.0.5"
+    "@forrestjs/hooks" "^3.1.3"
     bcrypt-nodejs "^0.0.3"
 
-"@forrestjs/service-jwt@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-jwt/-/service-jwt-3.1.2.tgz#269491aad3595c83ab4f5d375a465a4fd9ce7753"
-  integrity sha512-sv7NKQsINhpOWdsV2VnoCzuYE/PbiuWDX6wjgj+P2Oy4AI329K6cJHKCdP7R5r7ebnmR1P/8Xt9qf/YXJ1W7Lw==
+"@forrestjs/service-jwt@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-jwt/-/service-jwt-3.1.3.tgz#358fb8e3f81a88eb3ff24d8b68d20dd2916bc219"
+  integrity sha512-yDw477/vOEZSDmYTKfKLSCmsmJO9vx6xswWBfGeGVou+A2V8aXlr7VioYVskOvx+KySlOSwqe4OlimNeNdBXog==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/hooks" "^3.0.5"
+    "@forrestjs/hooks" "^3.1.3"
     jsonwebtoken "^8.5.1"
 
-"@forrestjs/service-logger@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-logger/-/service-logger-3.0.5.tgz#0e9fbd6030020fc702ba7908f682e4f8fec4884a"
-  integrity sha512-ts9yiZ+jzcWkjEF0gPwrdSy4EF6OQVRYhOKHS++FFFB49QsS0EbvNyJrz21vodz0SL0r1YjS3we45Slf4m3GVw==
+"@forrestjs/service-logger@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-logger/-/service-logger-3.1.3.tgz#6dde445ad1e23bcc080f6267d731b2c0f2994405"
+  integrity sha512-PykpNpHBBt/Dw9/aANGk1xSD59ToCNw+7wwdlIwl9jD3TzJc8BHyZw+qOsfb5oPn3j2xvAHql1jfzm1VxYOVPQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/hooks" "^3.0.5"
+    "@forrestjs/hooks" "^3.1.3"
     winston "^3.2.1"
 
-"@forrestjs/service-postgres-pubsub@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-postgres-pubsub/-/service-postgres-pubsub-3.0.5.tgz#9c52d83fd25f1f113a65a3c1d0676118835b8ac0"
-  integrity sha512-h8g7Ed2A/3QTbTERSbLzufBaFGppXRZ1GRfW/euOxMoBi4WEEGkRVJoeYQjMSIDuasNRealxLYPXeqLjk8Uxtg==
+"@forrestjs/service-postgres-pubsub@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-postgres-pubsub/-/service-postgres-pubsub-3.1.3.tgz#ef722c4b25d77b6d4f222af2e8479ce6be9c28f7"
+  integrity sha512-I9PGJXLU0ju1FGoj+qoX/xnncTvqW2gy3KftkQmHY85/rYifDLOi83H9SSICZETip+7Jgv8HgaoQObOXhaS/tg==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/hooks" "^3.0.5"
+    "@forrestjs/hooks" "^3.1.3"
     pg-pubsub "^0.4.1"
 
-"@forrestjs/service-postgres@^3.0.7":
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/@forrestjs/service-postgres/-/service-postgres-3.0.7.tgz#cfa5ed7a2a77d33770983148992c15c95f492fbc"
-  integrity sha512-2Ie08dnu1052a2Eimykd3nyEe5qBAX74vPD1fhlDYeqppgP+AS/8szo2+PQoUEWcNcdkprHNnZQZMiLHTGxqtw==
+"@forrestjs/service-postgres@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@forrestjs/service-postgres/-/service-postgres-3.1.3.tgz#851144aa683c316e983da1a345627b41f485d9a5"
+  integrity sha512-1S5uz7cnLaF5lgMNoZEr29luPlwR4fNf8bShjrIzinFBqD6fifn86HRBtDZiG86PRhZkfdHOkseVyyx0ZvdDeA==
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@forrestjs/hooks" "^3.0.5"
-    "@forrestjs/service-logger" "^3.0.5"
+    "@forrestjs/hooks" "^3.1.3"
+    "@forrestjs/service-logger" "^3.1.3"
     "@marcopeg/utils" "^2.0.1"
     pg "^7.11.0"
     sequelize "^5.8.6"

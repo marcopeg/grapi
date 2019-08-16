@@ -1,6 +1,6 @@
 import { createHookApp } from '@forrestjs/hooks'
 import { GraphQLInt, GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql'
-import createExtension from './create-extension'
+import { createExtension } from '@crossroad/client'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -12,21 +12,34 @@ const users = [
 
 export default createHookApp({
     // trace: true,
-    settings: ({ setConfig, getConfig }) => {
+    settings: ({ setConfig, setContext }) => {
         setConfig('express.port', 7070)
-
-        setConfig('service.url', 'http://localhost:7070')
-        setConfig('service.name', 'S2')
-
-        setConfig('api.endpoint', 'http://localhost:8080/api')
-        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlMyIn0sIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.XlcAlTdLGfT6DhDyhY1fVY6br3oXt_0iaid3S6WuZE0') // eslint-disable-line
-
-        setConfig('extension', createExtension({
-            name: getConfig('service.name'),
-            endpoint: getConfig('api.endpoint'),
-            token: getConfig('api.token'),
-            variables: {
-                serviceUrl: getConfig('service.url'),
+        setContext('extension', createExtension({
+            name: 'S2',
+            endpoint: 'http://localhost:8080/api',
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlMyIn0sIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.XlcAlTdLGfT6DhDyhY1fVY6br3oXt_0iaid3S6WuZE0', // eslint-disable-line
+            variables: { serviceUrl: 'http://localhost:7070' },
+            definition: {
+                queryWrapper: { args: [{ name: 'xGrapiOrigin', type: 'String' }] },
+                queries: [
+                    {
+                        name: 'age',
+                        type: 'Int!',
+                        args: [{ name: 'id', type: 'ID!' }],
+                        resolve: {
+                            type: 'graphql',
+                            url: '{{ serviceUrl }}/api',
+                            query: 'query foo ($id: ID!) { user (id: $id) { age }}',
+                            variables: [{ name: 'id', value: 'args.id' }],
+                            headers: [{ name: 'x-grapi-signature', value: 'meta.signature' }],
+                            grab: 'data.user.age',
+                        },
+                    },
+                ],
+                rules: [
+                    { name: 'originNotNull' },
+                    { name: 'originWhiteList', options: { accept: ['Trevorblades'] } },
+                ],
             },
         }))
     },
@@ -36,10 +49,11 @@ export default createHookApp({
         require('@forrestjs/service-express-graphql'),
     ],
     features: [
+        //////////////////////
         // Service's APIs
         [
             '$EXPRESS_GRAPHQL',
-            ({ registerQuery }, { getConfig }) => {
+            ({ registerQuery }, { extension }) =>
                 registerQuery('user', {
                     args: {
                         id: { type: new GraphQLNonNull(GraphQLID) },
@@ -52,21 +66,20 @@ export default createHookApp({
                         },
                     }),
                     resolve: async (_, args, { req }) => {
-                        await getConfig('extension').validateRequest(req)
+                        await extension.validateRequest(req)
                         return users.find(u => u.id === args.id)
                     },
-                })
-            },
+                }),
         ],
 
+        //////////////////////
         // Register the extension
         [
             '$START_SERVICE',
-            async ({ getConfig }, { jwt }) => {
-                getConfig('extension').register()
+            async ({ extension }) =>
+                extension.register()
                     .then(() => console.log('Extension successfully registered'))
-                    .catch(err => console.log(`Failed to register the extension - ${err.message}`))
-            },
+                    .catch(err => console.log(`Failed to register the extension - ${err.message}`)),
         ],
     ],
 })
