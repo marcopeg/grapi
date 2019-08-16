@@ -134,6 +134,9 @@ const GraphQLExtensionResolver = new GraphQLInputObjectType({
         query: {
             type: GraphQLString,
         },
+        variables: {
+            type: new GraphQLList(GraphQLExtensionVariable),
+        },
         headers: {
             type: new GraphQLList(GraphQLExtensionHeader),
         },

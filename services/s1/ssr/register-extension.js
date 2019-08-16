@@ -60,8 +60,18 @@ export const createExtension = ({
             throw new Error(`fetch failed - ${err.message}`)
         }
 
+        // Handle any error statusCodes with the intention of forwarding the
+        // GraphQL error messages that may be contained
         if (res.status !== 200) {
-            throw new Error(`request failed - ${res.status} ${res.statusText}`)
+            let message = null
+            try {
+                const data = await res.json()
+                data.errors && (message = data.errors.map(err => err.message).join(' -- '))
+            } catch (err) {
+                message = `${res.status} ${res.statusText}`
+            }
+
+            throw new Error(`request failed - ${message}`)
         }
 
         try {
@@ -95,9 +105,7 @@ export const createExtension = ({
         header = 'x-grapi-signature',
         message = 'Invalid GRAPI Signature',
     } = {}) => {
-        try {
-            await validateSecret(req.headers[header])
-        } catch (err) {
+        if (!await validateSecret(req.headers[header])) {
             throw new Error(message)
         }
     }

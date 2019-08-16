@@ -16,15 +16,8 @@ export default params => createExtension({
                     type: 'rest',
                     url: '{{ serviceUrl }}/users',
                     headers: [
-                        // { name: 'x-grapi-origin', value: '{{ meta.origin }}' },
-                        // { name: 'x-grapi-signature', value: '{{ meta.signature }}' },
-                        // { name: 'x-static-signature', value: '{{ staticSignature }}' },
-                    ],
-                    rules: [
-                        {
-                            match: ['statusError'],
-                            apply: ['statusError'],
-                        },
+                        { name: 'x-grapi-signature', value: 'meta.signature' },
+                        { name: 'x-static-signature', value: 'staticSignature' },
                     ],
                 },
             },
@@ -38,15 +31,8 @@ export default params => createExtension({
                     type: 'rest',
                     url: '{{ serviceUrl }}/users/{{ args.id }}',
                     headers: [
-                        // { name: 'x-grapi-origin', value: '{{ meta.origin }}' },
-                        // { name: 'x-grapi-signature', value: '{{ meta.signature }}' },
-                        // { name: 'x-static-signature', value: '{{ staticSignature }}' },
-                    ],
-                    rules: [
-                        {
-                            match: ['statusError'],
-                            apply: ['statusError'],
-                        },
+                        { name: 'x-grapi-signature', value: 'meta.signature' },
+                        { name: 'x-static-signature', value: 'staticSignature' },
                     ],
                     grab: 'name',
                 },
@@ -54,6 +40,7 @@ export default params => createExtension({
         ],
         rules: [
             { name: 'originNotNull' },
+            { name: 'originWhiteList', options: { accept: ['Trevorblades'] } },
         ],
     },
 })

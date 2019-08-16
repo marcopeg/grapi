@@ -5,6 +5,16 @@
 
 import { parseExtension as buildExtensionSchema } from 'graphql-extension'
 
+// In case a resolver doesn't offer a specific set of rules,
+// the "statusError" rule is being applied so to correctly propagate
+// any HTTP error that might be found
+const defaultRules = [
+    {
+        match: ['statusError'],
+        apply: ['statusError'],
+    },
+]
+
 const reduceFields = fields =>
     fields.reduce(
         (acc, curr) => ({
@@ -49,6 +59,7 @@ const reduceResolver = resolver => ({
     ...(resolver.grab ? { grab: resolver.grab } : {}),
     ...(resolver.headers ? { headers: reduceHeaders(resolver.headers) } : {}),
     ...(resolver.body ? { body: reduceHeaders(resolver.body) } : {}),
+    ...(resolver.rules ? { rules: resolver.rules } : { rules: defaultRules }),
 })
 
 const reduceQueries = queries =>

@@ -1,5 +1,4 @@
 import { createHookApp } from '@forrestjs/hooks'
-// import { registerExtension, createRequestValidator } from './register-extension'
 import { validateStaticHeader } from './static-header'
 import createExtension from './create-extension'
 
