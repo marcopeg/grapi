@@ -3,7 +3,7 @@
  */
 
 import { sign } from '@forrestjs/service-jwt'
-import { getExtension } from '../../../services/service-express-graphql-extension'
+import { getExtension } from '../../../services/crossroad-schema'
 
 export default async (meta, graphql) => {
     try {

@@ -1,5 +1,5 @@
 import * as hooks from './hooks'
-import { getExtension } from '../../services/service-express-graphql-extension'
+import { getExtension } from '../../services/crossroad-schema'
 
 import decorateMeta from './meta'
 import applyRules from './rules'

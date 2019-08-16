@@ -1,4 +1,4 @@
-import { registerExtension, reflowExtensions } from '../../services/service-express-graphql-extension'
+import { registerExtension, reflowExtensions } from '../../services/crossroad-schema'
 import { getModel } from '@forrestjs/service-postgres'
 
 export const register = async () => {

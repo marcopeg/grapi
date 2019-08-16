@@ -1,4 +1,4 @@
-# @forrestjs/service-express-graphql-extension
+# @crossroad/schema
 
 This service extends `@forrestjs/service-express-graphql` and allows to dynamically
 extend the running `GraphQLSchema` with **extensions** using `graphql-extension` package
