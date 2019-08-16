@@ -66,6 +66,7 @@ export default createHookApp({
                         },
                     }),
                     resolve: async (_, args, { req }) => {
+                        // throw new Error('foo')
                         await extension.validateRequest(req)
                         return users.find(u => u.id === args.id)
                     },

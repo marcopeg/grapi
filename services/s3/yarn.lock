@@ -967,7 +967,7 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.0", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.4", "@babel/runtime@^7.4.5":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.0", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.5":
   version "7.5.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.5.5.tgz#74fba56d35efbeca444091c7850ccd494fd2f132"
   integrity sha512-28QvEGyQyNkB0/m2B4FU7IEZGK2NUrcMtT6BZEFALTguLk+AUT6ofsHtPk5QyjAdUkpMJ+/Em+quwz4HOt30AQ==
@@ -1014,6 +1014,15 @@
   dependencies:
     exec-sh "^0.3.2"
     minimist "^1.2.0"
+
+"@crossroad/client@^0.2.10":
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/@crossroad/client/-/client-0.2.10.tgz#1f6e44d31f24b899abd4c7f9cf029a765cfad427"
+  integrity sha512-fPvbcZ4Dw1N10az6KQpRHPJvpLxaw6f4sHQtnCmXSh82oSpPVl7C2LL8dBFR+BtBf5uZ0RBh1n7XE0yR7Q7Lxg==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    clone "^2.1.2"
+    jsonwebtoken "^8.5.1"
 
 "@csstools/convert-colors@^1.4.0":
   version "1.4.0"
@@ -3386,6 +3395,11 @@ clone@^1.0.2:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
+
+clone@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
+  integrity sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=
 
 cls-bluebird@^2.1.0:
   version "2.1.0"

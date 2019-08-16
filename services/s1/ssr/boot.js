@@ -1,6 +1,7 @@
 import { createHookApp } from '@forrestjs/hooks'
 import { validateStaticHeader } from './static-header'
 import createExtension from './create-extension'
+import { HttpError } from '@crossroad/client'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -14,22 +15,16 @@ export default createHookApp({
     // trace: true,
     settings: ({ setConfig, getConfig, setContext }) => {
         setConfig('express.port', 6060)
-        setConfig('service.url', 'http://localhost:6060')
-        setConfig('service.name', 'S1')
-
-        setConfig('api.endpoint', 'http://localhost:8080/api')
-        setConfig('api.token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlMxIn0sImlhdCI6MTU2NTcwMzAyNiwiZXhwIjozMzA5MTc0NTQyNn0.MIJEI5tgKgyXthBUmRrRTHT8FWRygqGMTVYRy7AeiP4') // eslint-disable-line
-
         setConfig('staticSignature', '123')
 
         setContext('extension', createExtension({
-            name: getConfig('service.name'),
-            endpoint: getConfig('api.endpoint'),
-            token: getConfig('api.token'),
-            variables: {
-                serviceUrl: getConfig('service.url'),
-                staticSignature: getConfig('staticSignature'),
-            },
+            name: 'S1',
+            endpoint: 'http://localhost:8080/api',
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImV4dGVuc2lvbiI6IlMxIn0sImlhdCI6MTU2NTcwMzAyNiwiZXhwIjozMzA5MTc0NTQyNn0.MIJEI5tgKgyXthBUmRrRTHT8FWRygqGMTVYRy7AeiP4', // eslint-disable-line
+            variables: [
+                { name: 'serviceUrl', value: 'http://localhost:6060' },
+                { name: 'staticSignature', value: getConfig('staticSignature') },
+            ],
         }))
     },
     services: [
@@ -43,15 +38,24 @@ export default createHookApp({
                 registerRoute.get('/users/:id', [
                     validateStaticHeader(getConfig('staticSignature')),
                     getContext('extension').createMiddleware(),
+                    // () => HttpError.throw('Example Error', 418),
                     (req, res) => res.json(users.find(u => u.id === req.params.id)),
                 ])
 
                 registerRoute.get('/users', [
                     validateStaticHeader(getConfig('staticSignature')),
                     getContext('extension').createMiddleware(),
+                    // () => HttpError.throw('Example Error', 418),
                     (req, res) => res.json(users),
                 ])
             },
+        ],
+
+        // Handle App's throws and turn them into status codes with custom
+        // statusMessage for a nice error propagation
+        [
+            '$EXPRESS_HANDLER',
+            ({ registerHandler }) => registerHandler(HttpError.createHandler()),
         ],
 
         // Register the extension at boot time

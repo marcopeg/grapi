@@ -40,6 +40,7 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "@crossroad/client": "^0.2.10",
     "@forrestjs/package-universal": "^3.1.3",
     "fs-extra": "^8.0.1",
     "isomorphic-fetch": "^2.2.1"

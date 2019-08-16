@@ -2,6 +2,10 @@ import { createExtension } from '@crossroad/client'
 
 export default params => createExtension({
     ...params,
+    headers: [
+        { name: 'x-grapi-signature', value: 'meta.signature' },
+        { name: 'x-static-signature', value: 'staticSignature' },
+    ],
     definition: {
         queryWrapper: {
             args: [
@@ -15,10 +19,6 @@ export default params => createExtension({
                 resolve: {
                     type: 'rest',
                     url: '{{ serviceUrl }}/users',
-                    headers: [
-                        { name: 'x-grapi-signature', value: 'meta.signature' },
-                        { name: 'x-static-signature', value: 'staticSignature' },
-                    ],
                 },
             },
             {
@@ -30,10 +30,6 @@ export default params => createExtension({
                 resolve: {
                     type: 'rest',
                     url: '{{ serviceUrl }}/users/{{ args.id }}',
-                    headers: [
-                        { name: 'x-grapi-signature', value: 'meta.signature' },
-                        { name: 'x-static-signature', value: 'staticSignature' },
-                    ],
                     grab: 'name',
                 },
             },

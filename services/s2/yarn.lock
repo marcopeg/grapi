@@ -1015,10 +1015,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@crossroad/client@^0.2.9":
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/@crossroad/client/-/client-0.2.9.tgz#813c61c31fccff02552a82df10c4dacebb08d47f"
-  integrity sha512-/MtJ7XWuUuIqDcXdw1sEaF6yxitD+DOncUUxzlJxY01k0trUmWfwm25PeirNJuY169uxBNGBksqEhiwsHVYYCQ==
+"@crossroad/client@^0.2.10":
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/@crossroad/client/-/client-0.2.10.tgz#1f6e44d31f24b899abd4c7f9cf029a765cfad427"
+  integrity sha512-fPvbcZ4Dw1N10az6KQpRHPJvpLxaw6f4sHQtnCmXSh82oSpPVl7C2LL8dBFR+BtBf5uZ0RBh1n7XE0yR7Q7Lxg==
   dependencies:
     "@babel/runtime" "^7.5.5"
     clone "^2.1.2"
