@@ -49,7 +49,6 @@ export default createHookApp({
 
         setConfig('expressSSR.enabled', 'no')
 
-        setConfig('graphqlExtension.sourcePath', path.join(process.cwd(), 'extensions'))
 
         // console.log('>>> build', process.env.REACT_SSR_BUILD)
         // console.log('>>> src', process.env.REACT_SSR_BUILD_SRC)
@@ -90,22 +89,16 @@ export default createHookApp({
         require('@forrestjs/service-express-session'),
 
         require('@forrestjs/service-express-ssr'),
-        // require('@forrestjs/feature-locale'),
+        require('@forrestjs/feature-locale'),
     ],
     features: [
         // require('./features/graphql-version'),
 
-        require('./features/feature-pg-session'),
-        require('./features/feature-pg-session-info'),
+        require('@forrestjs/feature-pg-session'),
+        require('@forrestjs/feature-pg-session-info'),
         // require('./features/feature-pg-session-history'),
-        require('./features/feature-pg-auth'),
+        require('@forrestjs/feature-pg-auth'),
         require('./features/feature-passport'),
         require('./features/feature-journal'),
-
-        // Crossroad
-        require('./services/crossroad-schema'),
-        require('./features/crossroad-registry'),
-        require('./features/crossroad-manager'),
-        require('./features/crossroad-rules'),
     ],
 })
