@@ -6,6 +6,13 @@ module.exports = {
      */
     sections: [
         {
+            name: 'Atoms',
+            description: 'Super Small, Super Dumb',
+            components: [
+                'src/components/atoms/View/View.jsx',
+            ],
+        },
+        {
             name: 'Components',
             description: 'Application level dumb components',
             components: [
