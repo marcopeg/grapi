@@ -37,16 +37,9 @@
       "link:webapp:marcopeg:fetch-resolver": "(cd ~/dev/marcopeg/npm-packages/packages/fetch-resolver && TARGET=~/dev/marcopeg/grapi/services/webapp yarn watch:to)",
       "link:webapp:marcopeg:graphql-extension": "(cd ~/dev/marcopeg/npm-packages/packages/graphql-extension && TARGET=~/dev/marcopeg/grapi/services/webapp yarn watch:to)",
       "link:webapp:marcopeg:template": "(cd ~/dev/marcopeg/npm-packages/packages/template && TARGET=~/dev/marcopeg/grapi/services/webapp yarn watch:to)",
-      "link:webapp:marcopeg": "concurrently npm:link:webapp:marcopeg:dotted npm:link:webapp:marcopeg:fetch-resolver npm:link:webapp:marcopeg:graphql-extension npm:link:webapp:marcopeg:template",
-      "-- Webapp/Crossroad --": "",
-      "link:webapp:crossroad:client": "(cd ~/dev/marcopeg/grapi/lib/client && TARGET=~/dev/marcopeg/grapi/services/webapp yarn watch:to)",
-      "link:webapp:crossroad:manager": "(cd ~/dev/marcopeg/grapi/lib/manager && TARGET=~/dev/marcopeg/grapi/services/webapp yarn watch:to)",
-      "link:webapp:crossroad:registry": "(cd ~/dev/marcopeg/grapi/lib/registry && TARGET=~/dev/marcopeg/grapi/services/webapp yarn watch:to)",
-      "link:webapp:crossroad:rules": "(cd ~/dev/marcopeg/grapi/lib/rules && TARGET=~/dev/marcopeg/grapi/services/webapp yarn watch:to)",
-      "link:webapp:crossroad": "concurrently npm:link:webapp:crossroad:client npm:link:webapp:crossroad:manager npm:link:webapp:crossroad:registry npm:link:webapp:crossroad:rules",
-  
+      "link:webapp:marcopeg": "concurrently npm:link:webapp:marcopeg:dotted npm:link:webapp:marcopeg:fetch-resolver npm:link:webapp:marcopeg:graphql-extension npm:link:webapp:marcopeg:template",  
       "--- ALL ---": "",
-      "link:webapp": "concurrently npm:link:webapp:forrestjs npm:link:webapp:marcopeg npm:link:webapp:crossroad",
+      "link:webapp": "concurrently npm:link:webapp:forrestjs npm:link:webapp:marcopeg",
       "link:all": "concurrently npm:link:webapp"
     }
   }

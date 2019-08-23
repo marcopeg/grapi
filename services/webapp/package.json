@@ -6,21 +6,23 @@
   "scripts": {
     "----- // CRA DEFAULT SCRIPTS // -----": "",
     "start": "yarn clean && yarn build && cross-env NODE_ENV=production node index",
-    "build": "yarn build:app && yarn build:node",
+    "build": "concurrently npm:build:locale npm:build:design && concurrently npm:build:src npm:build:ssr npm:build:app",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "----- // START SCRIPTS // -----": "",
     "start:api:quick": "cross-env NODE_ENV=production node index",
     "start:api": "yarn build:node && cross-env NODE_ENV=production node index",
-    "start:dev": "yarn && concurrently \"yarn start:dev:api\" \"yarn start:dev:app\"",
+    "start:dev": "yarn && concurrently npm:start:dev:api npm:start:dev:app npm:start:dev:design",
     "start:dev:api": "cross-env NODE_ENV=development nodemon --watch ssr -e js --watch node_build/app index.js",
     "start:dev:app": "react-scripts start",
+    "start:dev:design": "cross-env NODE_ENV=development nodemon --watch design -e json design/build.js",
     "----- // BUILD SCRIPTS // -----": "",
     "build:app": "react-scripts build && mkdir -p node_build && rm -rf ./node_build/app && mv build node_build/app",
     "build:src": "cross-env NODE_ENV=production babel src --out-dir node_build/src --copy-files",
     "build:ssr": "cross-env NODE_ENV=production babel ssr --out-dir node_build/ssr",
     "build:locale": "yarn build:src && node ./node_modules/@forrestjs/core/lib/react-intl-pack.js",
+    "build:design": "cross-env NODE_ENV=development node design/build.js",
     "build:node": "yarn build:src && yarn build:ssr",
     "----- // CLEANING SCRIPTS // -----": "",
     "clean:npm": "rm -rf ./node_modules",
@@ -43,6 +45,17 @@
   "eslintConfig": {
     "extends": [
       "@forrestjs/eslint-config-universal"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "src/_variables.js"
+        ],
+        "rules": {
+          "semi": "off",
+          "eol-last": "off"
+        }
+      }
     ]
   },
   "eslintIgnore": [
@@ -66,7 +79,7 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@forrestjs/package-universal": "^3.4.3",
+    "@forrestjs/package-universal": "^3.5.0",
     "es6-promise": "^4.2.8",
     "generate-password": "^1.4.2",
     "graphql-moment": "^0.0.2",
@@ -78,7 +91,10 @@
     "react-textarea-autosize": "^7.1.0"
   },
   "devDependencies": {
-    "@forrestjs/package-universal-dev": "^3.4.3",
-    "babel-polyfill": "^6.26.0"
+    "@forrestjs/package-universal-dev": "^3.5.0",
+    "babel-polyfill": "^6.26.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.3.1",
+    "style-dictionary": "^2.8.1"
   }
 }

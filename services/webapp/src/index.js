@@ -16,7 +16,7 @@ import { LocaleProvider } from '@forrestjs/feature-locale/client'
 import App from './App'
 import { createState } from './app.state'
 import './locale'
-import './index.css'
+import './index.scss'
 
 /**
  * It's likely that the server will provide the production `initialState``
