@@ -37,7 +37,7 @@
     "book": "yarn book:install && yarn book:serve",
     "----- // HEROKU UTILITIES // -----": "",
     "heroku-postbuild": "yarn build",
-    "heroku:deploy": "git push heroku master",
+    "heroku:deploy": "(cd ../../ && git subtree push --prefix services/webapp/ heroku master)",
     "heroku:logs": "heroku logs --tail"
   },
   "eslintConfig": {
