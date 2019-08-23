@@ -23,6 +23,7 @@ module.exports = {
             name: 'Components',
             description: 'Application level dumb components',
             components: [
+                'src/components/Modal/Modal.jsx',
                 'src/components/Editor/Editor.jsx',
             ],
         },

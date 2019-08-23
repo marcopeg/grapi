@@ -8,6 +8,8 @@
  * handle SSR routing with location/context provided by `react-ssr`.
  */
 
+/* eslint react/prop-types:off */
+
 import React from 'react'
 import { Provider } from 'react-redux'
 import { StaticRouter } from 'react-router-dom'

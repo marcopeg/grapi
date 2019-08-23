@@ -1,0 +1,156 @@
+@import 'variables.scss';
+
+.drop {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(200, 200, 200, 0.4);
+}
+
+.inner {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    background: #ddd;
+}
+
+
+/**
+ * Backdrop Animation
+ */
+
+.fadeEnter .drop,
+.slideLeftEnter .drop,
+.slideUpEnter .drop {
+    display: flex;
+    opacity: 0;
+}
+
+.fadeEnterActive .drop,
+.slideLeftEnterActive .drop,
+.slideUpEnterActive .drop {
+    display: flex;
+    opacity: 1;
+    transition: opacity $basic-animation-duration-fast $basic-animation-timing;
+}
+
+.fadeEnterDone .drop,
+.slideLeftEnterDone .drop,
+.slideUpEnterDone .drop {
+    display: flex;
+}
+
+.fadeExit .drop,
+.slideLeftExit .drop,
+.slideUpExit .drop {
+    display: flex;
+    opacity: 1;
+}
+
+.fadeExitActive .drop,
+.slideLeftExitActive .drop,
+.slideUpExitActive .drop {
+    display: flex;
+    opacity: 0;
+    transition: opacity $basic-animation-duration-fast $basic-animation-timing;
+    transition-delay: $basic-animation-duration * 0.5;
+}
+
+
+
+/**
+ * Fade
+ */
+
+.fadeEnter .inner {
+    display: flex;
+    opacity: 0;
+}
+
+.fadeEnterActive .inner {
+    display: flex;
+    opacity: 1;
+    transition: opacity $basic-animation-duration $basic-animation-timing;
+}
+
+.fadeEnterDone .inner {
+    display: flex;
+}
+
+.fadeExit .inner {
+    display: flex;
+    opacity: 1;
+}
+
+.fadeExitActive .inner {
+    display: flex;
+    opacity: 0;
+    transition: opacity $basic-animation-duration $basic-animation-timing;
+}
+
+
+/**
+ * SlideLeft
+ */
+
+.slideLeftEnter .inner {
+    display: flex;
+    transform: translate3d(100vw, 0, 0);
+}
+
+.slideLeftEnterActive .inner {
+    display: flex;
+    transform: translate3d(0, 0, 0);
+    transition: transform $basic-animation-duration $basic-animation-timing;
+}
+
+.slideLeftEnterDone .inner {
+    display: flex;
+}
+
+.slideLeftExit .inner {
+    display: flex;
+    transform: translate3d(0, 0, 0);
+}
+
+.slideLeftExitActive .inner {
+    display: flex;
+    transform: translate3d(100vw, 0, 0);
+    transition: transform $basic-animation-duration $basic-animation-timing;
+}
+
+
+/**
+ * SlideUp
+ */
+
+ .slideUpEnter .inner {
+    display: flex;
+    transform: translate3d(0, 100vh, 0);
+}
+
+.slideUpEnterActive .inner {
+    display: flex;
+    transform: translate3d(0, 0, 0);
+    transition: transform $basic-animation-duration $basic-animation-timing;
+}
+
+.slideUpEnterDone .inner {
+    display: flex;
+}
+
+.slideUpExit .inner {
+    display: flex;
+    transform: translate3d(0, 0, 0);
+}
+
+.slideUpExitActive .inner {
+    display: flex;
+    transform: translate3d(0, 100vh, 0);
+    transition: transform $basic-animation-duration $basic-animation-timing;
+}

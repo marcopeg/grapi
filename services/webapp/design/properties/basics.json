@@ -36,6 +36,15 @@
             "color": {
                 "-": { "value": "{basic.color.dark.light.value}" }
             }
+        },
+        "animation": {
+            "duration": {
+                "-": { "value": "250ms" },
+                "fast": { "value": "150ms" }
+            },
+            "timing": {
+                "-": { "value": "ease-in-out" }
+            }
         }
     }
 }
