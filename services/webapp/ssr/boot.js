@@ -1,5 +1,4 @@
 import { createHookApp } from '@forrestjs/hooks'
-import path from 'path'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -34,37 +33,13 @@ export default createHookApp({
             password: getEnv('PG_PASSWORD'),
         }])
 
-        // setConfig('expressGraphqlTest.isValid', ({ token }) => token === 'ali')
-
-        // settings.graphqlExtension = {
-        //     // sourcePath: 'foo',
-        // }
-
         setConfig('jwt', {
             secret: getEnv('JWT_SECRET'),
             duration: getEnv('JWT_DURATION'),
         })
 
         setConfig('express.session.duration', '30d')
-
         setConfig('expressSSR.enabled', 'no')
-
-
-        // console.log('>>> build', process.env.REACT_SSR_BUILD)
-        // console.log('>>> src', process.env.REACT_SSR_BUILD_SRC)
-        // setConfig('expressSSR.enabled', 'no')
-
-        // setConfig('hash', {
-        //     rounds: Number(getEnv('BCRYPT_ROUNDS')),
-        // })
-
-        // setConfig('express.session.autoStart', false)
-        // setConfig('express.session.autoExtend', false)
-        // setConfig('express.session.duration', '5s')
-        // setConfig('express.device.setCookie', false)
-        // setConfig('express.session.setCookie', false)
-        // setConfig('express.session.setHeader', true)
-        // setConfig('express.session.autoValidate', true)
     },
     services: [
         require('@forrestjs/service-env'),
@@ -76,13 +51,6 @@ export default createHookApp({
         require('@forrestjs/service-express'),
         require('@forrestjs/service-express-graphql'),
         require('@forrestjs/service-express-graphql-test'),
-
-        // In order to catch the graphql query
-        // [ '$EXPRESS_MIDDLEWARE', ({ registerMiddleware }) => {
-        //     registerMiddleware(require('body-parser').json())
-        //     registerMiddleware(require('body-parser').urlencoded({ extended: true }))
-        // } ],
-
         require('@forrestjs/service-express-cookies'),
         require('@forrestjs/service-express-request'),
         require('@forrestjs/service-express-device'),
@@ -92,11 +60,8 @@ export default createHookApp({
         require('@forrestjs/feature-locale'),
     ],
     features: [
-        // require('./features/graphql-version'),
-
         require('@forrestjs/feature-pg-session'),
         require('@forrestjs/feature-pg-session-info'),
-        // require('./features/feature-pg-session-history'),
         require('@forrestjs/feature-pg-auth'),
         require('./features/feature-passport'),
         require('./features/feature-journal'),
