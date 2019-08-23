@@ -1,4 +1,5 @@
 import { createHookApp } from '@forrestjs/hooks'
+import parseDatabaseUrl from 'parse-database-url'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -6,12 +7,19 @@ require('isomorphic-fetch')
 export default createHookApp({
     trace: true,
     settings: async ({ setConfig, getEnv }) => {
+        // Compose the configuration from a single database URL or from single pieces of information
+        // NOTE: usefull to handle Heroku's default configuration variables
+        const databaseUrl = getEnv('DATABASE_URL', `postgres://${getEnv('PG_USERNAME')}:${getEnv('PG_PASSWORD')}@${getEnv('PG_HOST')}:${getEnv('PG_PORT')}/${getEnv('PG_DATABASE')}`)
+        const databaseConfig = (() => {
+            const config = parseDatabaseUrl(databaseUrl)
+            config.username = config.user
+            delete config.user
+            delete config.driver
+            return config
+        })()
+
         setConfig('postgres.connections', [{
-            host: getEnv('PG_HOST'),
-            port: getEnv('PG_PORT'),
-            database: getEnv('PG_DATABASE'),
-            username: getEnv('PG_USERNAME'),
-            password: getEnv('PG_PASSWORD'),
+            ...databaseConfig,
             maxAttempts: Number(getEnv('PG_MAX_CONN_ATTEMPTS', 25)),
             attemptDelay: Number(getEnv('PG_CONN_ATTEMPTS_DELAY', 5000)),
             pool: { max: 2, min: 0, acquire: 30000, idle: 10000 },

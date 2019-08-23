@@ -81,6 +81,7 @@
     "es6-promise": "^4.2.8",
     "generate-password": "^1.4.2",
     "graphql-moment": "^0.0.2",
+    "parse-database-url": "^0.3.0",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
     "passport-github": "^1.1.0",
