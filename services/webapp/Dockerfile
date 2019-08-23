@@ -29,6 +29,7 @@ ADD webpack.config.extend.js /usr/src/app-build
 ADD ssr /usr/src/app-build/ssr
 ADD src /usr/src/app-build/src
 ADD public /usr/src/app-build/public
+ADD design /usr/src/app-build/design
 ADD index.js /usr/src/app-build
 
 # Build:
