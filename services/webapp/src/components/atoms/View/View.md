@@ -22,7 +22,7 @@
 
 ```js
 <div style={{ width: 300, height: 50, border: '1px dashed #ddd' }}>
-    <View vertical>
+    <View vertical spaced>
         <div>col1</div>
         <div>col2</div>
     </View>

@@ -13,6 +13,13 @@ module.exports = {
             ],
         },
         {
+            name: 'Cells',
+            description: 'Little Bigger, Still Dumb',
+            components: [
+                'src/components/cells/Card/Card.jsx',
+            ],
+        },
+        {
             name: 'Components',
             description: 'Application level dumb components',
             components: [
