@@ -7,9 +7,12 @@ require('isomorphic-fetch')
 export default createHookApp({
     trace: true,
     settings: async ({ setConfig, getEnv }) => {
-        // Compose the configuration from a single database URL or from single pieces of information
-        // NOTE: usefull to handle Heroku's default configuration variables
-        const databaseUrl = getEnv('DATABASE_URL', `postgres://${getEnv('PG_USERNAME')}:${getEnv('PG_PASSWORD')}@${getEnv('PG_HOST')}:${getEnv('PG_PORT')}/${getEnv('PG_DATABASE')}`)
+        // Destructure DATABASE_URL with fallback on PG_XXX environment variables
+        // I did this because of Heroku deployment
+        let databaseUrl = getEnv('DATABASE_URL', '---');
+        (databaseUrl === '---') && (databaseUrl = `postgres://${getEnv('PG_USERNAME')}:${getEnv('PG_PASSWORD')}@${getEnv('PG_HOST')}:${getEnv('PG_PORT')}/${getEnv('PG_DATABASE')}`)
+
+        // Build a Sequelize compatible database configruation
         const databaseConfig = (() => {
             const config = parseDatabaseUrl(databaseUrl)
             config.username = config.user
@@ -33,13 +36,7 @@ export default createHookApp({
             },
         }])
 
-        setConfig('postgresPubSub', [{
-            host: getEnv('PG_HOST'),
-            port: getEnv('PG_PORT'),
-            database: getEnv('PG_DATABASE'),
-            username: getEnv('PG_USERNAME'),
-            password: getEnv('PG_PASSWORD'),
-        }])
+        setConfig('postgresPubSub', [databaseConfig])
 
         setConfig('jwt', {
             secret: getEnv('JWT_SECRET'),
