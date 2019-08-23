@@ -8,6 +8,24 @@
                 "-": { "value": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Roboto\", \"Oxygen\", \"Ubuntu\", \"Cantarell\", \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", sans-serif" }
             }
         },
+        "color": {
+            "dark": {
+                "-": { "value": "#232831" },
+                "light": { "value": "#ddd" }
+            },
+            "light": {
+                "-": { "value": "#fff" },
+                "dark": { "value": "#ddd" }
+            },
+            "primary": {
+                "-": { "value": "#1990ff" }
+            }
+        },
+        "size": {
+            "unit": {
+                "-": { "value": "10px" }
+            }
+        },
         "border": {
             "size": {
                 "-": { "value": "1px" }
@@ -15,34 +33,9 @@
             "style": {
                 "-": { "value": "solid" }
             },
-            "radius": {
-                "-": { "value": "4px" }
+            "color": {
+                "-": { "value": "{basic.color.dark.light.value}" }
             }
-        },
-        "color": {
-            "primary": {
-                "-": { "value": "#1dadb5" }
-            },
-            "dark": {
-                "-": { "value": "#232831" },
-                "light": { "value": "#393e46" }
-            },
-            "light": {
-                "-": { "value": "#fff" },
-                "dark": { "value": "#ddd" }
-            },
-            "disabled": {
-                "-": { "value": "#eee" }
-            },
-            "facebook": {
-                "-": { "value": "#4267b2" }
-            }
-        },
-        "margin": {
-            "medium": { "value": "10px" }
-        },
-        "padding": {
-            "medium": { "value": "10px" }
         }
     }
 }

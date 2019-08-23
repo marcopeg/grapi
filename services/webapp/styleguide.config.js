@@ -52,7 +52,7 @@ module.exports = {
      * prefer to go the `styled-components` way.
      */
     require: [
-        path.join(__dirname, 'src/index.css'),
+        path.join(__dirname, 'src/index.scss'),
     ],
 
     /**

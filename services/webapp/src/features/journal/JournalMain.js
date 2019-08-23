@@ -2,11 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withAuth, Login } from 'features/login'
-import { Link } from 'react-router-dom'
 import { fetchJournal, saveJournal, checkPin, savePin } from './journal.service'
 
 import AskPin from './AskPin'
 import JournalWrite from './JournalWrite'
+import LayoutDefault from 'containers/LayoutDefault'
 
 const mapState = ({ journal }) => ({
     hasPin: journal.pin !== null,
@@ -31,20 +31,9 @@ class JournalMain extends React.Component {
             : <AskPin onSubmit={savePin} />
 
         return (
-            <div style={{
-                // position: 'fixed',
-                // top: 0,
-                // left: 0,
-                // bottom: 0,
-                // right: 0,
-                // backgroundColor: 'red',
-                // overflow: 'auto',
-                // WebkitOverflowScrolling: 'touch',
-            }}>
-                <Link to="/">Back</Link>
-                <hr />
+            <LayoutDefault>
                 {body}
-            </div>
+            </LayoutDefault>
         )
     }
 }

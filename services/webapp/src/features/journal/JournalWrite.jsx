@@ -72,42 +72,8 @@ class JournalWrite extends React.Component {
             )
         }
 
-        // return (
-        //     <div style={{
-        //         margin: '50px 10px 20px 10px',
-        //         maxWidth: '800px',
-        //     }}>
-        //         <KeyboardPadding>
-        //             {({ height }) => (
-        //                 <>
-        //                     <h2 style={{ paddingTop: height }}>What makes you feel good?</h2>
-        //                     <div style={{ border: '1px solid #ddd', padding: 10 }}>
-        //                         <Editor
-        //                             ref={this.editor}
-        //                             value={journal.content}
-        //                             onChange={this.onChange}
-        //                             inputStyle={{
-        //                                 width: '100%',
-        //                                 border: '0px solid #fff',
-        //                                 outline: 'none',
-        //                                 fontFamily: 'Verdana',
-        //                                 fontSize: '14pt',
-        //                                 margin: '5px 0',
-        //                             }}
-        //                         />
-        //                     </div>
-        //                     <hr />
-        //                     <small><b>{this.state.words} words</b> :: last saved: {lastSaved.toISOString()} - {height}px</small><br />
-        //                     <ScrollToBottom />
-        //                 </>
-        //             )}
-        //         </KeyboardPadding>
-        //     </div>
-        // )
-        // return 'write'
         return (
             <div style={{
-                padding: '50px 10px 20px 10px',
                 maxWidth: '800px',
             }}>
                 <h2>What makes you feel good?</h2>

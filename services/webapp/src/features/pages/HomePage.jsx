@@ -1,13 +1,15 @@
+/* eslint-disable */
+
 import React from 'react'
 import { withAuth } from 'features/login'
+import LayoutDefault from 'containers/LayoutDefault'
 import { Link } from 'react-router-dom'
-import * as styles from './HomePage.module.scss'
 
 const HomePage = () => (
-    <div>
-        <Link to="/journal" className={styles.link}>Journal APP</Link><br />
-        <Link to="/ui" className={styles.link}>Ui Tests</Link><br />
-    </div>
+    <LayoutDefault>
+        <Link to="/journal">Journal APP</Link><br />
+        <Link to="/ui">Ui Tests</Link><br />
+    </LayoutDefault>
 )
 
 const HomePagePublic = () => (
