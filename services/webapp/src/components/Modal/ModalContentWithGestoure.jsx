@@ -2,7 +2,14 @@ import React, { useState, useLayoutEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import * as styles from './Modal.module.scss'
 
-const ModalContentWithGestoure = ({ children, animation, gestureSize, onRequestHide }) => {
+const ModalContentWithGestoure = ({
+    animation,
+    gestureSize,
+    onRequestHide,
+    useGestures, // eslint-disable-line
+    useBackdrop, // eslint-disable-line
+    ...props
+}) => {
     const contentEl = useRef(null)
     const [ activePosition, setActivePosition ] = useState([ null, null ])
 
@@ -64,14 +71,14 @@ const ModalContentWithGestoure = ({ children, animation, gestureSize, onRequestH
     // translate the content if it's during a closing transition
     let contentStyle = {}
 
-    if (animation === 'slideLeft' && activePosition[0] !== null) {
+    if (animation === 'slideLeft' && activePosition[0] > 0) {
         contentStyle = {
             transform: `translate3d(${activePosition[0]}px, 0, 0)`,
             transition: 'none',
         }
     }
 
-    if (animation === 'slideUp' && activePosition[1] !== null) {
+    if (animation === 'slideUp' && activePosition[1] > 0) {
         contentStyle = {
             transform: `translate3d(0, ${activePosition[1]}px, 0)`,
             transition: 'none',
@@ -83,7 +90,7 @@ const ModalContentWithGestoure = ({ children, animation, gestureSize, onRequestH
             ref={contentEl}
             className={styles.inner}
             style={contentStyle}
-            children={children}
+            {...props}
         />
     )
 }

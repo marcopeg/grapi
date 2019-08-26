@@ -1,16 +1,16 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import * as styles from './Modal.module.scss'
 
-const ModalContent = ({ children }) => (
+const ModalContent = ({
+    useGestures, // eslint-disable-line
+    useBackdrop, // eslint-disable-line
+    onRequestHide, // eslint-disable-line
+    ...props
+}) => (
     <div
+        {...props}
         className={styles.inner}
-        children={children}
     />
 )
-
-ModalContent.propTypes = {
-    children: PropTypes.any.isRequired, // eslint-disable-line
-}
 
 export default ModalContent

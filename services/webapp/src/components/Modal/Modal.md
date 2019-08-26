@@ -2,6 +2,7 @@
 #### Fade
 
 ```js
+const ScreenView = require('components/cells/ScreenView').default
 initialState = { isVisible: false };
 <div>
     <button onClick={() => setState({ isVisible: !state.isVisible })}>
@@ -13,7 +14,18 @@ initialState = { isVisible: false };
         useBackdrop={true}
         onRequestHide={() => setState({ isVisible: false })}
     >
-        Hello World - Fade!
+        <ScreenView
+            centered
+            width={90}
+            height={90}
+            marginBottom={50}
+            style={{ background: 'red' }}
+        >
+            Hello World - Fade!
+            <button onClick={() => setState({ isVisible: false })}>
+                close
+            </button>
+        </ScreenView>
     </Modal>
 </div>
 ```
@@ -21,6 +33,7 @@ initialState = { isVisible: false };
 #### SlideLeft
 
 ```js
+const ScreenView = require('components/cells/ScreenView').default
 initialState = { isVisible: false }
 ;
 <div>
@@ -31,10 +44,13 @@ initialState = { isVisible: false }
     <Modal
         isVisible={state.isVisible}
         animation={'slideLeft'}
-        useBackdrop={true}
+        useGestures={true}
         onRequestHide={() => setState({ isVisible: false })}
     >
-        Hello World - SlideLeft!
+        <ScreenView centered style={{ backgroundColor: 'rgba(200, 200, 200, 0.5)' }}>
+            <h3>Hello World - SlideLeft!</h3>
+            <p>(swipe right to close)</p>
+        </ScreenView>
     </Modal>
 </div>
 ```
@@ -42,6 +58,7 @@ initialState = { isVisible: false }
 #### SlideUp
 
 ```js
+const ScreenView = require('components/cells/ScreenView').default
 initialState = { isVisible: false };
 <div>
     <button onClick={() => setState({ isVisible: !state.isVisible })}>
@@ -51,10 +68,13 @@ initialState = { isVisible: false };
     <Modal
         isVisible={state.isVisible}
         animation={'slideUp'}
-        useBackdrop={true}
+        useGestures={true}
         onRequestHide={() => setState({ isVisible: false })}
     >
-        Hello World - SlideUp!
+        <ScreenView centered style={{ backgroundColor: 'rgba(200, 200, 200, 0.5)' }}>
+            <h3>Hello World - SlideUp!</h3>
+            <p>(swipe down to close)</p>
+        </ScreenView>
     </Modal>
 </div>
 ```

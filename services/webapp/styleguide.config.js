@@ -17,6 +17,7 @@ module.exports = {
             description: 'Little Bigger, Still Dumb',
             components: [
                 'src/components/cells/Card/Card.jsx',
+                'src/components/cells/ScreenView/ScreenView.jsx',
             ],
         },
         {

@@ -39,7 +39,7 @@
         },
         "animation": {
             "duration": {
-                "-": { "value": "250ms" },
+                "-": { "value": "300ms" },
                 "fast": { "value": "150ms" }
             },
             "timing": {

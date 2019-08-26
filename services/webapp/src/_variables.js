@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Fri, 23 Aug 2019 15:11:54 GMT
+ * Generated on Mon, 26 Aug 2019 13:54:33 GMT
  */
 
 export const BasicFontSize = "16px"; // basic stuff
@@ -14,6 +14,6 @@ export const BasicSizeUnit = "10px";
 export const BasicBorderSize = "1px";
 export const BasicBorderStyle = "solid";
 export const BasicBorderColor = "#ddd";
-export const BasicAnimationDuration = "250ms";
+export const BasicAnimationDuration = "300ms";
 export const BasicAnimationDurationFast = "150ms";
 export const BasicAnimationTiming = "ease-in-out";

@@ -57,8 +57,8 @@ Modal.propTypes = {
 
 Modal.defaultProps = {
     animation: 'fade',
-    useBackdrop: true,
-    useGestures: true,
+    useBackdrop: false,
+    useGestures: false,
     onRequestHide: () => {},
 }
 
