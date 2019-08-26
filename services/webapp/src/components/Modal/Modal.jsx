@@ -31,9 +31,13 @@ const Modal = ({ isVisible, ...props }) => {
 
     return ReactDOM.createPortal((
         <CSSTransition
+            appear
             in={isVisible}
             timeout={animationTimeout}
             classNames={{
+                appear: styles[`${animation}Appear`],
+                appearActive: styles[`${animation}AppearActive`],
+                appearDone: styles[`${animation}AppearDone`],
                 enter: styles[`${animation}Enter`],
                 enterActive: styles[`${animation}EnterActive`],
                 enterDone: styles[`${animation}EnterDone`],

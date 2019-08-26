@@ -14,8 +14,8 @@ const ModalContentWithGestoure = ({
     const [ activePosition, setActivePosition ] = useState([ null, null ])
 
     useLayoutEffect(() => {
-        let initialPosition = null
-        let activePosition = null
+        let initialPosition = [ 0, 0 ]
+        let activePosition = [ 0, 0 ]
 
         const touchStartHandler = (e) => {
             e.preventDefault()
@@ -50,21 +50,21 @@ const ModalContentWithGestoure = ({
             }
 
             initialPosition = [ null, null ]
-            setActivePosition(activePosition = [ null, null ])
+            setActivePosition(activePosition = [ 0, 0 ])
         }
 
         // Attach and detach the event handlers
         const target = contentEl.current
-        target.addEventListener('touchstart', touchStartHandler)
-        target.addEventListener('touchmove', touchMoveHandler)
-        target.addEventListener('touchend', touchEndHandler)
-        target.addEventListener('touchcancel', touchEndHandler)
+        target.addEventListener('touchstart', touchStartHandler, true)
+        target.addEventListener('touchmove', touchMoveHandler, true)
+        target.addEventListener('touchend', touchEndHandler, true)
+        target.addEventListener('touchcancel', touchEndHandler, true)
 
         return () => {
-            target.removeEventListener('touchstart', touchStartHandler)
-            target.removeEventListener('touchmove', touchMoveHandler)
-            target.removeEventListener('touchend', touchEndHandler)
-            target.removeEventListener('touchcancel', touchEndHandler)
+            target.removeEventListener('touchstart', touchStartHandler, true)
+            target.removeEventListener('touchmove', touchMoveHandler, true)
+            target.removeEventListener('touchend', touchEndHandler, true)
+            target.removeEventListener('touchcancel', touchEndHandler, true)
         }
     }, [true]) // eslint-disable-line
 

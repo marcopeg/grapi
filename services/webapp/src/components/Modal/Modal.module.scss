@@ -7,7 +7,7 @@
     bottom: 0;
     right: 0;
     left: 0;
-    background: rgba(200, 200, 200, 0.4);
+    background: rgba(200, 200, 200, 0.6);
 }
 
 .inner {
@@ -17,6 +17,18 @@
     left: 0;
 
     background: #ddd;
+}
+
+.fadeAppear .inner, .fadeAppear .drop,
+.fadeAppearActive .inner, .fadeAppearActive .drop,
+.fadeAppearDone .inner, .fadeAppearDone .drop,
+.slideLeftAppear .inner, .slideLeftAppear .drop,
+.slideLeftAppearActive .inner, .slideLeftAppearActive .drop,
+.slideLeftAppearDone .inner, .slideLeftAppearDone .drop,
+.slideUpAppear .inner, .slideUpAppear .drop,
+.slideUpAppearActive .inner, .slideUpAppearActive .drop,
+.slideUpAppearDone .inner, .slideUpAppearDone .drop {
+    display: flex;
 }
 
 
