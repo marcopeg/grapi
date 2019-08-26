@@ -18,8 +18,6 @@ const ModalContentWithGestoure = ({
         let activePosition = [ 0, 0 ]
 
         const touchStartHandler = (e) => {
-            e.preventDefault()
-            e.stopPropagation()
             initialPosition = [ e.touches[0].pageX, e.touches[0].pageY ]
         }
 
