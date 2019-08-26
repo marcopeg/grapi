@@ -11,7 +11,7 @@ initialState = { isVisible: false };
     <Modal
         isVisible={state.isVisible}
         useBackdrop={true}
-        onRequestHide={() => setState({ isVisible: !state.isVisible })}
+        onRequestHide={() => setState({ isVisible: false })}
     >
         Hello World - Fade!
     </Modal>
@@ -21,7 +21,8 @@ initialState = { isVisible: false };
 #### SlideLeft
 
 ```js
-initialState = { isVisible: false };
+initialState = { isVisible: false }
+;
 <div>
     <button onClick={() => setState({ isVisible: !state.isVisible })}>
         Toggle Modal
@@ -31,7 +32,7 @@ initialState = { isVisible: false };
         isVisible={state.isVisible}
         animation={'slideLeft'}
         useBackdrop={true}
-        onRequestHide={() => setState({ isVisible: !state.isVisible })}
+        onRequestHide={() => setState({ isVisible: false })}
     >
         Hello World - SlideLeft!
     </Modal>
@@ -51,7 +52,7 @@ initialState = { isVisible: false };
         isVisible={state.isVisible}
         animation={'slideUp'}
         useBackdrop={true}
-        onRequestHide={() => setState({ isVisible: !state.isVisible })}
+        onRequestHide={() => setState({ isVisible: false })}
     >
         Hello World - SlideUp!
     </Modal>

@@ -1,29 +1,31 @@
-/* eslint-disable */
-
 import React from 'react'
+import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import { CSSTransition } from 'react-transition-group'
 import * as styles from './Modal.module.scss'
 import { BasicAnimationDuration } from '_variables'
 
+import ModalBackdrop from './ModalBackdrop'
+import ModalContent from './ModalContent'
+import ModalContentWithGestoure from './ModalContentWithGestoure'
+
 const animationTimeout = parseInt(BasicAnimationDuration, 10) * 1.5
 
-const Modal = ({ children, isVisible, animation, useBackdrop, onRequestHide }) => {
-    // optional backdrop
+const Modal = ({ isVisible, ...props }) => {
+    const { animation, useBackdrop, useGestures } = props
+
     const backdrop = useBackdrop
-        ? (
-            <div
-                className={styles.drop}
-                onClick={() => onRequestHide()}
-                children={typeof useBackdrop === 'object' ? useBackdrop : null}
-            />
-        )
+        ? <ModalBackdrop {...props} />
         : null
 
+    const content = animation.indexOf('slide') >= 0 && useGestures === true
+        ? <ModalContentWithGestoure {...props} />
+        : <ModalContent {...props} />
+
     const item = (
-        <div className={styles.wrapper}>
+        <div>
             {backdrop}
-            <div className={styles.inner} children={children} />
+            {content}
         </div>
     )
 
@@ -45,9 +47,18 @@ const Modal = ({ children, isVisible, animation, useBackdrop, onRequestHide }) =
     ), document.body)
 }
 
+Modal.propTypes = {
+    isVisible: PropTypes.bool.isRequired,
+    useGestures: PropTypes.bool,
+    useBackdrop: PropTypes.bool,
+    animation: PropTypes.oneOf([ 'fade', 'slideLeft', 'slideUp' ]),
+    onRequestHide: PropTypes.func,
+}
+
 Modal.defaultProps = {
     animation: 'fade',
-    useBackdrop: false,
+    useBackdrop: true,
+    useGestures: true,
     onRequestHide: () => {},
 }
 

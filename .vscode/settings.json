@@ -1,0 +1,5 @@
+{
+    "eslint.workingDirectories": [
+      { "directory": "./services/webapp", "changeProcessCWD": true }
+    ]
+  }
