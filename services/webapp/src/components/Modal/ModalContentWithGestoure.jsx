@@ -1,6 +1,10 @@
+/* eslint-disable */
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import * as styles from './Modal.module.scss'
+import { BasicAnimationDuration } from '_variables'
+
+const animationDuration = parseInt(BasicAnimationDuration, 10)
 
 const ModalContentWithGestoure = ({
     animation,
@@ -12,10 +16,21 @@ const ModalContentWithGestoure = ({
 }) => {
     const contentEl = useRef(null)
     const [ activePosition, setActivePosition ] = useState([ null, null ])
+    const [ fastAnimation, setFastAnimation ] = useState(false)
 
     useEffect(() => {
         let initialPosition = [ 0, 0 ]
         let activePosition = [ 0, 0 ]
+
+        const handleHide = (name) => {
+            setFastAnimation(true)
+            setTimeout(() => setFastAnimation(false), animationDuration)
+
+            onRequestHide({
+                name,
+                movement: activePosition,
+            })
+        }
 
         const touchStartHandler = (e) => {
             initialPosition = [ e.touches[0].pageX, e.touches[0].pageY ]
@@ -36,15 +51,9 @@ const ModalContentWithGestoure = ({
 
         const touchEndHandler = () => {
             if (animation === 'slideLeft' && activePosition[0] > gestureSize) {
-                onRequestHide({
-                    name: 'slideRight',
-                    movement: activePosition,
-                })
+                handleHide('slideRight')
             } else if (animation === 'slideUp' && activePosition[1] > gestureSize) {
-                onRequestHide({
-                    name: 'slideDown',
-                    movement: activePosition,
-                })
+                handleHide('slideDown')
             }
 
             initialPosition = [ null, null ]
@@ -83,6 +92,15 @@ const ModalContentWithGestoure = ({
         }
     }
 
+    // Speed up transition when closing down the modal with a gesture
+    if (!contentStyle.transition) {
+        if (fastAnimation) {
+            contentStyle.transition = `${animationDuration / 2.5}ms`
+        } else {
+            contentStyle.transition = BasicAnimationDuration
+        }
+    }
+
     return (
         <div
             ref={contentEl}
@@ -101,7 +119,7 @@ ModalContentWithGestoure.propTypes = {
 }
 
 ModalContentWithGestoure.defaultProps = {
-    gestureSize: 48,
+    gestureSize: 48 * 2,
 }
 
 export default ModalContentWithGestoure
