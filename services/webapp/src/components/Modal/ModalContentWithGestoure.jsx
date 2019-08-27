@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import * as styles from './Modal.module.scss'
 
@@ -13,7 +13,7 @@ const ModalContentWithGestoure = ({
     const contentEl = useRef(null)
     const [ activePosition, setActivePosition ] = useState([ null, null ])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         let initialPosition = [ 0, 0 ]
         let activePosition = [ 0, 0 ]
 
@@ -64,7 +64,7 @@ const ModalContentWithGestoure = ({
             target.removeEventListener('touchend', touchEndHandler, true)
             target.removeEventListener('touchcancel', touchEndHandler, true)
         }
-    }, [true]) // eslint-disable-line
+    }, [ contentEl, animation, gestureSize, onRequestHide ])
 
     // translate the content if it's during a closing transition
     let contentStyle = {}
