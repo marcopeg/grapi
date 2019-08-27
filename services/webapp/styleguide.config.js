@@ -18,13 +18,13 @@ module.exports = {
             components: [
                 'src/components/cells/Card/Card.jsx',
                 'src/components/cells/ScreenView/ScreenView.jsx',
+                'src/components/cells/Modal/Modal.jsx',
             ],
         },
         {
             name: 'Components',
             description: 'Application level dumb components',
             components: [
-                'src/components/Modal/Modal.jsx',
                 'src/components/Editor/Editor.jsx',
             ],
         },
